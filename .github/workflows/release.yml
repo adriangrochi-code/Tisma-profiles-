@@ -1,0 +1,61 @@
+name: Release the profile pack
+
+on:
+  push:
+    branches: [main]
+    paths: ['tools/**', 'community/**', 'sources.json', '.github/workflows/release.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the source commit
+        id: src
+        run: |
+          echo "repo=$(jq -r '.tisma_slicer.repository' sources.json | sed 's#https://github.com/##')" >> "$GITHUB_OUTPUT"
+          echo "commit=$(jq -r '.tisma_slicer.commit' sources.json)" >> "$GITHUB_OUTPUT"
+          echo "dir=$(jq -r '.tisma_slicer.directory' sources.json)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.src.outputs.repo }}
+          ref: ${{ steps.src.outputs.commit }}
+          path: source
+          sparse-checkout: ${{ steps.src.outputs.dir }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check the community data
+        run: python3 tools/check_community.py community
+
+      - name: Convert
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}"
+
+      - name: Package
+        id: pkg
+        run: |
+          version="$(date -u +%Y.%m.%d)-$(git rev-parse --short HEAD)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          python3 tools/package.py pack community dist --version "$version"
+          cp pack/stats.json dist/stats.json
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "pack-${{ steps.pkg.outputs.version }}" dist/* \
+            --title "Profile pack ${{ steps.pkg.outputs.version }}" \
+            --notes "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md." \
+            --latest
