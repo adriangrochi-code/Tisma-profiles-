@@ -47,7 +47,7 @@
     {"anchor": "filament_selector", "title": "Los datos del material", "text": "El panel del filamento muestra temperaturas, cama, cabina, ventilador y secado de partida para su tipo. Si el fabricante da otros valores, mandan los del fabricante."},
     {"anchor": "filament_selector", "title": "¿Necesita algo especial?", "text": "Fijate si pide cama caliente, impresora cerrada o boquilla de acero endurecido (los que tienen fibras o partículas). El asistente avisa si tu impresora no lo tiene."},
     {"anchor": "help_procedures", "title": "Secarlo", "text": "Muchos materiales conviene secarlos antes de imprimir; con hilos o burbujas, secarlos más tiempo.", "open": {"type": "procedure", "id": "dry_filament"}},
-    {"anchor": "calibrations", "title": "Calibrar en orden", "text": "Para ajustarlo fino, en este orden: torre de temperatura, flujo, retracción, flujo máximo y enfriamiento. Cada prueba guarda su resultado en el perfil del filamento.", "open": {"type": "calibration", "id": "temperature_tower"}}
+    {"anchor": "calibrations", "title": "Calibrar en orden", "text": "Para ajustarlo fino, en este orden: torre de temperatura, flujo máximo, avance de presión, flujo y retracción (y, si hace falta, enfriamiento). Cada prueba usa el resultado de la anterior y guarda el suyo en el perfil del filamento.", "open": {"type": "calibration", "id": "temperature_tower"}}
    ]
   },
   {

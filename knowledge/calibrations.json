@@ -1,0 +1,548 @@
+{
+ "format": "tisma-knowledge-calibrations",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {
+   "id": "orca_wiki",
+   "title": "Wiki de OrcaSlicer: guía de calibración y páginas de cada prueba",
+   "author": "Equipo y comunidad de OrcaSlicer",
+   "url": "https://github.com/SoftFever/OrcaSlicer/wiki/calibration_guide"
+  },
+  {
+   "id": "ellis_guide",
+   "title": "Ellis' Print Tuning Guide",
+   "author": "Andrew Ellis",
+   "url": "https://ellis3dp.com/Print-Tuning-Guide/"
+  },
+  {
+   "id": "klipper_pa",
+   "title": "Klipper: Pressure advance",
+   "author": "Proyecto Klipper",
+   "url": "https://www.klipper3d.org/Pressure_Advance.html"
+  },
+  {
+   "id": "klipper_resonances",
+   "title": "Klipper: Measuring Resonances",
+   "author": "Proyecto Klipper",
+   "url": "https://www.klipper3d.org/Measuring_Resonances.html"
+  },
+  {
+   "id": "barajas_problemas",
+   "title": "Guía de solución de problemas de impresión 3D v3.3.1",
+   "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"
+  }
+ ],
+ "notes": [
+  "Texto propio, a partir de las fuentes citadas: se tomaron el orden, los rangos y las fórmulas, no el texto.",
+  "order es el orden recomendado: cada prueba usa el resultado de las anteriores (before)."
+ ],
+ "calibrations": [
+  {
+   "id": "first_layer",
+   "name": "Primera capa",
+   "group": "printer",
+   "order": 1,
+   "why": "Casi todo depende de que la primera capa se pegue pareja. Se ajusta la distancia de la boquilla a la cama (Z-offset).",
+   "repeat": "Al cambiar la superficie de la cama, la boquilla o el sensor de nivelación.",
+   "before": [],
+   "steps": [
+    "Limpiar la cama y hacer la nivelación de la impresora.",
+    "Imprimir parches cuadrados repartidos por la cama, con la primera capa algo gruesa (0,25 mm o más) y un ancho de línea de 120 % o más.",
+    "Mientras imprime, subir o bajar la boquilla de a 0,01 mm (Z-offset en vivo) y mirar cada parche.",
+    "Guardar el Z-offset en la impresora cuando el parche sale bien."
+   ],
+   "read": [
+    {
+     "look": "Se ven huecos entre las líneas, o se ve la cama a través",
+     "means": "Boquilla muy lejos: bajarla"
+    },
+    {
+     "look": "No se ven líneas, salen grumos, pelusa o una superficie ondulada",
+     "means": "Boquilla muy cerca: subirla"
+    },
+    {
+     "look": "Arriba liso y sin huecos, abajo con las líneas marcadas y sin huecos",
+     "means": "Bien"
+    }
+   ],
+   "result": {
+    "where": "printer_firmware",
+    "text": "El Z-offset se guarda en la impresora; el perfil no cambia."
+   },
+   "tips": [
+    "Ante la duda, un poco más aplastada que de menos.",
+    "En cama texturada las líneas de abajo se ven menos: juzgar por arriba."
+   ],
+   "sources": [
+    "ellis_guide",
+    "barajas_problemas"
+   ],
+   "open": {
+    "type": "procedure",
+    "id": "level_bed"
+   }
+  },
+  {
+   "id": "temperature_tower",
+   "name": "Torre de temperatura",
+   "group": "filament",
+   "order": 2,
+   "why": "La temperatura cambia todo lo demás: fluidez, hilos, puentes y adherencia entre capas. Va primero entre las pruebas del filamento.",
+   "repeat": "Con cada filamento nuevo (marca o tipo).",
+   "before": [
+    "first_layer"
+   ],
+   "steps": [
+    "Elegir el rango de temperaturas del fabricante del filamento.",
+    "Imprimir la torre: cada tramo a otra temperatura.",
+    "Mirar cada tramo: hilos, puentes, voladizos, superficie y, si se puede, romperla para ver la adherencia entre capas."
+   ],
+   "read": [
+    {
+     "look": "Muchos hilos",
+     "means": "Muy caliente (aunque muy frío también puede dar hilos)"
+    },
+    {
+     "look": "Puentes y voladizos caídos",
+     "means": "Muy caliente"
+    },
+    {
+     "look": "Capas que se separan al doblar",
+     "means": "Muy frío"
+    }
+   ],
+   "result": {
+    "key": "material.nozzle_temp",
+    "text": "La temperatura del mejor tramo. Si varios están bien, la del medio; si se va a imprimir rápido, hacia arriba del rango bueno."
+   },
+   "tips": [
+    "Con boquillas grandes la torre se escala a la boquilla y la capa es la mitad del diámetro."
+   ],
+   "sources": [
+    "orca_wiki"
+   ]
+  },
+  {
+   "id": "max_flow",
+   "name": "Flujo volumétrico máximo",
+   "group": "filament",
+   "order": 3,
+   "why": "Cuánto plástico por segundo puede derretir el hotend con ese filamento. Pone el techo de velocidad para no subextruir ni tapar.",
+   "repeat": "Con cada filamento y al cambiar hotend o boquilla.",
+   "before": [
+    "temperature_tower"
+   ],
+   "steps": [
+    "Imprimir la prueba: el flujo sube con la altura (por ejemplo de 5 a 20 mm³/s, de a 0,5 por mm).",
+    "Buscar la altura donde la superficie cambia (de brillante a mate, o aparecen huecos).",
+    "Medir la altura justo debajo de ese punto."
+   ],
+   "read": [
+    {
+     "look": "La superficie pasa de brillante a mate o se abre",
+     "means": "Ahí se pasó del flujo que el hotend sostiene"
+    }
+   ],
+   "result": {
+    "key": "extrusion.max_flow",
+    "text": "Flujo = inicio + altura medida × paso (ejemplo: 5 + 19 × 0,5 = 14,5 mm³/s). Usar entre 10 y 20 % menos que el resultado."
+   },
+   "tips": [
+    "La velocidad que eso permite: velocidad = flujo / (alto de capa × ancho de línea).",
+    "Valores orientativos con boquilla de latón de 0,4: E3D V6 y Revo unos 11 mm³/s; Dragon SF 15; Dragon HF y Rapido HF 24; Rapido UHF y Mosquito Magnum 30. Cada hotend y temperatura cambia.",
+    "Otra forma: extruir 100 mm de filamento a velocidades cada vez mayores y ver cuándo entra menos de lo pedido."
+   ],
+   "sources": [
+    "orca_wiki",
+    "ellis_guide"
+   ]
+  },
+  {
+   "id": "pressure_advance",
+   "name": "Avance de presión",
+   "group": "filament",
+   "order": 4,
+   "why": "Compensa que la presión en la boquilla tarda en subir y bajar: sin él, sobra plástico en las esquinas y falta al arrancar las líneas.",
+   "repeat": "Con cada filamento; repetirlo rápido si después el flujo cambió mucho.",
+   "before": [
+    "max_flow"
+   ],
+   "steps": [
+    "Elegir el método: torre (no depende de la primera capa), patrón de esquinas o líneas (depende mucho de la primera capa).",
+    "Rangos de partida: con extrusor directo valores chicos; con Bowden largo, mucho más grandes.",
+    "Imprimir y buscar la altura o la línea con las esquinas más limpias."
+   ],
+   "read": [
+    {
+     "look": "Esquinas con bulto, líneas que terminan gordas",
+     "means": "Valor bajo"
+    },
+    {
+     "look": "Esquinas redondeadas o con falta de material, huecos al arrancar",
+     "means": "Valor alto"
+    }
+   ],
+   "result": {
+    "key": "extrusion.pressure_advance",
+    "text": "En la torre: valor = inicio + altura medida × paso (ejemplo de Klipper: 0 + 12,9 × 0,020 = 0,258). Ante la duda, el valor más bajo."
+   },
+   "tips": [
+    "Valores habituales entre 0,05 y 1: directo en la parte baja, Bowden en la alta. Si hasta 1 no mejora nada, no conviene usarlo.",
+    "Ignorar la esquina donde cambia de capa la costura.",
+    "En Marlin tiene que estar activado Linear Advance en el firmware (M900)."
+   ],
+   "sources": [
+    "orca_wiki",
+    "klipper_pa",
+    "ellis_guide"
+   ]
+  },
+  {
+   "id": "flow",
+   "name": "Flujo",
+   "group": "filament",
+   "order": 5,
+   "why": "Que salga la cantidad justa de plástico: medidas correctas, buena unión entre líneas y superficies lisas.",
+   "repeat": "Con cada filamento (puede cambiar con el color o la bobina).",
+   "before": [
+    "pressure_advance"
+   ],
+   "steps": [
+    "Imprimir bloques con el flujo variando de a 1 % alrededor del actual (por ejemplo de −5 % a +5 %).",
+    "Mirar y tocar la superficie de arriba de cada bloque, en el centro, no en los bordes.",
+    "Si hace falta más precisión, repetir de a 0,5 %."
+   ],
+   "read": [
+    {
+     "look": "Huecos o valles entre líneas",
+     "means": "Poco flujo"
+    },
+    {
+     "look": "Superficie áspera, rebarbas",
+     "means": "Mucho flujo"
+    },
+    {
+     "look": "Superficie lisa, líneas apenas solapadas",
+     "means": "Bien"
+    }
+   ],
+   "result": {
+    "key": "extrusion.flow",
+    "text": "Nuevo flujo = flujo actual más la corrección del mejor bloque (0,98 + 0,01 = 0,99). Si se duda entre dos, el más alto."
+   },
+   "tips": [
+    "Antes, avance de presión calibrado: si no, las líneas engañan.",
+    "No medir paredes con calibre para calibrar el flujo; para medidas exactas está la prueba de medidas."
+   ],
+   "sources": [
+    "orca_wiki",
+    "ellis_guide"
+   ]
+  },
+  {
+   "id": "retraction",
+   "name": "Retracción",
+   "group": "filament",
+   "order": 6,
+   "why": "Menos hilos al viajar. Los valores de fábrica suelen andar; calibrar solo si hay hilos.",
+   "repeat": "Con cada filamento, si hay hilos.",
+   "before": [
+    "flow"
+   ],
+   "steps": [
+    "Imprimir la torre: cada tramo con otro largo de retracción (directo: de 0 a 2 mm de a 0,1; Bowden: de 1 a 6 mm de a 0,2).",
+    "Buscar el tramo más limpio y medir su altura."
+   ],
+   "read": [
+    {
+     "look": "Hilos en todos los tramos, también arriba",
+     "means": "Filamento húmedo o boquilla que gotea: secar el filamento y revisar la boquilla"
+    }
+   ],
+   "result": {
+    "key": "retraction.length",
+    "text": "El largo más corto que da la torre limpia."
+   },
+   "tips": [
+    "PLA y ABS suelen andar con 0,2 a 0,4 mm en extrusor directo.",
+    "Antes, avance de presión y flujo: los dos cambian la presión en la boquilla."
+   ],
+   "sources": [
+    "orca_wiki"
+   ],
+   "open": {
+    "type": "procedure",
+    "id": "dry_filament"
+   }
+  },
+  {
+   "id": "stringing_temperature",
+   "name": "Hilos según la temperatura",
+   "group": "filament",
+   "order": 7,
+   "why": "Encontrar la temperatura más baja que no deja hilos sin perder adherencia.",
+   "repeat": "Si después de la retracción siguen los hilos.",
+   "before": [
+    "retraction"
+   ],
+   "steps": [
+    "Imprimir la prueba de hilos con la temperatura bajando por tramos.",
+    "Elegir el tramo sin hilos más caliente que todavía se adhiere bien."
+   ],
+   "read": [
+    {
+     "look": "Hilos que bajan al bajar la temperatura",
+     "means": "La temperatura era la causa"
+    },
+    {
+     "look": "Hilos que no cambian",
+     "means": "Mirar humedad del filamento y retracción"
+    }
+   ],
+   "result": {
+    "key": "material.nozzle_temp",
+    "text": "La temperatura elegida."
+   },
+   "tips": [],
+   "sources": [
+    "barajas_problemas",
+    "orca_wiki"
+   ]
+  },
+  {
+   "id": "cooling",
+   "name": "Enfriamiento y tiempo de capa",
+   "group": "filament",
+   "order": 8,
+   "why": "Una capa que no se enfrió recibe la siguiente blanda: se deforma, sobre todo en piezas chicas y puntas.",
+   "repeat": "Con materiales nuevos o piezas chicas que salen deformadas.",
+   "before": [
+    "flow"
+   ],
+   "steps": [
+    "Imprimir piezas chicas con distintos tiempos mínimos de capa y ventilador.",
+    "Mirar las puntas y las partes chicas."
+   ],
+   "read": [
+    {
+     "look": "Puntas derretidas o curvadas hacia arriba",
+     "means": "Falta enfriar: más ventilador o más tiempo mínimo de capa"
+    },
+    {
+     "look": "Capas que se separan o piezas que se rajan (ABS)",
+     "means": "Demasiado ventilador para ese material"
+    }
+   ],
+   "result": {
+    "key": "cooling.min_layer_time",
+    "text": "El tiempo mínimo de capa que dio piezas sanas; el ventilador va en cooling.fan_min y cooling.fan_max."
+   },
+   "tips": [
+    "Ventilador parejo durante la impresión: cambiarlo hace capas desparejas.",
+    "ABS: unos 15 s de tiempo mínimo de capa; necesita más ventilador del que parece en impresoras cerradas.",
+    "Imprimir varias piezas separadas también les da tiempo de enfriarse."
+   ],
+   "sources": [
+    "ellis_guide"
+   ]
+  },
+  {
+   "id": "overhang_angle",
+   "name": "Ángulo de voladizo",
+   "group": "filament",
+   "order": 9,
+   "why": "Hasta qué inclinación la impresora imprime sin soporte, para no poner soporte de más.",
+   "repeat": "Con materiales nuevos.",
+   "before": [
+    "cooling"
+   ],
+   "steps": [
+    "Imprimir la prueba de voladizos con rampas de distinto ángulo.",
+    "Buscar la rampa más tendida que sale limpia por abajo."
+   ],
+   "read": [
+    {
+     "look": "La cara de abajo cuelga o se riza",
+     "means": "Ese ángulo necesita soporte"
+    }
+   ],
+   "result": {
+    "key": "support.threshold_angle",
+    "text": "El ángulo de la rampa más tendida que salió limpia."
+   },
+   "tips": [
+    "Ojo con cómo se mide: desde la cama o desde la vertical cambia el número (60° desde la vertical son 30° desde la cama)."
+   ],
+   "sources": [
+    "orca_wiki"
+   ]
+  },
+  {
+   "id": "supports",
+   "name": "Separación del soporte",
+   "group": "filament",
+   "order": 10,
+   "why": "Que el soporte sostenga y se saque fácil.",
+   "repeat": "Con materiales nuevos.",
+   "before": [
+    "overhang_angle"
+   ],
+   "steps": [
+    "Imprimir repisas sostenidas con distintas separaciones (de a una capa).",
+    "Sacar el soporte de cada una."
+   ],
+   "read": [
+    {
+     "look": "Soporte soldado que arranca la piel",
+     "means": "Separación chica"
+    },
+    {
+     "look": "La cara de abajo cae o sale con hilos",
+     "means": "Separación grande"
+    }
+   ],
+   "result": {
+    "key": "support.z_gap",
+    "text": "La menor separación que se saca limpia (en capas enteras)."
+   },
+   "tips": [],
+   "sources": [
+    "orca_wiki"
+   ]
+  },
+  {
+   "id": "cornering",
+   "name": "Esquinas (jerk, desvío de esquina)",
+   "group": "printer",
+   "order": 11,
+   "why": "La velocidad con la que la impresora pasa por una esquina sin vibrar. La mayoría no lo necesita: el firmware ya la limita.",
+   "repeat": "Al cambiar piezas mecánicas.",
+   "before": [
+    "flow"
+   ],
+   "steps": [
+    "Subir la aceleración y la velocidad de la prueba para provocar vibraciones (por ejemplo 2000 mm/s² y 100 mm/s), con filamento opaco y brillante.",
+    "Imprimir la torre con el valor subiendo y ver dónde las esquinas pierden filo.",
+    "Repetir con un rango más fino."
+   ],
+   "read": [
+    {
+     "look": "Toda la torre igual",
+     "means": "Probablemente es el tope del firmware"
+    }
+   ],
+   "result": {
+    "key": "machine.corner_speed",
+    "text": "El valor a la altura donde las esquinas todavía están bien. Rangos: desvío de esquina de Marlin 2 entre 0,01 y 0,3 mm; jerk clásico unos 1 a 20 mm/s."
+   },
+   "tips": [
+    "Después, volver la aceleración y la velocidad a lo normal."
+   ],
+   "sources": [
+    "orca_wiki"
+   ]
+  },
+  {
+   "id": "input_shaping",
+   "name": "Input shaping (vibraciones)",
+   "group": "printer",
+   "order": 12,
+   "why": "Compensa las vibraciones de la impresora que dejan ondas (ringing) después de las esquinas.",
+   "repeat": "Una vez al año, o al mover la impresora o cambiar correas, motores o estructura.",
+   "before": [
+    "cornering"
+   ],
+   "steps": [
+    "Si la impresora tiene acelerómetro, usar su medición automática: es más precisa.",
+    "Si no: aceleración alta (unos 20 000 mm/s²) y velocidad alta (unos 200 mm/s), filamento opaco y brillante.",
+    "Prueba de frecuencia (por ejemplo de 15 a 110 Hz): medir en X y en Y la altura donde las ondas desaparecen y leer la frecuencia.",
+    "Prueba de amortiguación con esas frecuencias."
+   ],
+   "read": [
+    {
+     "look": "Ondas que se repiten después de una esquina",
+     "means": "Vibración que el input shaping tiene que compensar"
+    }
+   ],
+   "result": {
+    "where": "printer_firmware",
+    "text": "Tipo, frecuencia en X e Y y amortiguación (típica 0,1 a 0,2) en el firmware o en el G-code de inicio."
+   },
+   "tips": [
+    "Las frecuencias suelen andar entre unos 35 y 75 Hz.",
+    "Más suavizado permite menos aceleración: la aceleración máxima sugerida por la medición no es una recomendación para imprimir, va con margen.",
+    "Después, volver la aceleración y la velocidad a lo normal."
+   ],
+   "sources": [
+    "orca_wiki",
+    "klipper_resonances"
+   ]
+  },
+  {
+   "id": "vfa",
+   "name": "Artefactos verticales finos (VFA)",
+   "group": "printer",
+   "order": 13,
+   "why": "Marcas verticales finas que aparecen a ciertas velocidades por resonancias que el input shaping no saca.",
+   "repeat": "Si aparecen rayas verticales finas en paredes lisas.",
+   "before": [
+    "input_shaping"
+   ],
+   "steps": [
+    "Imprimir la prueba de velocidades.",
+    "Anotar las velocidades donde aparecen las rayas."
+   ],
+   "read": [
+    {
+     "look": "Rayas solo en algunos tramos",
+     "means": "Esas velocidades resuenan: evitarlas en la pared externa"
+    }
+   ],
+   "result": {
+    "key": "speed.outer_wall",
+    "text": "Una velocidad de pared externa fuera de los tramos con rayas."
+   },
+   "tips": [],
+   "sources": [
+    "orca_wiki",
+    "ellis_guide"
+   ]
+  },
+  {
+   "id": "dimensional",
+   "name": "Medidas y encastres",
+   "group": "printer",
+   "order": 14,
+   "why": "Que las piezas encajen: agujeros y contornos a medida.",
+   "repeat": "Al final, después de todo lo demás.",
+   "before": [
+    "flow",
+    "vfa"
+   ],
+   "steps": [
+    "Imprimir la prueba de tolerancias: una base con agujeros con distinta holgura (0; 0,05; 0,1; 0,2; 0,3 y 0,4 mm) y una pieza que entra en ellos.",
+    "Probar con la pieza o con una llave Allen de 6 mm, y medir con calibre."
+   ],
+   "read": [
+    {
+     "look": "La pieza entra justo en un agujero",
+     "means": "Esa holgura es la que hace falta para encastres"
+    }
+   ],
+   "result": {
+    "key": "compensation.hole_offset",
+    "text": "Corregir el tamaño de los agujeros y, si hace falta, el de los contornos (slicing.xy_offset), y volver a probar."
+   },
+   "tips": [
+    "Primero que se vea bien; después las medidas.",
+    "Para ABS, una contracción en XY de 100 a 101 % suele bastar; no tocar los pasos por mm del firmware."
+   ],
+   "sources": [
+    "orca_wiki",
+    "ellis_guide"
+   ]
+  }
+ ]
+}
