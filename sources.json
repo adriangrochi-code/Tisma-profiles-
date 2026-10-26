@@ -3,5 +3,10 @@
   "repository": "https://github.com/adriangrochi-code/Nuevo-slicer-basado-en-prusa-",
   "commit": "a6b4f623ed51ab885169cfbb7f107f67b44d0f9c",
   "directory": "resources/profiles"
+ },
+ "uvtools": {
+  "repository": "https://github.com/sn4k3/UVtools",
+  "commit": "de8580dbfb3cd0aba56f483552d5d7632e4b29a7",
+  "directory": "PrusaSlicer"
  }
 }

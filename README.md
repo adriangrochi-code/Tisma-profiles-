@@ -9,17 +9,20 @@ sources.*
 
 ## Qué hay
 
-Versión del 26-10-2026, convertida desde los perfiles de Tisma Slicer:
+Versión del 26-10-2026, convertida desde los perfiles de Tisma Slicer y las impresoras de resina de UVtools:
 
 | Qué | Cantidad |
 |---|---|
-| Fabricantes (paquetes de origen) | 215 |
-| Impresoras FDM (una por modelo y boquilla) | 2317 |
-| Impresoras de resina | 13 |
+| Paquetes de origen (fabricantes) | 236 |
+| Modelos de impresora FDM | 902, con 2261 boquillas o variantes |
+| Modelos de impresora de resina | 156 |
 | Filamentos | 11 651 |
 | Perfiles de impresión | 4483 |
 | Resinas | 484 |
-| Perfiles de impresión de resina | 12 |
+| Perfiles de impresión de resina | 36 |
+
+Cada modelo está una sola vez: lo que comparten sus boquillas se guarda una vez, y cada boquilla solo con lo que
+cambia. Los 24 modelos que venían de dos fuentes se guardan una sola vez.
 
 Cada perfil trae:
 - los ajustes que entiende el motor, con sus nombres;
@@ -57,5 +60,6 @@ Cómo agregarlos: `docs/COMMUNITY.md`.
 
 - **Perfiles de PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0.
 - **Definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`).
+- **Impresoras de resina y perfiles universales de UVtools:** AGPL-3.0.
 - **El paquete y las herramientas:** AGPL-3.0 o posterior (`LICENSE`).
 - **Cada perfil** dice su licencia y su origen.

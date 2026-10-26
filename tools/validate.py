@@ -6,6 +6,7 @@ Usage: validate.py <pack dir> <tisma-engine binary> <report.json> [--jobs N] [--
 """
 
 import argparse
+import copy
 import collections
 import concurrent.futures
 import itertools
@@ -40,6 +41,17 @@ def merge(dst, src):
     return dst
 
 
+def printer_entry(pack, ref, cache={}):
+    """The printer of a model variant ('model file#variant'), with the model's common settings merged in."""
+    path, vid = ref.split('#', 1)
+    if path not in cache:
+        cache[path] = json.load(open(os.path.join(pack, path), encoding='utf-8'))
+    doc = cache[path]
+    var = next(v for v in doc['variants'] if v['id'] == vid)
+    settings = merge(copy.deepcopy(doc['common']['settings']), copy.deepcopy(var['settings']))
+    return {'technology': doc['technology'], 'profile': {'settings': settings}, 'defaults': var['defaults']}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pack')
@@ -54,7 +66,7 @@ def main():
     work = []
     for v in index['vendors']:
         for rel in v['printers']:
-            e = json.load(open(os.path.join(args.pack, rel), encoding='utf-8'))
+            e = printer_entry(args.pack, rel)
             if e['technology'] != 'fff':
                 continue
             fil = (e['defaults']['filament'] or [None])[0]
@@ -69,7 +81,7 @@ def main():
 
         def printer(rel):
             if rel not in loaded:
-                loaded[rel] = json.load(open(os.path.join(args.pack, rel), encoding='utf-8'))
+                loaded[rel] = printer_entry(args.pack, rel)
             return loaded[rel]
         for v in index['vendors']:
             for group in ('filaments', 'prints'):

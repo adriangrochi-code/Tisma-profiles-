@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Converts the Tisma Slicer vendor bundles (PrusaSlicer INI format, with the profiles it took from PrusaSlicer,
-OrcaSlicer, Creality Print, Elegoo Slicer and Cura) into a Tisma profile pack (docs/FORMAT.md).
+OrcaSlicer, Creality Print, Elegoo Slicer and Cura) and the UVtools resin printer profiles into a Tisma profile pack
+(docs/FORMAT.md).
 
 Each profile keeps every value of its source (inheritance resolved) under "original", and the values the engine
 understands, under its own keys (the engine's docs/CONFIG.md), under "profile.settings".
 
-Usage: convert.py <profiles dir> <out dir> [--source-commit SHA]
+Usage: convert.py <profiles dir> <out dir> [--source-commit SHA] [--uvtools DIR --uvtools-commit SHA]
 """
 
 import argparse
@@ -18,7 +19,7 @@ import re
 import shutil
 import sys
 
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -76,6 +77,69 @@ class Bundle:
         out.update(values)
         out.pop('inherits', None)
         return out
+
+
+class SyntheticBundle(Bundle):
+    """A bundle made from loose preset files (one preset per file, every value written, no section header)."""
+
+    def __init__(self, bundle_id, vendor_name):
+        self.path = ''
+        self.id = bundle_id
+        self.vendor = {'name': vendor_name}
+        self.models = collections.OrderedDict()
+        self.sections = collections.OrderedDict()
+
+
+def read_preset(path):
+    values = {}
+    with open(path, encoding='utf-8') as f:
+        for line in f:
+            line = line.rstrip('\r\n')
+            if not line or line.lstrip().startswith('#') or '=' not in line:
+                continue
+            k, v = line.split('=', 1)
+            values[k.strip()] = v.strip()
+    values.pop('inherits', None)  # exported presets carry every value; the parent is not part of the bundle
+    return values
+
+
+def uvtools_bundles(root):
+    """UVtools ships resin printers (PrusaSlicer/printer/<Vendor> <Model>.ini) and generic resin print profiles
+    (PrusaSlicer/sla_print/*.ini)."""
+    out = collections.OrderedDict()
+    pdir = os.path.join(root, 'PrusaSlicer', 'printer')
+    for f in sorted(os.listdir(pdir)):
+        if not f.endswith('.ini'):
+            continue
+        name = f[:-4]
+        vendor, _, model = name.partition(' ')
+        b = out.setdefault(vendor, SyntheticBundle('UVtools_' + slug(vendor), vendor))
+        c = read_preset(os.path.join(pdir, f))
+        c['printer_technology'] = 'SLA'
+        # The resin bundles of the makers fit 'PRINTER_TECHNOLOGY_SLA' printers of their brand; UVtools does not write
+        # that keyword, so its printers would only get the generic Prusa resins.
+        if 'PRINTER_TECHNOLOGY_SLA' not in c.get('printer_notes', ''):
+            c['printer_notes'] = c.get('printer_notes', '') + '\\nPRINTER_TECHNOLOGY_SLA'
+        mid = slug(model or name)
+        # printer_model stays as written (UVtools sets the one whose resin materials fit); the pack model is apart.
+        c['pack_model'] = mid
+        c['printer_variant'] = c.get('printer_variant') or 'default'
+        m = re.search(r'FILEFORMAT_([A-Za-z0-9_.]+)', c.get('printer_notes', ''))
+        if m:
+            c['file_format'] = m.group(1).lower()
+        b.sections[('printer', name)] = c
+        b.models[mid] = {'name': name, 'technology': 'SLA', 'family': vendor, 'variants': 'default'}
+    sdir = os.path.join(root, 'PrusaSlicer', 'sla_print')
+    if os.path.isdir(sdir):
+        b = SyntheticBundle('UVtools_Universal', 'UVtools universal resin print profiles')
+        for f in sorted(os.listdir(sdir)):
+            if f.endswith('.ini'):
+                c = read_preset(os.path.join(sdir, f))
+                c['compatible_printers'] = ''
+                c['compatible_printers_condition'] = ''
+                b.sections[('sla_print', f[:-4])] = c
+        out['~universal'] = b
+    return list(out.values())
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -542,6 +606,8 @@ class Writer:
 
 
 def license_of(bundle_id):
+    if bundle_id.startswith('UVtools_'):
+        return 'AGPL-3.0-or-later', 'UVtools resin printer profiles'
     if bundle_id.startswith('Cura_') or bundle_id == 'Belt_BLACKBELT_3D':
         return 'LGPL-3.0-or-later', 'UltiMaker Cura / BlackBelt Cura definitions'
     if bundle_id.startswith('Orca_'):
@@ -553,15 +619,164 @@ def license_of(bundle_id):
     return 'AGPL-3.0-or-later', 'PrusaSlicer / Tisma Slicer vendor profiles'
 
 
+def canonical_vendor(bundle_id):
+    s = re.sub(r'^(orca|crealityprint|elegooslicer|cura|belt|uvtools)_', '', bundle_id.lower())
+    s = re.sub(r'sla$', '', s)
+    s = re.sub(r'research|technologies|technology|3d$', '', s)
+    return re.sub(r'[^a-z0-9]', '', s)
+
+
+def canonical_model(name, vendor_words):
+    s = name.lower().replace('original ', '')
+    for word in sorted(vendor_words, key=len, reverse=True):
+        if word:
+            s = s.replace(word, '')
+    return re.sub(r'[^a-z0-9]', '', s)
+
+
+def diff_settings(common, full):
+    out = {}
+    for group, values in full.items():
+        if not isinstance(values, dict):
+            if common.get(group) != values:
+                out[group] = values
+            continue
+        for k, v in values.items():
+            if common.get(group, {}).get(k, object()) != v:
+                out.setdefault(group, {})[k] = v
+    return out
+
+
+def common_settings(settings_list):
+    if not settings_list:
+        return {}
+    out = {}
+    first = settings_list[0]
+    for group, values in first.items():
+        if not isinstance(values, dict):
+            continue
+        for k, v in values.items():
+            if all(s.get(group, {}).get(k, object()) == v for s in settings_list[1:]):
+                out.setdefault(group, {})[k] = v
+    return out
+
+
+def common_flat(dicts):
+    if not dicts:
+        return {}
+    return {k: v for k, v in dicts[0].items() if all(d.get(k, object()) == v for d in dicts[1:])}
+
+
+def build_models(w, index, printer_entries):
+    """One file per printer model, with what its nozzles (or variants) share written once and, per variant, only what
+    changes. Models that two sources both have are kept once: from the manufacturer's own bundle when there is one.
+    Returns {printer entry path: 'model file#variant id'}."""
+    refs = {}
+    groups = collections.OrderedDict()  # canonical (vendor, model) -> [(vendor dict, model dict)]
+    for v in index['vendors']:
+        words = {v['name'].lower(), canonical_vendor(v['id'])} | set(v['name'].lower().split())
+        for m in v['models']:
+            if not m['printers']:
+                continue
+            key = (m['technology'], canonical_vendor(v['id']), canonical_model(m['name'], words))
+            groups.setdefault(key, []).append((v, m))
+    # Printers without a model of their own get one each.
+    in_model = {rel for v in index['vendors'] for m in v['models'] for rel in m['printers']}
+    for v in index['vendors']:
+        for rel in v['printers']:
+            if rel not in in_model:
+                e = printer_entries[rel]
+                m = {'id': e['profile']['name'], 'name': e['profile']['name'], 'technology': e['technology'],
+                     'family': '', 'variants': [], 'default_materials': [], 'assets': {}, 'printers': [rel]}
+                v['models'].append(m)
+                groups.setdefault((e['technology'], v['id'], rel), []).append((v, m))
+
+    def preference(item):
+        v, m = item
+        derived = bool(re.match(r'^(Orca|CrealityPrint|ElegooSlicer|Cura|Belt|UVtools)_', v['id']))
+        return (derived, -len(m['printers']))
+
+    for key, items in groups.items():
+        items.sort(key=preference)
+        keep_v, keep_m = items[0]
+        entries = [(rel, printer_entries[rel]) for rel in keep_m['printers']]
+        variants = []
+        seen = set()
+        for rel, e in entries:
+            vid = (e.get('variant') or '').strip()
+            nozzle = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
+            if not vid or vid == 'default':
+                vid = str(nozzle) if nozzle is not None and len(entries) > 1 else 'default'
+            if vid in seen:
+                vid = e['profile']['name']
+            seen.add(vid)
+            variants.append((vid, nozzle, rel, e))
+        common = common_settings([e['profile']['settings'] for _, _, _, e in variants])
+        original_common = common_flat([e['original'] for _, _, _, e in variants])
+        first = variants[0][3]
+        path = w.path(os.path.dirname(os.path.dirname(keep_m['printers'][0])), 'models', slug(keep_m['name']) + '.json')
+        default_variant = next((vid for vid, n, rel, e in variants if n == 0.4 and not re.match(r'(?i)hf', vid)),
+                               variants[0][0])
+        doc = {'format': 'tisma-pack-model', 'version': FORMAT_VERSION, 'technology': keep_m['technology'],
+               'vendor': keep_v['name'], 'model': {'id': keep_m['id'], 'name': keep_m['name'],
+                                                    'family': keep_m.get('family', '')},
+               'assets': keep_m.get('assets', {}), 'license': first['license'], 'origin': first['origin'],
+               'default_variant': default_variant,
+               'common': {'settings': common}, 'variants': []}
+        for vid, nozzle, rel, e in variants:
+            var = {'id': vid, 'nozzle': nozzle, 'name': e['profile']['name'],
+                   'settings': diff_settings(common, e['profile']['settings']),
+                   'defaults': e.get('defaults', {}), 'source_defaults': e.get('source_defaults', {})}
+            for k in ('not_converted',):
+                if k in e:
+                    var[k] = e[k]
+            var['original'] = {k: v for k, v in e['original'].items() if original_common.get(k, object()) != v}
+            doc['variants'].append(var)
+            refs[rel] = path + '#' + vid
+        doc['original_common'] = original_common
+        merged = []
+        for v, m in items[1:]:
+            # The same printer from another source: its printers point at the variant with the same nozzle.
+            for rel in m['printers']:
+                e = printer_entries[rel]
+                n = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
+                hf = bool(re.match(r'(?i)hf', e.get('variant') or ''))
+                match = next((vid for vid, n2, r2, e2 in variants if n2 == n and
+                              bool(re.match(r'(?i)hf', vid)) == hf), default_variant)
+                refs[rel] = path + '#' + match
+            merged.append({'bundle': v['id'], 'model': m['name'], 'license': printer_entries[m['printers'][0]]['license'],
+                           'origin': printer_entries[m['printers'][0]]['origin']})
+            m['merged_into'] = path
+            w.stats['models merged from a second source'] += 1
+        if merged:
+            doc['also_in'] = merged
+        w.write(path, doc)
+        keep_m['file'] = path
+        keep_m['variants'] = [{'id': vid, 'nozzle': n} for vid, n, rel, e in variants]
+        keep_m['default_variant'] = default_variant
+        w.stats['models'] += 1
+        w.stats['model variants'] += len(variants)
+    for v in index['vendors']:
+        for m in v['models']:
+            m.pop('printers', None)
+        v['models'] = [m for m in v['models'] if 'file' in m]
+        v['printers'] = sorted({refs[r] for r in v['printers'] if refs[r].startswith('vendors/%s/' % slug(v['id']))})
+    return refs
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('profiles')
     ap.add_argument('out')
     ap.add_argument('--source-commit', default='')
+    ap.add_argument('--uvtools', help='a checkout of UVtools, for its resin printer profiles')
+    ap.add_argument('--uvtools-commit', default='')
     args = ap.parse_args()
 
     bundles = [Bundle(os.path.join(args.profiles, f)) for f in sorted(os.listdir(args.profiles))
                if f.endswith('.ini')]
+    if args.uvtools:
+        bundles += uvtools_bundles(args.uvtools)
     everything = {}
     for b in bundles:
         for key, values in b.sections.items():
@@ -574,7 +789,11 @@ def main():
                         'https://github.com/adriangrochi-code/Nuevo-slicer-basado-en-prusa-',
                         'commit': args.source_commit, 'directory': 'resources/profiles'},
              'license': 'AGPL-3.0-or-later', 'vendors': []}
+    if args.uvtools:
+        index['other_sources'] = [{'program': 'UVtools', 'repository': 'https://github.com/sn4k3/UVtools',
+                                   'commit': args.uvtools_commit, 'directory': 'PrusaSlicer'}]
     all_printers = []  # (config, entry id) of every FDM printer, for the generic (template) bundles
+    all_sla = []  # the same for resin printers: resin materials name their printers by keywords of any bundle
     deferred = []
     printer_ids = {}  # entry path -> number, its place in index['printers']
     compat_sets = {}  # tuple of printer numbers -> set number
@@ -604,7 +823,7 @@ def main():
             rel = w.path(vdir, 'printers', slug(name) + '.json')
             entry = {'format': 'tisma-pack-entry', 'version': FORMAT_VERSION,
                      'technology': 'sla' if sla else 'fff', 'vendor': vendor_name,
-                     'model': c.get('printer_model', ''), 'variant': c.get('printer_variant', ''),
+                     'model': c.get('pack_model', c.get('printer_model', '')), 'variant': c.get('printer_variant', ''),
                      'profile': {'format': 'tisma-profile', 'version': 1, 'kind': 'printer', 'name': name,
                                  'settings': settings},
                      'defaults': {'filament': split_list(c.get('default_filament_profile', ''))
@@ -624,8 +843,7 @@ def main():
             printer_ids[rel] = len(printer_ids)
             printer_names[(b.id, name)] = rel
             printers.append((c, rel, sla))
-            if not sla:
-                all_printers.append((c, rel))
+            (all_sla if sla else all_printers).append((c, rel))
             w.stats['sla printers' if sla else 'printers'] += 1
 
         for mid, m in b.models.items():
@@ -644,7 +862,7 @@ def main():
                     shutil.copyfile(src, os.path.join(args.out, rel))
                     assets[key] = rel
             model['assets'] = assets
-            model['printers'] = [rel for c, rel, sla in printers if c.get('printer_model') == mid]
+            model['printers'] = [rel for c, rel, sla in printers if c.get('pack_model', c.get('printer_model')) == mid]
             vendor['models'].append(model)
 
         deferred.append((b, vendor, printers, vdir, lic, origin))
@@ -662,7 +880,7 @@ def main():
     for b, vendor, printers, vdir, lic, origin in deferred:
         generic = b.id in ('Templates',) or not printers
         targets = [(c, rel) for c, rel in all_printers] if generic else [(c, rel) for c, rel, sla in printers]
-        sla_targets = [(c, rel) for c, rel, sla in printers if sla]
+        sla_targets = all_sla
         for (kind, name), values in b.sections.items():
             if name.startswith('*') or kind not in ('filament', 'print', 'sla_material', 'sla_print'):
                 continue
@@ -742,9 +960,12 @@ def main():
                 out.append(hit[0])
         if out:
             return out, 'source'
-        for own in (True, False):
+        # The first compatible one of the printer's own bundle, then of a bundle of the same maker, then of any.
+        brand = canonical_vendor(bid)
+        for rank in (0, 1, 2):
             for b2, r2, compat in by_kind[kind]:
-                if (b2 == bid) == own and compat is not None and fits(compat, pid):
+                level = 0 if b2 == bid else 1 if canonical_vendor(b2) == brand else 2
+                if level == rank and compat is not None and fits(compat, pid):
                     return [r2], 'compatible'
         return [], 'none'
 
@@ -762,13 +983,28 @@ def main():
             w.stats['default filament: ' + how_f] += 1
         w.stats['default print: ' + how_p] += 1
         entry['source_defaults'] = d
-        w.write(rel, entry)
+
+    refs = build_models(w, index, printer_entries)
+
+    # The compatible sets name printers by their place in index['printers']: move them to the model variants
+    # (several source printers can end on the same variant when a model came from two sources).
+    old = sorted(printer_ids, key=printer_ids.get)
+    unique = []
+    place = {}
+    for rel in old:
+        ref = refs[rel]
+        if ref not in place:
+            place[ref] = len(unique)
+            unique.append(ref)
+    remapped = {}
+    for key, n in compat_sets.items():
+        remapped[n] = sorted({place[refs[old[i]]] for i in key})
+    index['printers'] = unique
+    compat_out = [remapped[n] for n in range(len(compat_sets))]
 
     for v in index['vendors']:
         v['counts'] = {k: len(v[k]) for k in ('models', 'printers', 'filaments', 'prints', 'resins', 'resin_prints')}
-    index['printers'] = sorted(printer_ids, key=printer_ids.get)
-    w.write('compatible.json', {'format': 'tisma-pack-compatible', 'version': FORMAT_VERSION,
-                                'sets': [list(k) for k in sorted(compat_sets, key=compat_sets.get)]})
+    w.write('compatible.json', {'format': 'tisma-pack-compatible', 'version': FORMAT_VERSION, 'sets': compat_out})
     index['counts'] = dict(w.stats)
     w.write('index.json', index)
     w.write('stats.json', {'counts': dict(w.stats),

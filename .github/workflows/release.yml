@@ -25,6 +25,7 @@ jobs:
           echo "repo=$(jq -r '.tisma_slicer.repository' sources.json | sed 's#https://github.com/##')" >> "$GITHUB_OUTPUT"
           echo "commit=$(jq -r '.tisma_slicer.commit' sources.json)" >> "$GITHUB_OUTPUT"
           echo "dir=$(jq -r '.tisma_slicer.directory' sources.json)" >> "$GITHUB_OUTPUT"
+          echo "uv_commit=$(jq -r '.uvtools.commit' sources.json)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v4
         with:
@@ -32,6 +33,13 @@ jobs:
           ref: ${{ steps.src.outputs.commit }}
           path: source
           sparse-checkout: ${{ steps.src.outputs.dir }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: sn4k3/UVtools
+          ref: ${{ steps.src.outputs.uv_commit }}
+          path: uvtools
+          sparse-checkout: PrusaSlicer
 
       - uses: actions/setup-python@v5
         with:
@@ -41,7 +49,7 @@ jobs:
         run: python3 tools/check_community.py community
 
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}"
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}"
 
       - name: Package
         id: pkg
