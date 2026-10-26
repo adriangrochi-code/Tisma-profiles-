@@ -1,0 +1,80 @@
+{
+ "format": "tisma-knowledge-procedures",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {"id": "barajas_problemas", "title": "Guía de solución de problemas de impresión 3D v3.3.1", "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"}
+ ],
+ "notes": ["Texto propio, a partir de los procedimientos de la guía citada. Cada paso es una acción en la impresora; ningún paso cambia ajustes del laminado."],
+ "procedures": [
+  {
+   "id": "level_bed",
+   "name": "Nivelar la cama y ajustar la primera capa",
+   "for": "Primera capa que no se pega, boquilla que raspa, pie de elefante.",
+   "steps": [
+    {"title": "Limpiar la cama", "text": "Limpiar con alcohol isopropílico (mejor al 99 %) o lavar con agua y detergente. Si el material o la superficie lo piden, poner una capa fina de adhesivo."},
+    {"title": "Apretar los resortes", "text": "Si la cama tiene perillas debajo, girarlas para comprimir los resortes antes de nivelar: con los resortes flojos, la nivelación dura poco."},
+    {"title": "Nivelar como dice el fabricante", "text": "Seguir el procedimiento de la impresora (sensor, varios sensores o a mano) hasta el momento en que pide imprimir una prueba."},
+    {"title": "Imprimir una prueba lenta", "text": "Laminar una capa de prueba que cubra la cama, con la primera capa a 10 mm/s, y mandarla a imprimir."},
+    {"title": "Mirar las líneas", "text": "Bien: líneas planas, pegadas entre sí. Muy cerca: líneas finas, transparentes o con grumos. Muy lejos: líneas redondas y separadas, se ve la cama entre ellas."},
+    {"title": "Corregir", "text": "Con nivelación automática: ajustar el Z-offset (también llamado «baby steps») durante la impresión, con menos para acercar y más para alejar; el cambio tarda de 20 a 40 s en verse. Con nivelación manual: dividir la cama en cuadrantes, uno por perilla, y girar la perilla del cuadrante que salga mal."},
+    {"title": "Guardar", "text": "Cuando la primera capa sale bien, cancelar la prueba y guardar el Z-offset si la impresora lo pregunta."}
+   ]
+  },
+  {
+   "id": "unclog_nozzle",
+   "name": "Destapar la boquilla (tirón en frío)",
+   "for": "Boquilla tapada del todo o en parte.",
+   "warnings": ["Trabajar con la boquilla caliente con cuidado: quema.", "No usar pinzas ni tijeras para cortar el tubo de teflón: aplastado causa atascos."],
+   "steps": [
+    {"title": "Sacar el tubo", "text": "Si hay tubo de teflón en la entrada del hotend o del extrusor, apretar el anillo del conector y tirar del tubo. Si el tubo está gastado donde lo muerde el conector, cortar esa parte con un corte recto (un cortador o una guía impresa ayudan)."},
+    {"title": "Calentar y tirar", "text": "Calentar la boquilla a la temperatura del filamento y, mientras sube, tirar del filamento con firmeza (con extrusor directo, apretando la palanca). Al llegar a cierta temperatura se suelta y sale con la suciedad pegada en la punta."},
+    {"title": "Repetir", "text": "Cortar la punta sucia, volver a meter el filamento y empujar. Dejar enfriar y repetir dos o tres veces hasta que la punta salga limpia."},
+    {"title": "Si no alcanza", "text": "Con la boquilla caliente, pasar con pinzas una aguja de limpieza de boquillas para mover el tapón, y volver a hacer el tirón en frío."},
+    {"title": "Terminar", "text": "Armar todo y limpiar la boquilla por fuera con un cepillo de cerdas metálicas."}
+   ],
+   "prevention": ["Mantener los filamentos limpios y sin polvo (un filtro de esponja en la entrada ayuda).",
+                  "No dejar la boquilla caliente mucho tiempo sin extruir: el plástico se quema.",
+                  "Los filamentos con partículas (fibra de carbono, brillo en la oscuridad, ESD) tapan boquillas chicas como 0,4 y 0,25 mm."]
+  },
+  {
+   "id": "extruder_tension",
+   "name": "Ajustar la presión del extrusor",
+   "for": "Extrusor que patina, filamento mordido, flexibles.",
+   "steps": [
+    {"title": "Calentar", "text": "Calentar la boquilla a la temperatura del filamento que se va a usar."},
+    {"title": "Ubicar el ajuste", "text": "Buscar cómo se regula el resorte del extrusor (tuerca, tornillo o perilla). Algunos extrusores no tienen ajuste."},
+    {"title": "Extruir y sentir", "text": "Desde la pantalla, extruir unos 100 mm y, mientras sale, frenar el filamento con los dedos a la entrada."},
+    {"title": "Buscar el punto", "text": "Girar el ajuste de a poco hacia un lado hasta el tope y después hacia el otro, sintiendo dónde el extrusor tira con más fuerza sin aplastar el filamento."},
+    {"title": "Anotar", "text": "Ese ajuste vale para ese filamento: los flexibles suelen pedir otra presión."}
+   ]
+  },
+  {
+   "id": "ptfe_tube",
+   "name": "Ajustar el tubo de teflón del hotend",
+   "for": "Atascos o poco flujo en hotends con tubo de teflón hasta la boquilla.",
+   "applies_to": "Hotends con barrel para tubo de teflón; no a los barrel de metal (all-metal).",
+   "steps": [
+    {"title": "Ver dónde se filtra", "text": "Con el uso, el plástico se mete entre el tubo y la boquilla (o el fondo del barrel) y el tubo retrocede."},
+    {"title": "Revisar el tubo", "text": "Desarmar y mirar la punta del tubo: si está quemada o deformada, reemplazarlo. Hay tubos que aguantan más temperatura (por ejemplo, los Capricorn)."},
+    {"title": "Trabarlo", "text": "Volver a meter el tubo hasta que toque la boquilla o el fondo del barrel y trabarlo en el conector, para que no pueda retroceder."}
+   ]
+  },
+  {
+   "id": "dry_filament",
+   "name": "Secar el filamento",
+   "for": "Hilos, burbujas, crujidos, medidas grandes.",
+   "steps": [
+    {"title": "Ver el material", "text": "Buscar la temperatura y las horas de secado del material (materials.json, «drying»). Nunca pasar la temperatura máxima: el filamento se ablanda y la bobina se deforma."},
+    {"title": "Elegir las horas", "text": "Antes de imprimir alcanza con el tiempo corto; con humedad leve (hilos), el intermedio; con humedad severa (burbujas, crujidos), el largo."},
+    {"title": "Secar", "text": "Usar un secador de filamento, o un horno que mantenga la temperatura de forma estable, con la bobina sin la bolsa."},
+    {"title": "Guardar", "text": "Guardar en bolsa hermética o caja con desecante. Guardar así evita que tome más humedad, pero no saca la que ya tiene."}
+   ],
+   "notes": ["Un filamento nuevo y cerrado puede venir húmedo; no es un defecto.",
+             "Dos bobinas del mismo material y la misma marca pueden tomar humedad distinto.",
+             "Los hilos son el primer síntoma; las burbujas y el filamento quebradizo aparecen con mucha humedad.",
+             "El desecante se regenera a 65-70 °C, de 3 a 8 h."]
+  }
+ ]
+}

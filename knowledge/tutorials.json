@@ -1,0 +1,78 @@
+{
+ "format": "tisma-knowledge-tutorials",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {"id": "barajas_problemas", "title": "Guía de solución de problemas de impresión 3D v3.3.1", "author": "Rafa Barajas", "url": "https://www.rafabarajas.com"},
+  {"id": "barajas_materiales", "title": "Guía de materiales de impresión 3D v3.2", "author": "Rafa Barajas", "url": "https://www.rafabarajas.com"}
+ ],
+ "notes": [
+  "Texto propio. Cada paso señala una parte de la interfaz por su ancla (anchor), que la ficha del asistente del motor define, y opcionalmente espera una acción de la persona (wait_for) para avanzar solo.",
+  "Los tutoriales se pueden saltar, pausar y retomar."
+ ],
+ "tutorials": [
+  {
+   "id": "first_print",
+   "name": "Tu primera impresión",
+   "when": "first_start",
+   "minutes": 5,
+   "steps": [
+    {"anchor": "printer_selector", "title": "Tu impresora", "text": "Elegí el modelo de tu impresora. La boquilla se elige aparte; si no la cambiaste, es de 0,4 mm.", "wait_for": "printer_selected"},
+    {"anchor": "filament_selector", "title": "El filamento", "text": "Elegí el filamento que vas a usar. Si no sabés cuál, empezá con PLA: es el más fácil.", "wait_for": "filament_selected"},
+    {"anchor": "plate", "title": "El modelo", "text": "Arrastrá un archivo STL o 3MF a la placa, o abrilo desde Archivo. Para probar, podés usar el cubo de calibración.", "wait_for": "model_added"},
+    {"anchor": "plate_tools", "title": "Acomodarlo", "text": "Con las herramientas de la placa movés, girás o escalás el modelo. «Apoyar cara» pone una cara plana sobre la cama: menos soportes y mejor adherencia."},
+    {"anchor": "quick_settings", "title": "Calidad, relleno y soportes", "text": "La altura de capa decide detalle contra tiempo. El relleno, cuánto se llena por dentro (15 a 20 % alcanza para casi todo). Activá soportes si el modelo tiene partes en el aire."},
+    {"anchor": "slice_button", "title": "Laminar", "text": "Laminar corta el modelo en capas y prepara el archivo para la impresora.", "wait_for": "sliced"},
+    {"anchor": "preview", "title": "Revisar", "text": "En la vista previa mirás capa por capa. Revisá los avisos: dicen qué puede salir mal y en qué capa."},
+    {"anchor": "send_button", "title": "Imprimir", "text": "Mandalo por la red, por USB o guardalo en una memoria. Mirá la primera capa: si no se pega bien, el asistente de problemas te ayuda."}
+   ]
+  },
+  {
+   "id": "first_layer",
+   "name": "Nivelar y lograr una buena primera capa",
+   "when": "on_request",
+   "minutes": 10,
+   "steps": [
+    {"anchor": "help_procedures", "title": "Por qué importa", "text": "Casi todos los problemas empiezan en la primera capa: si la boquilla está muy cerca, no sale plástico; muy lejos, no se pega."},
+    {"anchor": "help_procedures", "title": "Paso a paso", "text": "Seguí el procedimiento «Nivelar la cama y ajustar la primera capa»: limpiar, nivelar, imprimir una prueba lenta y corregir el Z-offset.", "open": {"type": "procedure", "id": "level_bed"}},
+    {"anchor": "calibrations", "title": "Prueba de primera capa", "text": "La calibración de primera capa imprime parches en toda la cama para ver dónde está cerca o lejos.", "open": {"type": "calibration", "id": "first_layer"}}
+   ]
+  },
+  {
+   "id": "new_material",
+   "name": "Probar un material nuevo",
+   "when": "new_filament",
+   "minutes": 8,
+   "steps": [
+    {"anchor": "filament_selector", "title": "Los datos del material", "text": "El panel del filamento muestra temperaturas, cama, cabina, ventilador y secado de partida para su tipo. Si el fabricante da otros valores, mandan los del fabricante."},
+    {"anchor": "filament_selector", "title": "¿Necesita algo especial?", "text": "Fijate si pide cama caliente, impresora cerrada o boquilla de acero endurecido (los que tienen fibras o partículas). El asistente avisa si tu impresora no lo tiene."},
+    {"anchor": "help_procedures", "title": "Secarlo", "text": "Muchos materiales conviene secarlos antes de imprimir; con hilos o burbujas, secarlos más tiempo.", "open": {"type": "procedure", "id": "dry_filament"}},
+    {"anchor": "calibrations", "title": "Calibrar en orden", "text": "Para ajustarlo fino, en este orden: torre de temperatura, flujo, retracción, flujo máximo y enfriamiento. Cada prueba guarda su resultado en el perfil del filamento.", "open": {"type": "calibration", "id": "temperature_tower"}}
+   ]
+  },
+  {
+   "id": "fix_problem",
+   "name": "Algo salió mal",
+   "when": "on_request",
+   "minutes": 3,
+   "steps": [
+    {"anchor": "help_problems", "title": "Elegí el problema", "text": "Buscá por lo que ves: hilos, capas corridas, esquinas levantadas, primera capa… Cada problema tiene sus causas, de la más común a la menos común."},
+    {"anchor": "help_problems", "title": "Revisá en orden", "text": "Para cada causa hay una pregunta para confirmarla. Empezá por la de arriba: cambiar varias cosas a la vez confunde."},
+    {"anchor": "help_problems", "title": "Aplicá el arreglo", "text": "Si el arreglo es un ajuste, «Aplicar» muestra el valor de antes y el de después y lo cambia en tu perfil; «Deshacer» lo vuelve atrás."}
+   ]
+  },
+  {
+   "id": "engineering",
+   "name": "¿Resiste mi pieza? (Ingeniería)",
+   "when": "first_open:engineering",
+   "minutes": 6,
+   "steps": [
+    {"anchor": "engineering_panel", "title": "Qué hace", "text": "Ingeniería calcula si la pieza impresa aguanta una carga, con las capas como el punto débil, y propone el relleno mínimo."},
+    {"anchor": "engineering_faces", "title": "Dónde se sujeta", "text": "Hacé clic en las caras que quedan fijas (atornilladas o apoyadas).", "wait_for": "fixed_face_added"},
+    {"anchor": "engineering_loads", "title": "Dónde se carga", "text": "Hacé clic en la cara donde va la fuerza y escribí cuánto pesa o empuja.", "wait_for": "load_added"},
+    {"anchor": "engineering_run", "title": "Calcular", "text": "El resultado colorea la pieza: rojo es donde más trabaja. El veredicto dice si aguanta con tu material y tu relleno.", "wait_for": "analysis_done"},
+    {"anchor": "engineering_apply", "title": "Ajustar", "text": "Podés pedir el relleno mínimo que aguanta, o reforzar solo las zonas rojas, y aplicarlo al laminado."}
+   ]
+  }
+ ]
+}

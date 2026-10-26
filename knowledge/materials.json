@@ -1,0 +1,2236 @@
+{
+ "format": "tisma-knowledge-materials",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {
+   "id": "barajas_materiales",
+   "title": "Guía de materiales de impresión 3D v3.2",
+   "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"
+  },
+  {
+   "id": "barajas_parametros",
+   "title": "Tabla de parámetros base recomendados v2.0",
+   "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"
+  },
+  {
+   "id": "barajas_secado",
+   "title": "Tabla de secado de filamentos",
+   "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"
+  }
+ ],
+ "notes": [
+  "Valores de partida para probar un material nuevo; el fabricante del filamento manda si da otros.",
+  "Temperaturas en °C, retracción en mm, ventilador en %, horas de secado según cuánta humedad tomó el filamento.",
+  "Desecante: se regenera a 65-70 °C, de 3 a 8 h (tabla de secado)."
+ ],
+ "fields": {
+  "nozzle_temp, bed_temp, fan": "de la guía de materiales: rangos [mín, máx] en °C y %",
+  "bed_required, enclosure": "cama caliente y cabina cerrada: necesaria, recomendada, opcional o no necesaria",
+  "nozzle_material, abrasive": "boquilla que pide el material; abrasivo si pide acero endurecido o inoxidable",
+  "surfaces": "superficies o adhesivos de cama con los que se imprime",
+  "base_table": "de la tabla de parámetros base: temperaturas de boquilla, cama y cabina, ventilador, cabina, retracción con extrusor directo y Bowden (mm), boquilla mínima (mm)",
+  "drying": "de la tabla de secado: si conviene secar antes de imprimir, temperatura [mín, máx] y horas antes de imprimir, con humedad leve y con humedad severa"
+ },
+ "materials": [
+  {
+   "name": "PLA",
+   "family": "PLA",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    180,
+    220
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      8,
+      9
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     180,
+     220
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PETG",
+   "family": "PETG",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    220,
+    250
+   ],
+   "bed_temp": [
+    75,
+    90
+   ],
+   "fan": [
+    50,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "Placa fría (Cold plate)",
+    "Cinta de pintor azul",
+    "PEI",
+    "Lámina ABS"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      10,
+      11
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     65,
+     70
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     220,
+     250
+    ],
+    "bed_temp": [
+     75,
+     90
+    ],
+    "chamber_temp": 60,
+    "fan": 50,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": 2.5
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PETG HS",
+   "family": "PETG",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    220,
+    270
+   ],
+   "bed_temp": [
+    80,
+    90
+   ],
+   "fan": [
+    70,
+    100
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      12
+     ]
+    }
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "no necesaria"
+  },
+  {
+   "name": "ABS",
+   "family": "ABS",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    220,
+    280
+   ],
+   "bed_temp": [
+    80,
+    110
+   ],
+   "fan": [
+    25,
+    50
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "recomendada",
+   "surfaces": [
+    "ABS juice",
+    "Base ABS",
+    "PEI",
+    "Placa fría (Cold plate)"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      14,
+      15
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     70,
+     85
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     220,
+     280
+    ],
+    "bed_temp": [
+     80,
+     110
+    ],
+    "chamber_temp": 80,
+    "fan": 25,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "TPU/TPE",
+   "family": "TPU/TPE",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    225,
+    245
+   ],
+   "bed_temp": [
+    20,
+    60
+   ],
+   "fan": [
+    90,
+    100
+   ],
+   "bed_required": "no necesaria",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "Barra de pegamento",
+    "Cinta de pintor azul",
+    "Lámina ABS"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      16,
+      17
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     55,
+     65
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     225,
+     245
+    ],
+    "bed_temp": [
+     20,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 2,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PVB",
+   "family": "PVB",
+   "category": "básicos",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    200,
+    230
+   ],
+   "bed_temp": [
+    20,
+    80
+   ],
+   "fan": [
+    70,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Cinta Kapton"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      18,
+      19
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PLA+",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    210,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      21,
+      22
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     60,
+     75
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     210,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA HS",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    210,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      23,
+      24
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     60,
+     75
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     210,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA mármol",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      25,
+      26
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA glitter",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      27,
+      28
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA seda",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      29,
+      30
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 2,
+    "hours_mild": 4,
+    "hours_severe": 10
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA seda tricolor",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      31,
+      32
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 2,
+    "hours_mild": 4,
+    "hours_severe": 10
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA multicolor",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    230
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      33,
+      34
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA madera",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    220
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa de vidrio con pegamento",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      35,
+      36
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     230
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.8
+   }
+  },
+  {
+   "name": "PLA LW",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    270
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa de vidrio con pegamento",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      37,
+      38
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     270
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PLA con partículas de metal",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      39,
+      40
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     50,
+     60
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     270
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  },
+  {
+   "name": "PLA antibacterial",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    190,
+    220
+   ],
+   "bed_temp": [
+    23,
+    60
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      41,
+      42
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     60,
+     75
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     190,
+     220
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  },
+  {
+   "name": "PLA fotocromático",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    220
+   ],
+   "bed_temp": [
+    50,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      43,
+      44
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PLA termocromático",
+   "family": "PLA",
+   "category": "variantes de PLA de PLA",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    190,
+    220
+   ],
+   "bed_temp": [
+    23,
+    60
+   ],
+   "fan": [
+    80,
+    100
+   ],
+   "bed_required": "opcional",
+   "enclosure": "no necesaria",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa de vidrio con pegamento",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      45,
+      46
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Brilla en la oscuridad",
+   "family": "Brilla",
+   "category": "especiales",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "bed_required": "según el material base",
+   "enclosure": "según el material base",
+   "surfaces": [
+    "Según material base"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      48,
+      49
+     ]
+    }
+   ]
+  },
+  {
+   "name": "ESD",
+   "family": "ESD",
+   "category": "especiales",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "bed_required": "según el material base",
+   "enclosure": "según el material base",
+   "surfaces": [
+    "Según material base"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      50,
+      51
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Con fibra de carbono (CF)",
+   "family": "Con",
+   "category": "especiales",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "bed_required": "según el material base",
+   "enclosure": "según el material base",
+   "surfaces": [
+    "Según material base"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      52,
+      53
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Retardante de llama (FR)",
+   "family": "Retardante",
+   "category": "especiales",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "bed_required": "según el material base",
+   "enclosure": "según el material base",
+   "surfaces": [
+    "Según material base"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      54,
+      55
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Detectable magnéticamente",
+   "family": "Detectable",
+   "category": "especiales",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "bed_required": "según el material base",
+   "enclosure": "según el material base",
+   "surfaces": [
+    "Según material base"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      56,
+      57
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PVA",
+   "family": "PVA",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    180,
+    200
+   ],
+   "bed_temp": [
+    50,
+    60
+   ],
+   "fan": [
+    90,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "opcional",
+   "surfaces": [
+    "Fijador de cabello",
+    "PEI",
+    "Placa fría (Cold plate)",
+    "Barra de pegamento",
+    "Cinta de pintor azul"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      59,
+      60
+     ]
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     45,
+     65
+    ],
+    "hours_before_printing": 3,
+    "hours_mild": 8,
+    "hours_severe": 15
+   }
+  },
+  {
+   "name": "HIPS",
+   "family": "HIPS",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    230,
+    260
+   ],
+   "bed_temp": [
+    90,
+    110
+   ],
+   "fan": [
+    0,
+    30
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "surfaces": [
+    "PEI",
+    "Placa fría (Cold plate)"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      61,
+      62
+     ]
+    }
+   ]
+  },
+  {
+   "name": "ASA",
+   "family": "ASA",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    220,
+    280
+   ],
+   "bed_temp": [
+    90,
+    110
+   ],
+   "fan": [
+    10,
+    25
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "opcional",
+   "surfaces": [
+    "Cinta Kapton",
+    "Láminas PET",
+    "ABS juice",
+    "ASA juice"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      64,
+      65
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     70,
+     85
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     220,
+     280
+    ],
+    "bed_temp": [
+     90,
+     110
+    ],
+    "chamber_temp": 80,
+    "fan": 25,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 0.8,
+     "bowden": 2
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PA (nylon)",
+   "family": "PA",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    240,
+    290
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      66,
+      67
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     70,
+     85
+    ],
+    "hours_before_printing": 3,
+    "hours_mild": 8,
+    "hours_severe": 16
+   },
+   "base_table": {
+    "nozzle_temp": [
+     240,
+     290
+    ],
+    "bed_temp": [
+     45,
+     60
+    ],
+    "chamber_temp": 80,
+    "fan": 100,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 2,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PAHT-CF",
+   "family": "PA",
+   "category": "de ingeniería",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    260,
+    290
+   ],
+   "bed_temp": [
+    45,
+    60
+   ],
+   "fan": [
+    20,
+    40
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      68,
+      69
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PPS-CF",
+   "family": "PPS",
+   "category": "de ingeniería",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    310,
+    340
+   ],
+   "bed_temp": [
+    100,
+    120
+   ],
+   "fan": [
+    20,
+    40
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      70,
+      71
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PP",
+   "family": "PP",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    220,
+    250
+   ],
+   "bed_temp": [
+    85,
+    100
+   ],
+   "fan": [
+    50,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      72,
+      73
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     55,
+     65
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     220,
+     250
+    ],
+    "bed_temp": [
+     85,
+     100
+    ],
+    "chamber_temp": 60,
+    "fan": 50,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 1.6,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PC",
+   "family": "PC",
+   "category": "de ingeniería",
+   "nozzle_material": "latón",
+   "abrasive": false,
+   "nozzle_temp": [
+    260,
+    310
+   ],
+   "bed_temp": [
+    80,
+    120
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "surfaces": [
+    "PEI",
+    "Barra de pegamento",
+    "Adhesivo comercial- Nano Tech"
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      74,
+      75
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "recomendado",
+    "temp": [
+     70,
+     85
+    ],
+    "hours_before_printing": 1,
+    "hours_mild": 3,
+    "hours_severe": 8
+   },
+   "base_table": {
+    "nozzle_temp": [
+     260,
+     310
+    ],
+    "bed_temp": [
+     80,
+     120
+    ],
+    "chamber_temp": 80,
+    "fan": 100,
+    "enclosure": "no necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": 2.5
+    },
+    "nozzle_diameter_min": 0.4
+   }
+  },
+  {
+   "name": "PVDF",
+   "family": "PVDF",
+   "category": "de ingeniería",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    310,
+    340
+   ],
+   "bed_temp": [
+    90,
+    110
+   ],
+   "fan": [
+    0,
+    40
+   ],
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      76
+     ]
+    }
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria"
+  },
+  {
+   "name": "PEI",
+   "family": "PEI",
+   "category": "avanzados",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    370,
+    390
+   ],
+   "bed_temp": [
+    120,
+    160
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      79,
+      80
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     80,
+     90
+    ],
+    "hours_before_printing": 2,
+    "hours_mild": 8,
+    "hours_severe": 16
+   },
+   "base_table": {
+    "nozzle_temp": [
+     370,
+     390
+    ],
+    "bed_temp": [
+     120,
+     160
+    ],
+    "chamber_temp": 100,
+    "fan": 100,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  },
+  {
+   "name": "PEKK",
+   "family": "PEKK",
+   "category": "avanzados",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    345,
+    375
+   ],
+   "bed_temp": [
+    120,
+    140
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      81,
+      82
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     100,
+     120
+    ],
+    "hours_before_printing": 4,
+    "hours_mild": 8,
+    "hours_severe": 16
+   },
+   "base_table": {
+    "nozzle_temp": [
+     345,
+     375
+    ],
+    "bed_temp": [
+     120,
+     140
+    ],
+    "chamber_temp": 150,
+    "fan": 100,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  },
+  {
+   "name": "PEEK",
+   "family": "PEEK",
+   "category": "avanzados",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    375,
+    410
+   ],
+   "bed_temp": [
+    130,
+    145
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      83,
+      84
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     100,
+     120
+    ],
+    "hours_before_printing": 4,
+    "hours_mild": 8,
+    "hours_severe": 16
+   },
+   "base_table": {
+    "nozzle_temp": [
+     345,
+     410
+    ],
+    "bed_temp": [
+     130,
+     145
+    ],
+    "chamber_temp": 140,
+    "fan": 100,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  },
+  {
+   "name": "TPI",
+   "family": "TPI",
+   "category": "avanzados",
+   "nozzle_material": "acero endurecido o inoxidable",
+   "abrasive": true,
+   "nozzle_temp": [
+    420,
+    445
+   ],
+   "bed_temp": [
+    180,
+    220
+   ],
+   "fan": [
+    100,
+    100
+   ],
+   "bed_required": "necesaria",
+   "enclosure": "necesaria",
+   "sources": [
+    {
+     "id": "barajas_materiales",
+     "title": "Guía de materiales de impresión 3D v3.2",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com",
+     "pages": [
+      85,
+      86
+     ]
+    },
+    {
+     "id": "barajas_parametros",
+     "title": "Tabla de parámetros base recomendados v2.0",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    },
+    {
+     "id": "barajas_secado",
+     "title": "Tabla de secado de filamentos",
+     "author": "Rafa Barajas",
+     "url": "https://www.rafabarajas.com"
+    }
+   ],
+   "drying": {
+    "before_printing": "si",
+    "temp": [
+     130,
+     150
+    ],
+    "hours_before_printing": 4,
+    "hours_mild": 8,
+    "hours_severe": 16
+   },
+   "base_table": {
+    "nozzle_temp": [
+     420,
+     445
+    ],
+    "bed_temp": [
+     180,
+     220
+    ],
+    "chamber_temp": 240,
+    "fan": 100,
+    "enclosure": "necesaria",
+    "retraction": {
+     "direct": 1,
+     "bowden": null
+    },
+    "nozzle_diameter_min": 0.6
+   }
+  }
+ ]
+}

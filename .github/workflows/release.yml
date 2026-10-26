@@ -3,7 +3,7 @@ name: Release the profile pack
 on:
   push:
     branches: [main]
-    paths: ['tools/**', 'community/**', 'sources.json', '.github/workflows/release.yml']
+    paths: ['tools/**', 'community/**', 'knowledge/**', 'sources.json', '.github/workflows/release.yml']
   workflow_dispatch:
 
 permissions:
@@ -45,8 +45,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Check the community data
-        run: python3 tools/check_community.py community
+      - name: Check the community data and the knowledge base
+        run: |
+          python3 tools/check_community.py community
+          python3 tools/check_knowledge.py knowledge
 
       - name: Convert
         run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}"
@@ -56,7 +58,7 @@ jobs:
         run: |
           version="$(date -u +%Y.%m.%d)-$(git rev-parse --short HEAD)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          python3 tools/package.py pack community dist --version "$version"
+          python3 tools/package.py pack community dist --version "$version" --knowledge knowledge
           cp pack/stats.json dist/stats.json
 
       - name: Publish

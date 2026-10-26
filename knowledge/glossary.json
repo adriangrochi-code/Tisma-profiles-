@@ -1,0 +1,544 @@
+{
+ "format": "tisma-knowledge-glossary",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {
+   "id": "barajas_glosario",
+   "title": "Glosario de términos de impresión 3D v1.4",
+   "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"
+  }
+ ],
+ "notes": [
+  "Definiciones propias. La lista de términos sigue el glosario citado, sin las marcas, empresas, programas y sitios.",
+  "settings: ajustes del motor relacionados, para mostrar la definición junto al ajuste."
+ ],
+ "terms": [
+  {
+   "term": "Abrasión",
+   "definition": "Desgaste de la boquilla por filamentos con partículas duras (fibra de carbono, vidrio, metal). Se evita con boquillas de acero endurecido.",
+   "settings": [
+    "extrusion.abrasive",
+    "machine.hardened_nozzle"
+   ]
+  },
+  {
+   "term": "Acabado con vapor",
+   "definition": "Alisado de la superficie exponiendo la pieza a vapores de un solvente (acetona para ABS y ASA). Deja un acabado brillante y redondea los detalles."
+  },
+  {
+   "term": "Alisado (ironing)",
+   "definition": "Pasada extra sobre la cara de arriba, casi sin extruir, que aplasta las líneas y deja la superficie lisa."
+  },
+  {
+   "term": "Altura de capa",
+   "definition": "Espesor de cada capa. Más fina da más detalle y tarda más; más gruesa es más rápida y algo más débil entre capas. No conviene pasar el 80 % de la boquilla.",
+   "settings": [
+    "layers.height",
+    "layers.first_height"
+   ]
+  },
+  {
+   "term": "Autonivelación",
+   "definition": "Sistema que mide la altura de la cama en varios puntos con un sensor y compensa las diferencias al imprimir."
+  },
+  {
+   "term": "Avance de presión",
+   "definition": "Corrección del firmware que adelanta o retrasa el extrusor según la aceleración, para que las esquinas no tengan exceso ni falta de plástico (pressure advance, linear advance).",
+   "settings": [
+    "extrusion.pressure_advance"
+   ]
+  },
+  {
+   "term": "Balsa (raft)",
+   "definition": "Varias capas impresas debajo de la pieza que mejoran la adherencia y reducen el warping; se usa con ABS, ASA, PP o PC."
+  },
+  {
+   "term": "Banda o correa",
+   "definition": "Correa dentada que mueve el cabezal o la cama. Floja o gastada, pierde pasos y corre las capas."
+  },
+  {
+   "term": "Barrel (heat break)",
+   "definition": "Tubo que une el disipador con el bloque calentador y separa la zona fría de la caliente. Los de metal (all-metal) aguantan más temperatura; los bimetálicos transmiten menos calor hacia arriba."
+  },
+  {
+   "term": "Bloque calentador",
+   "definition": "Pieza, en general de aluminio, que lleva el calor del cartucho calefactor a la boquilla."
+  },
+  {
+   "term": "Boquilla",
+   "definition": "Punta del hotend por donde sale el plástico fundido. Su diámetro (0,4 mm la más común) decide el ancho de línea y el detalle.",
+   "settings": [
+    "machine.nozzle_diameter"
+   ]
+  },
+  {
+   "term": "Borde (brim)",
+   "definition": "Vueltas de una línea pegadas a la base de la pieza, en la primera capa, para que se pegue mejor a la cama.",
+   "settings": [
+    "adhesion.brim_width"
+   ]
+  },
+  {
+   "term": "Cabina calefaccionada",
+   "definition": "Cámara cerrada con calefacción propia que mantiene caliente el aire alrededor de la pieza; necesaria para materiales técnicos.",
+   "settings": [
+    "machine.max_chamber_temp",
+    "extrusion.chamber_temperature"
+   ]
+  },
+  {
+   "term": "Cama caliente",
+   "definition": "Base de impresión con calefacción que ayuda a que la primera capa se pegue y a que la pieza no se contraiga.",
+   "settings": [
+    "machine.max_bed_temp"
+   ]
+  },
+  {
+   "term": "Capa",
+   "definition": "Cada una de las rebanadas horizontales en que se divide el modelo para imprimirlo."
+  },
+  {
+   "term": "Capas superiores e inferiores",
+   "definition": "Capas sólidas que cierran la pieza arriba y abajo.",
+   "settings": [
+    "surfaces.top_layers",
+    "surfaces.bottom_layers"
+   ]
+  },
+  {
+   "term": "Cartucho calefactor",
+   "definition": "Resistencia que calienta el bloque calentador."
+  },
+  {
+   "term": "Chaflán",
+   "definition": "Borde cortado en ángulo. En la base de una pieza evita el pie de elefante y en los voladizos ayuda a imprimir sin soportes."
+  },
+  {
+   "term": "Compensación dimensional",
+   "definition": "Corrección en el laminado para que la pieza salga a medida: escala por eje, agujeros más grandes o más chicos, primera capa más chica.",
+   "settings": [
+    "compensation.scale_x",
+    "compensation.hole_offset",
+    "slicing.xy_offset"
+   ]
+  },
+  {
+   "term": "Conector neumático",
+   "definition": "Pieza que sujeta el tubo de teflón: se aprieta el anillo para soltarlo."
+  },
+  {
+   "term": "Contracción",
+   "definition": "Lo que se achica el plástico al enfriarse. Los que más se contraen (ABS, ASA, PC, nylon) se curvan y se despegan."
+  },
+  {
+   "term": "Costura (seam)",
+   "definition": "Lugar donde empieza y termina cada vuelta de pared; queda una marca. Se puede alinear, poner atrás o repartir al azar.",
+   "settings": [
+    "walls.seam"
+   ]
+  },
+  {
+   "term": "Cracking",
+   "definition": "Grietas entre capas por contracción, sobre todo en impresoras abiertas."
+  },
+  {
+   "term": "Curling",
+   "definition": "Bordes o puntas que se curvan hacia arriba por calor acumulado o poco enfriamiento."
+  },
+  {
+   "term": "Densidad de relleno",
+   "definition": "Porcentaje del interior de la pieza que se llena con plástico.",
+   "settings": [
+    "infill.density"
+   ]
+  },
+  {
+   "term": "Desecante",
+   "definition": "Material que absorbe humedad (gel de sílice, por ejemplo); se guarda junto al filamento y se regenera calentándolo."
+  },
+  {
+   "term": "Desfase de capas",
+   "definition": "Capas corridas respecto de las de abajo porque un motor perdió pasos."
+  },
+  {
+   "term": "Diámetro del filamento",
+   "definition": "Grosor del filamento: 1,75 mm (el más común) o 2,85 mm. Tiene que coincidir con la impresora.",
+   "settings": [
+    "machine.filament_diameter"
+   ]
+  },
+  {
+   "term": "Doble extrusión",
+   "definition": "Impresora con dos extrusores para dos colores o un material de soporte soluble."
+  },
+  {
+   "term": "Dureza Shore",
+   "definition": "Escala de dureza de los flexibles. Shore 95A es un TPU común; números más bajos son más blandos y más difíciles de imprimir."
+  },
+  {
+   "term": "Elongación",
+   "definition": "Cuánto se estira un material antes de romperse, en %."
+  },
+  {
+   "term": "Endstop",
+   "definition": "Sensor o interruptor de fin de carrera que marca el cero de cada eje."
+  },
+  {
+   "term": "Enfriamiento",
+   "definition": "Ventilador de capa que solidifica el plástico al salir. Cada material pide más o menos.",
+   "settings": [
+    "cooling.fan_min",
+    "cooling.fan_max",
+    "cooling.fan_off_layers"
+   ]
+  },
+  {
+   "term": "Extrusor",
+   "definition": "Mecanismo que empuja el filamento hacia el hotend con un engranaje."
+  },
+  {
+   "term": "Extrusor Bowden",
+   "definition": "Extrusor fijo en la estructura que empuja el filamento por un tubo largo. El cabezal pesa menos, pero necesita más retracción."
+  },
+  {
+   "term": "Extrusor directo",
+   "definition": "Extrusor montado sobre el cabezal, pegado al hotend. Maneja mejor los flexibles y necesita poca retracción."
+  },
+  {
+   "term": "Falda (skirt)",
+   "definition": "Una o más vueltas alrededor de la pieza, sin tocarla, para purgar la boquilla antes de empezar.",
+   "settings": [
+    "adhesion.skirt_loops",
+    "adhesion.skirt_distance"
+   ]
+  },
+  {
+   "term": "FFF / FDM",
+   "definition": "Impresión por filamento fundido: una boquilla caliente deposita plástico capa por capa."
+  },
+  {
+   "term": "Filamento",
+   "definition": "Hilo de plástico enrollado en una bobina que se funde en la boquilla."
+  },
+  {
+   "term": "Firmware",
+   "definition": "Programa que corre en la placa de la impresora y ejecuta el G-code (Marlin, Klipper, RepRapFirmware…).",
+   "settings": [
+    "machine.flavor"
+   ]
+  },
+  {
+   "term": "Flujo",
+   "definition": "Multiplicador de la cantidad de plástico que se extruye. Se ajusta por material con una prueba de flujo.",
+   "settings": [
+    "extrusion.flow"
+   ]
+  },
+  {
+   "term": "Flujo volumétrico máximo",
+   "definition": "Lo máximo que el hotend puede fundir, en mm³ por segundo. Limita la velocidad con capas y líneas grandes.",
+   "settings": [
+    "machine.max_flow",
+    "extrusion.max_flow"
+   ]
+  },
+  {
+   "term": "G-code",
+   "definition": "Archivo de instrucciones que la impresora sigue: movimientos, temperaturas, ventilador."
+  },
+  {
+   "term": "Ghosting",
+   "definition": "Ondas o ecos en la superficie después de esquinas, por vibraciones."
+  },
+  {
+   "term": "Gotas (blobs)",
+   "definition": "Bolitas de plástico pegadas a la pieza."
+  },
+  {
+   "term": "Higroscópico",
+   "definition": "Que absorbe humedad del aire, como casi todos los filamentos (más el nylon, el PVA y el TPU)."
+  },
+  {
+   "term": "Hotend",
+   "definition": "Conjunto que funde el plástico: disipador, barrel, bloque calentador, sensor y boquilla."
+  },
+  {
+   "term": "Humedad",
+   "definition": "Agua que absorbe el filamento. Da hilos primero y burbujas después; se saca secándolo."
+  },
+  {
+   "term": "Impresora cartesiana",
+   "definition": "Impresora que mueve cada eje por separado; en general la cama se mueve en Y."
+  },
+  {
+   "term": "Impresora CoreXY",
+   "definition": "Impresora en la que dos motores mueven juntos el cabezal en X e Y con correas cruzadas; la cama solo baja."
+  },
+  {
+   "term": "Impresora delta",
+   "definition": "Impresora de cama redonda con tres brazos que mueven el cabezal."
+  },
+  {
+   "term": "Input shaping",
+   "definition": "Compensación de vibraciones del firmware: mide las resonancias de la máquina y ajusta los movimientos para reducirlas."
+  },
+  {
+   "term": "Interfaz de soporte",
+   "definition": "Capas densas del soporte justo debajo de la pieza, para que la cara apoyada quede mejor.",
+   "settings": [
+    "support.interface_layers"
+   ]
+  },
+  {
+   "term": "Jerk",
+   "definition": "Cambio de velocidad que la impresora hace sin frenar en una esquina. Alto, imprime rápido pero vibra más.",
+   "settings": [
+    "machine.corner_speed"
+   ]
+  },
+  {
+   "term": "Klipper",
+   "definition": "Firmware que calcula los movimientos en una computadora aparte; tiene compensación de vibraciones y avance de presión."
+  },
+  {
+   "term": "Laminador (slicer)",
+   "definition": "Programa que corta el modelo en capas y genera el G-code."
+  },
+  {
+   "term": "Litofanía",
+   "definition": "Imagen grabada en relieve que se ve al ponerla a contraluz."
+  },
+  {
+   "term": "Malla",
+   "definition": "Modelo 3D hecho de triángulos (STL, 3MF, OBJ)."
+  },
+  {
+   "term": "Marlin",
+   "definition": "Firmware de impresoras 3D muy usado."
+  },
+  {
+   "term": "Motor paso a paso",
+   "definition": "Motor que gira en pasos fijos; mueve los ejes y el extrusor."
+  },
+  {
+   "term": "Multimaterial",
+   "definition": "Imprimir con varios filamentos en la misma pieza, por colores o por propiedades."
+  },
+  {
+   "term": "Operaciones booleanas",
+   "definition": "Sumar, restar o intersectar modelos."
+  },
+  {
+   "term": "Parámetros de impresión",
+   "definition": "Conjunto de ajustes del laminado: capas, velocidades, temperaturas, relleno, soportes."
+  },
+  {
+   "term": "Pasos por mm",
+   "definition": "Pasos del motor que hacen avanzar un milímetro un eje o el filamento; se calibra en el firmware."
+  },
+  {
+   "term": "Patrón de relleno",
+   "definition": "Forma del relleno: rectilíneo, grilla, triángulos, giroide, cúbico, rayo… Unos son más fuertes y otros más rápidos.",
+   "settings": [
+    "infill.pattern"
+   ]
+  },
+  {
+   "term": "Perfil de impresión",
+   "definition": "Ajustes guardados para una impresora, un filamento o una forma de imprimir."
+  },
+  {
+   "term": "Perímetros o paredes",
+   "definition": "Vueltas que forman el contorno de cada capa. Más paredes, pieza más fuerte.",
+   "settings": [
+    "walls.count",
+    "walls.width"
+   ]
+  },
+  {
+   "term": "PID",
+   "definition": "Control de temperatura que ajusta la potencia del calentador para mantenerla estable; se calibra con una prueba del firmware."
+  },
+  {
+   "term": "Pie de elefante",
+   "definition": "Base más ancha que el resto porque la primera capa se aplastó de más.",
+   "settings": [
+    "slicing.first_layer_shrink"
+   ]
+  },
+  {
+   "term": "Pillowing",
+   "definition": "Bultos o huecos en la cara de arriba por pocas capas sólidas o poco relleno.",
+   "settings": [
+    "surfaces.top_layers"
+   ]
+  },
+  {
+   "term": "Porosidad",
+   "definition": "Huecos dentro de la pieza; la hace menos resistente y menos estanca."
+  },
+  {
+   "term": "Post-procesado",
+   "definition": "Lo que se hace a la pieza después de imprimir: sacar soportes, lijar, pintar, alisar."
+  },
+  {
+   "term": "Precisión",
+   "definition": "Qué tan cerca están las medidas de la pieza de las del modelo."
+  },
+  {
+   "term": "Recocido",
+   "definition": "Calentar la pieza un tiempo por debajo de su fusión para que gane resistencia y temperatura de uso; puede contraerla."
+  },
+  {
+   "term": "Relleno (infill)",
+   "definition": "Estructura interna de la pieza entre las paredes.",
+   "settings": [
+    "infill.density",
+    "infill.pattern"
+   ]
+  },
+  {
+   "term": "Resina fotosensible",
+   "definition": "Líquido que se endurece con luz ultravioleta; lo usan las impresoras de resina."
+  },
+  {
+   "term": "Retracción",
+   "definition": "Retroceso del filamento antes de un viaje para que no gotee. En exceso, causa huecos y atascos.",
+   "settings": [
+    "retraction.length",
+    "retraction.speed"
+   ]
+  },
+  {
+   "term": "Rigidez",
+   "definition": "Cuánto resiste un material a doblarse."
+  },
+  {
+   "term": "Salto en Z",
+   "definition": "Subida de la boquilla durante un viaje para no rozar la pieza.",
+   "settings": [
+    "retraction.lift"
+   ]
+  },
+  {
+   "term": "Secado de filamento",
+   "definition": "Calentar el filamento a temperatura baja unas horas para sacarle la humedad."
+  },
+  {
+   "term": "Sensor de filamento",
+   "definition": "Detecta cuando se termina o se corta el filamento y pausa la impresión."
+  },
+  {
+   "term": "SLA, DLP y LCD",
+   "definition": "Impresión con resina: un láser, un proyector o una pantalla endurecen la resina capa por capa."
+  },
+  {
+   "term": "SLS",
+   "definition": "Sinterizado de polvo con láser."
+  },
+  {
+   "term": "Soporte",
+   "definition": "Estructura temporal que sostiene las partes en voladizo; se quita al terminar.",
+   "settings": [
+    "support.enabled",
+    "support.threshold_angle"
+   ]
+  },
+  {
+   "term": "Soporte de árbol",
+   "definition": "Soporte con ramas que salen de pocos puntos de la cama y tocan la pieza solo donde hace falta."
+  },
+  {
+   "term": "Soporte soluble",
+   "definition": "Soporte de un material que se disuelve (PVA en agua, HIPS en limoneno)."
+  },
+  {
+   "term": "Stringing (hilos)",
+   "definition": "Hilos finos entre partes de la pieza."
+  },
+  {
+   "term": "Temperatura de cama",
+   "definition": "Temperatura de la base de impresión.",
+   "settings": [
+    "machine.variables.bed_temperature"
+   ]
+  },
+  {
+   "term": "Temperatura de impresión",
+   "definition": "Temperatura de la boquilla.",
+   "settings": [
+    "machine.variables.temperature"
+   ]
+  },
+  {
+   "term": "Termistor",
+   "definition": "Sensor de temperatura del hotend y de la cama."
+  },
+  {
+   "term": "Termoestable",
+   "definition": "Plástico que endurece de forma permanente, como las resinas curadas."
+  },
+  {
+   "term": "Termoplástico",
+   "definition": "Plástico que se ablanda con calor y se puede volver a fundir; todos los filamentos lo son."
+  },
+  {
+   "term": "Tiempo mínimo de capa",
+   "definition": "Tiempo que se espera que tarde cada capa como mínimo; si una capa es más rápida, se imprime más lento para que enfríe.",
+   "settings": [
+    "cooling.min_layer_time",
+    "cooling.min_speed"
+   ]
+  },
+  {
+   "term": "Torre de purga",
+   "definition": "Torre que se imprime al lado para limpiar la boquilla al cambiar de filamento."
+  },
+  {
+   "term": "Tubo de teflón (PTFE)",
+   "definition": "Tubo de baja fricción por donde pasa el filamento; en algunos hotends llega hasta la boquilla."
+  },
+  {
+   "term": "Velocidad de impresión",
+   "definition": "Velocidad del cabezal mientras extruye; cada tipo de línea tiene la suya.",
+   "settings": [
+    "speed.walls",
+    "speed.infill",
+    "speed.max"
+   ]
+  },
+  {
+   "term": "Ventilador de capa",
+   "definition": "Ventilador que enfría el plástico recién extruido.",
+   "settings": [
+    "cooling.fan_min",
+    "cooling.fan_max"
+   ]
+  },
+  {
+   "term": "Voladizo (overhang)",
+   "definition": "Parte de la pieza sin nada debajo. Hasta unos 45° se imprime sin soporte; más, lo necesita.",
+   "settings": [
+    "support.threshold_angle"
+   ]
+  },
+  {
+   "term": "Warping",
+   "definition": "Esquinas de la base que se levantan porque el plástico se contrae al enfriarse."
+  },
+  {
+   "term": "Z-offset",
+   "definition": "Distancia entre la boquilla y la cama en el cero de Z; se ajusta para que la primera capa salga bien."
+  },
+  {
+   "term": "Área de construcción",
+   "definition": "Lo más grande que entra en la impresora: ancho, largo y alto.",
+   "settings": [
+    "machine.bed",
+    "machine.max_height"
+   ]
+  }
+ ]
+}

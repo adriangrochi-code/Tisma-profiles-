@@ -1,0 +1,556 @@
+{
+ "format": "tisma-knowledge-problems",
+ "version": 1,
+ "language": "es",
+ "sources": [
+  {"id": "barajas_problemas", "title": "Guía de solución de problemas de impresión 3D v3.3.1", "author": "Rafa Barajas",
+   "url": "https://www.rafabarajas.com"}
+ ],
+ "notes": [
+  "Texto propio. La lista de problemas, causas y arreglos sigue la guía citada; las acciones apuntan a los ajustes del motor (docs/CONFIG.md del motor).",
+  "Las causas van de la más común a la menos común. El asistente propone revisar primero las de arriba.",
+  "Acciones: setting (cambia un ajuste: op add suma, multiply multiplica, set fija), calibration (abre una prueba de calibración), procedure (abre un procedimiento de procedures.json), problem (lleva a otro problema), hardware y model (consejos para la máquina o el modelo, sin cambio de ajustes)."
+ ],
+ "problems": [
+  {
+   "id": "no_extrusion_start",
+   "name": "No sale plástico al empezar",
+   "symptoms": "La primera capa empieza sin material, con líneas cortadas o solo algunas gotas.",
+   "causes": [
+    {"id": "nozzle_too_close", "name": "La boquilla está pegada a la cama",
+     "explain": "Es la causa más común: sin espacio, el plástico no puede salir. Se nota en la primera capa.",
+     "check": "¿La boquilla raspa la cama o las primeras líneas salen transparentes y finas?",
+     "actions": [{"type": "procedure", "id": "level_bed"}]},
+    {"id": "oozed_while_heating", "name": "La boquilla se vació mientras calentaba",
+     "explain": "Esperando a empezar, el plástico caliente gotea y la boquilla queda vacía los primeros segundos.",
+     "check": "¿Cae un hilo de plástico de la boquilla mientras calienta?",
+     "actions": [{"type": "setting", "key": "adhesion.skirt_loops", "op": "set", "value": 2,
+                  "why": "Una falda alrededor de la pieza llena la boquilla antes de empezar la pieza."}]},
+    {"id": "extruder_slips", "name": "El extrusor gira pero no empuja",
+     "explain": "Si el motor del extrusor se mueve pero el filamento no avanza, puede faltar presión, el filamento puede estar mordido o la boquilla, tapada.",
+     "check": "¿Se escucha un «clac» en el extrusor o el filamento tiene una marca de los dientes?",
+     "actions": [{"type": "procedure", "id": "extruder_tension"}, {"type": "problem", "id": "ground_filament"},
+                 {"type": "procedure", "id": "unclog_nozzle"}]}
+   ]
+  },
+  {
+   "id": "first_layer_adhesion",
+   "name": "La primera capa no se pega",
+   "symptoms": "Las líneas de la primera capa se levantan, se arrastran o no se quedan en la cama.",
+   "causes": [
+    {"id": "nozzle_too_high", "name": "La boquilla está muy separada",
+     "explain": "La línea apenas toca la cama y no se aplasta; a veces se ve la cama entre líneas.",
+     "check": "¿Las líneas salen redondas y separadas, sin aplastarse?",
+     "actions": [{"type": "procedure", "id": "level_bed"}]},
+    {"id": "dirty_bed", "name": "Cama sucia",
+     "explain": "La grasa de los dedos o el polvo impiden que el plástico se pegue, a veces solo en una zona.",
+     "check": "¿Se tocó la cama con los dedos o hace mucho que no se lava?",
+     "actions": [{"type": "hardware", "text": "Lavar la cama con agua y detergente de cocina, o limpiarla con alcohol isopropílico, y dejarla secar."}]},
+    {"id": "temps_low", "name": "Temperaturas de primera capa bajas",
+     "explain": "El plástico frío se pega menos. Cada material pide una temperatura de cama propia (materials.json).",
+     "check": "¿La temperatura de cama está debajo de la del material?",
+     "actions": [{"type": "setting", "key": "machine.variables.first_layer_temperature", "op": "add", "value": 10, "unit": "°C"},
+                 {"type": "setting", "key": "machine.variables.first_layer_bed_temperature", "op": "add", "value": 5, "unit": "°C"}]},
+    {"id": "fan_first_layers", "name": "Ventilador en las primeras capas",
+     "explain": "Enfriar de golpe las primeras capas las contrae y las despega.",
+     "check": "¿El ventilador de capa arranca desde la primera capa?",
+     "actions": [{"type": "setting", "key": "cooling.fan_off_layers", "op": "set", "value": 2}]},
+    {"id": "first_layer_fast", "name": "Primera capa demasiado rápida",
+     "explain": "A menos velocidad la línea tiene más tiempo de pegarse.",
+     "check": "¿La primera capa va a más de 30 mm/s?",
+     "actions": [{"type": "setting", "key": "speed.first_layer", "op": "multiply", "value": 0.7}]},
+    {"id": "small_contact", "name": "Poca superficie de apoyo",
+     "explain": "Las piezas con poca base, o los materiales que se contraen mucho (ABS, ASA, PC), necesitan más apoyo.",
+     "check": "¿La pieza toca la cama con poca superficie o es de un material que se contrae?",
+     "actions": [{"type": "setting", "key": "adhesion.brim_width", "op": "set", "value": 5, "unit": "mm"},
+                 {"type": "hardware", "text": "Un adhesivo de cama (barra de pegamento, fijador o uno para impresión 3D) ayuda al empezar."}]}
+   ]
+  },
+  {
+   "id": "under_extrusion",
+   "name": "Sale poco plástico",
+   "symptoms": "La pieza queda frágil, con huecos y líneas que no se tocan en toda la pieza.",
+   "causes": [
+    {"id": "temp_low", "name": "Temperatura de boquilla baja",
+     "explain": "Si el plástico no está bien fundido, la boquilla no deja pasar todo el que se pide.",
+     "check": "¿La temperatura está en la parte baja del rango del material?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]},
+    {"id": "partial_clog", "name": "Boquilla tapada en parte",
+     "explain": "Polvo o plástico quemado dentro de la boquilla reducen el paso.",
+     "check": "¿Al extruir a mano el hilo sale torcido o finito?",
+     "actions": [{"type": "procedure", "id": "unclog_nozzle"}]},
+    {"id": "extruder_pressure", "name": "Falta presión en el extrusor",
+     "explain": "Sin presión el engranaje patina sobre el filamento.",
+     "check": "¿El filamento se frena con poca fuerza de los dedos?",
+     "actions": [{"type": "procedure", "id": "extruder_tension"}]},
+    {"id": "ptfe_gap", "name": "Tubo de teflón corrido",
+     "explain": "En hotends con tubo hasta la boquilla, el tubo puede retroceder y dejar un hueco donde el plástico se acumula.",
+     "check": "¿El hotend tiene tubo de teflón hasta adentro?",
+     "actions": [{"type": "procedure", "id": "ptfe_tube"}]},
+    {"id": "flow_low", "name": "Flujo bajo para este material",
+     "explain": "Cada filamento se comprime distinto. Los flexibles y los de madera piden más flujo (los de madera, de 110 a 150 %).",
+     "check": "¿Se descartaron las causas de arriba?",
+     "actions": [{"type": "calibration", "id": "flow"},
+                 {"type": "setting", "key": "extrusion.flow", "op": "add", "value": 5, "unit": "%"}]}
+   ]
+  },
+  {
+   "id": "incomplete_print",
+   "name": "La impresión queda a medias",
+   "symptoms": "La impresora termina, o sigue moviéndose, pero la pieza se cortó en una altura.",
+   "causes": [
+    {"id": "clog", "name": "Se tapó la boquilla",
+     "explain": "Una boquilla tapada a mitad de la impresión corta el flujo de golpe.",
+     "check": "¿La boquilla sigue tapada al terminar?",
+     "actions": [{"type": "procedure", "id": "unclog_nozzle"}]},
+    {"id": "heat_creep", "name": "El calor sube por el barrel",
+     "explain": "Con temperatura alta, un disipador sucio o el PLA dentro de una cabina cerrada, el plástico se ablanda antes de tiempo y se atasca.",
+     "check": "¿Imprime PLA en una impresora cerrada, o el disipador tiene polvo?",
+     "actions": [{"type": "hardware", "text": "Limpiar el disipador y abrir la puerta o la tapa si el material no necesita cabina."},
+                 {"type": "setting", "key": "machine.variables.temperature", "op": "add", "value": -5, "unit": "°C"}]},
+    {"id": "gcode_cut", "name": "Archivo incompleto",
+     "explain": "Al copiar a una memoria, el archivo puede quedar cortado.",
+     "check": "¿La vista previa del archivo que está en la memoria muestra la pieza entera?",
+     "actions": [{"type": "hardware", "text": "Abrir en la vista previa el archivo que quedó en la memoria; si está cortado, volver a copiarlo y expulsar la memoria antes de sacarla."}]},
+    {"id": "wiring", "name": "Cables o conectores flojos",
+     "explain": "El movimiento continuo del cabezal desgasta cables y conectores.",
+     "check": "¿Se corta siempre en distinta altura y el cabezal se mueve mucho?",
+     "actions": [{"type": "hardware", "text": "Revisar cables y conectores del cabezal y de los motores; un soporte de cables impreso los protege."}]}
+   ]
+  },
+  {
+   "id": "stringing",
+   "name": "Hilos entre partes",
+   "symptoms": "Hilos finos, como telaraña, entre partes de la pieza.",
+   "causes": [
+    {"id": "moisture", "name": "Filamento con humedad",
+     "explain": "Es el primer síntoma de humedad, antes que las burbujas. Un filamento nuevo y cerrado también puede venir húmedo.",
+     "check": "¿El filamento estuvo afuera más de unos días, o crepita al salir?",
+     "actions": [{"type": "procedure", "id": "dry_filament"}]},
+    {"id": "temp_high", "name": "Temperatura alta",
+     "explain": "Más caliente, el plástico gotea más durante los viajes.",
+     "check": "¿La temperatura está en la parte alta del rango?",
+     "actions": [{"type": "calibration", "id": "stringing_temperature"},
+                 {"type": "setting", "key": "machine.variables.temperature", "op": "add", "value": -5, "unit": "°C"}]},
+    {"id": "travel_slow", "name": "Viajes lentos",
+     "explain": "Mientras más tarda el viaje, más tiempo tiene el plástico para salir.",
+     "check": "¿La velocidad de viaje es baja para la impresora?",
+     "actions": [{"type": "setting", "key": "speed.travel", "op": "multiply", "value": 1.3,
+                  "why": "Sin pasar la velocidad máxima de la impresora."}]},
+    {"id": "retraction", "name": "Retracción", "last_resort": true,
+     "explain": "Tocar la retracción después de descartar lo anterior: si es demasiada, trae huecos y atascos. Vale solo para ese filamento.",
+     "check": "¿Ya se secó el filamento y se probó la temperatura?",
+     "actions": [{"type": "calibration", "id": "retraction"},
+                 {"type": "setting", "key": "retraction.length", "op": "add", "value": 0.2, "unit": "mm"}]}
+   ]
+  },
+  {
+   "id": "overheating_small",
+   "name": "Deformaciones en zonas chicas por calor",
+   "symptoms": "Puntas, columnas finas o partes chicas salen blandas, caídas o derretidas.",
+   "causes": [
+    {"id": "temp_high", "name": "Temperatura de boquilla alta",
+     "explain": "Más caliente, más tarda en solidificarse.",
+     "check": "¿La temperatura está en la parte alta del rango?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]},
+    {"id": "cooling_low", "name": "Poco enfriamiento",
+     "explain": "En piezas chicas o impresoras rápidas, el ventilador puede no alcanzar.",
+     "check": "¿Las capas chicas tardan pocos segundos?",
+     "actions": [{"type": "calibration", "id": "cooling"},
+                 {"type": "setting", "key": "cooling.min_layer_time", "op": "add", "value": 3, "unit": "s"},
+                 {"type": "setting", "key": "cooling.fan_min", "op": "set", "value": 100, "unit": "%"}]},
+    {"id": "speed_high", "name": "Velocidad alta",
+     "explain": "Si el enfriamiento no alcanza, bajar la velocidad de 15 a 30 %.",
+     "check": "¿Se probó el enfriamiento sin mejora?",
+     "actions": [{"type": "setting", "key": "speed.max", "op": "multiply", "value": 0.8}]},
+    {"id": "single_small_part", "name": "Una sola pieza chica",
+     "explain": "Imprimir dos copias separadas, o una columna fina al lado, le da tiempo a cada capa de enfriarse.",
+     "check": "¿Es una sola pieza chica y alta?",
+     "actions": [{"type": "model", "text": "Agregar una segunda copia separada, o un cilindro de 5 mm de la misma altura, a unos centímetros."}]}
+   ]
+  },
+  {
+   "id": "layer_shift",
+   "name": "Capas corridas",
+   "symptoms": "A partir de una altura, la pieza sigue corrida en X, en Y o en los dos.",
+   "causes": [
+    {"id": "speed_high", "name": "Demasiado rápido para los motores",
+     "explain": "Si los motores no llegan, pierden pasos (a veces se escucha un golpe) y todo lo que sigue queda corrido.",
+     "check": "¿Se escuchó un golpe en los ejes?",
+     "actions": [{"type": "setting", "key": "speed.max", "op": "multiply", "value": 0.8},
+                 {"type": "setting", "key": "machine.acceleration", "op": "multiply", "value": 0.8}]},
+    {"id": "curling_hit", "name": "La boquilla choca con bordes levantados",
+     "explain": "Si una parte se curva hacia arriba, el cabezal la golpea y pierde la posición.",
+     "check": "¿Hay bordes o puntas curvados hacia arriba?",
+     "actions": [{"type": "problem", "id": "curling"}]},
+    {"id": "belts", "name": "Correas flojas o gastadas",
+     "explain": "Una correa floja salta dientes.",
+     "check": "¿La correa suena grave al tocarla o tiene dientes gastados?",
+     "actions": [{"type": "hardware", "text": "Tensar las correas como dice el fabricante y revisarlas cada tanto."}]},
+    {"id": "drivers_hot", "name": "Placa de control recalentada",
+     "explain": "En una impresora abierta metida en una caja, la placa se calienta y apaga los motores un momento para protegerse.",
+     "check": "¿La impresora está dentro de una caja que no vino con ella?",
+     "actions": [{"type": "hardware", "text": "Ventilar la placa de control o sacar la electrónica fuera de la caja; si pasa en una impresora abierta, consultar al soporte del fabricante."}]}
+   ]
+  },
+  {
+   "id": "layer_separation",
+   "name": "Las capas se separan",
+   "symptoms": "La pieza se parte entre capas con poco esfuerzo.",
+   "causes": [
+    {"id": "temp_low", "name": "Temperatura baja",
+     "explain": "Las capas frías no se sueldan. Con boquillas grandes y capas gruesas hace falta más temperatura.",
+     "check": "¿La temperatura está en la parte baja del rango, o la boquilla es grande?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"},
+                 {"type": "setting", "key": "machine.variables.temperature", "op": "add", "value": 10, "unit": "°C"}]},
+    {"id": "layer_too_thick", "name": "Capa demasiado gruesa",
+     "explain": "Con capas de más del 80 % de la boquilla, las capas se tocan poco.",
+     "check": "¿La altura de capa pasa el 80 % de la boquilla?",
+     "actions": [{"type": "setting", "key": "layers.height", "op": "set_relative", "value": 0.75, "of": "machine.nozzle_diameter"}]},
+    {"id": "big_nozzle_flow", "name": "Boquilla grande: flujo y ventilador",
+     "explain": "Con más de 0,6 mm sale mucho más plástico: hay que respetar el flujo máximo y enfriar menos.",
+     "check": "¿La boquilla es de más de 0,6 mm?",
+     "actions": [{"type": "calibration", "id": "max_flow"}, {"type": "setting", "key": "cooling.fan_max", "op": "add", "value": -20, "unit": "%"}]},
+    {"id": "material", "name": "El material une poco",
+     "explain": "Los filamentos mate o con mucha carga de partículas (bronce, por ejemplo) unen menos que los brillantes.",
+     "check": "¿Es un filamento mate o con partículas?",
+     "actions": [{"type": "hardware", "text": "Para piezas que trabajan, elegir otro material o bajar la altura de capa."}]},
+    {"id": "drafts", "name": "Corrientes de aire o cambios de temperatura",
+     "explain": "En impresoras abiertas, el aire frío contrae las capas y las despega (se ve como grietas horizontales).",
+     "check": "¿La impresora está abierta y el material es ABS, ASA o PC?",
+     "actions": [{"type": "hardware", "text": "Cerrar la impresora o usar una cubierta, y si tiene cámara calefaccionada, encenderla."}]}
+   ]
+  },
+  {
+   "id": "bubbles",
+   "name": "Burbujas o superficie rugosa",
+   "symptoms": "Burbujas, poros o superficie irregular; el filamento crepita al salir.",
+   "causes": [
+    {"id": "moisture", "name": "Mucha humedad en el filamento",
+     "explain": "El agua se vuelve vapor en la boquilla. Es un nivel de humedad más alto que el que da solo hilos.",
+     "check": "¿Crepita o hace pequeños estallidos al extruir?",
+     "actions": [{"type": "procedure", "id": "dry_filament"}]},
+    {"id": "temp_high", "name": "Temperatura excesiva",
+     "explain": "Demasiado calor puede degradar componentes del filamento y formar gas.",
+     "check": "¿La temperatura está arriba del rango?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]}
+   ]
+  },
+  {
+   "id": "warping",
+   "name": "Las esquinas se levantan (warping)",
+   "symptoms": "Las esquinas o bordes de la base se despegan y curvan hacia arriba.",
+   "causes": [
+    {"id": "bed_temp", "name": "Cama fría para el material",
+     "explain": "Los materiales que se contraen mucho, como el ABS, necesitan la cama caliente toda la impresión (ABS, de 100 a 120 °C).",
+     "check": "¿La cama está debajo de lo que pide el material?",
+     "actions": [{"type": "setting", "key": "machine.variables.bed_temperature", "op": "add", "value": 10, "unit": "°C"}]},
+    {"id": "fan", "name": "Ventilador en las primeras capas",
+     "explain": "Con ABS conviene no enfriar las primeras cuatro capas, o casi nada.",
+     "check": "¿Es ABS, ASA o PC con ventilador desde el principio?",
+     "actions": [{"type": "setting", "key": "cooling.fan_off_layers", "op": "set", "value": 4},
+                 {"type": "setting", "key": "cooling.fan_max", "op": "set", "value": 30, "unit": "%"}]},
+    {"id": "enclosure", "name": "Sin cabina",
+     "explain": "La cama mantiene caliente la base, pero las capas de arriba se enfrían y tiran.",
+     "check": "¿La impresora es abierta?",
+     "actions": [{"type": "hardware", "text": "Usar una cabina o cubierta y no abrir la puerta durante la impresión."}]},
+    {"id": "brim", "name": "Falta un borde o una balsa",
+     "explain": "Un borde ancho o una balsa sostienen las esquinas.",
+     "check": "¿Ya se probó lo anterior?",
+     "actions": [{"type": "setting", "key": "adhesion.brim_width", "op": "set", "value": 8, "unit": "mm"}]},
+    {"id": "big_flat_base", "name": "Base muy grande que contrae al enfriar",
+     "explain": "En piezas con mucha base, la contracción puede curvar hasta la lámina magnética. Sin cámara calefaccionada no conviene imprimirlas así.",
+     "check": "¿La pieza arrastra la lámina de la cama al enfriarse?",
+     "actions": [{"type": "hardware", "text": "Con cámara calefaccionada, mantenerla caliente toda la impresión y enfriar despacio; si no, partir la pieza u orientarla con menos base."}]}
+   ]
+  },
+  {
+   "id": "ghosting",
+   "name": "Ondas en la superficie (ghosting)",
+   "symptoms": "Ecos u ondas repetidas después de esquinas y letras.",
+   "causes": [
+    {"id": "speed", "name": "Demasiado rápido",
+     "explain": "Los cambios bruscos de dirección hacen vibrar la máquina.",
+     "check": "¿Las ondas aparecen después de cada esquina?",
+     "actions": [{"type": "setting", "key": "machine.acceleration", "op": "multiply", "value": 0.7},
+                 {"type": "setting", "key": "speed.outer_wall", "op": "multiply", "value": 0.8}]},
+    {"id": "resonance", "name": "Resonancias sin compensar",
+     "explain": "Algunos firmwares (Klipper, por ejemplo) miden las resonancias y las compensan.",
+     "check": "¿El firmware tiene compensación de vibraciones (input shaping)?",
+     "actions": [{"type": "calibration", "id": "input_shaping"}]},
+    {"id": "mechanics", "name": "Problema mecánico",
+     "explain": "Un tornillo flojo, ruedas excéntricas sueltas, correas flojas o una mesa que se mueve.",
+     "check": "¿Algo se mueve al empujar el cabezal o la mesa?",
+     "actions": [{"type": "hardware", "text": "Limpiar y lubricar los ejes, ajustar ruedas excéntricas y correas, apoyar la impresora en una mesa firme; en máquinas de 30 cm o más, sumar refuerzos cruzados."}]}
+   ]
+  },
+  {
+   "id": "support_surface",
+   "name": "Cara mala sobre los soportes",
+   "symptoms": "La cara que apoya en el soporte sale fea, o el soporte no se despega.",
+   "causes": [
+    {"id": "distances", "name": "Separaciones del soporte",
+     "explain": "La separación en Z y en XY decide si el soporte se pega a la pieza o la deja caer.",
+     "check": "¿El soporte cuesta sacarlo, o la cara cuelga?",
+     "actions": [{"type": "calibration", "id": "supports"}, {"type": "setting", "key": "support.z_gap", "op": "add", "value": 0.05, "unit": "mm"}]},
+    {"id": "temp", "name": "Temperatura alta",
+     "explain": "Más caliente tarda más en enfriar y se suelda al soporte.",
+     "check": "¿La temperatura está alta?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]},
+    {"id": "cooling", "name": "Enfriamiento",
+     "explain": "Con buen enfriamiento hacen falta menos soportes y quedan mejor.",
+     "check": "¿El ventilador está bajo?",
+     "actions": [{"type": "calibration", "id": "cooling"}, {"type": "calibration", "id": "overhang_angle"}]},
+    {"id": "orientation", "name": "Orientación de la pieza",
+     "explain": "Girar la pieza puede evitar soportes y mejorar la cara.",
+     "check": "¿Otra orientación deja menos voladizos?",
+     "actions": [{"type": "model", "text": "Probar la orientación automática o girar la pieza para que la cara importante no apoye en soportes."}]}
+   ]
+  },
+  {
+   "id": "dimensions",
+   "name": "Las medidas no coinciden",
+   "symptoms": "La pieza sale más grande o más chica que el modelo.",
+   "causes": [
+    {"id": "moisture", "name": "Humedad",
+     "explain": "El filamento húmedo se hincha y la pieza sale un poco más grande.",
+     "check": "¿Además hay hilos?",
+     "actions": [{"type": "procedure", "id": "dry_filament"}]},
+    {"id": "elephant_foot", "name": "Altura en Z y base ancha",
+     "explain": "Si la primera capa quedó muy cerca de la cama, la base se ensancha y la altura queda corta.",
+     "check": "¿La base está más ancha que el resto?",
+     "actions": [{"type": "problem", "id": "elephant_foot"}]},
+    {"id": "small_holes", "name": "Agujeros chicos más chicos",
+     "explain": "El plástico se mueve al enfriarse y cierra los círculos chicos.",
+     "check": "¿El problema es solo en agujeros chicos?",
+     "actions": [{"type": "calibration", "id": "dimensional"}, {"type": "setting", "key": "compensation.hole_offset", "op": "add", "value": 0.1, "unit": "mm"}]},
+    {"id": "flow", "name": "Flujo",
+     "explain": "Unos materiales se expanden y otros se contraen.",
+     "check": "¿Las paredes salen más gruesas que lo pedido?",
+     "actions": [{"type": "calibration", "id": "flow"}]}
+   ]
+  },
+  {
+   "id": "ground_filament",
+   "name": "Filamento mordido",
+   "symptoms": "El engranaje come el filamento y le deja un surco; deja de avanzar.",
+   "causes": [
+    {"id": "clog", "name": "Boquilla tapada",
+     "explain": "Si el plástico no puede salir, el engranaje sigue girando y muerde.",
+     "check": "¿Sale plástico al extruir a mano?",
+     "actions": [{"type": "procedure", "id": "unclog_nozzle"}]},
+    {"id": "retraction", "name": "Retracción excesiva",
+     "explain": "Retraer mucho o muy rápido castiga el filamento. Prueba rápida: bajar la velocidad de retracción a la mitad.",
+     "check": "¿El surco aparece donde hay muchas retracciones?",
+     "actions": [{"type": "setting", "key": "retraction.speed", "op": "multiply", "value": 0.5}, {"type": "calibration", "id": "retraction"}]},
+    {"id": "too_fast", "name": "Demasiado flujo para el hotend",
+     "explain": "A más velocidad, más plástico por segundo del que el hotend funde.",
+     "check": "¿Pasa en las partes rápidas?",
+     "actions": [{"type": "calibration", "id": "max_flow"}, {"type": "setting", "key": "machine.variables.temperature", "op": "add", "value": 10, "unit": "°C"}]}
+   ]
+  },
+  {
+   "id": "weak_infill",
+   "name": "Relleno débil",
+   "symptoms": "Las paredes están bien pero el relleno sale fibroso, con huecos y se rompe.",
+   "causes": [
+    {"id": "too_fast", "name": "Relleno demasiado rápido",
+     "explain": "El relleno va más rápido que el resto; si el hotend no llega, sale de menos.",
+     "check": "¿El relleno va mucho más rápido que las paredes?",
+     "actions": [{"type": "setting", "key": "speed.infill", "op": "multiply", "value": 0.75}]},
+    {"id": "pattern", "name": "Patrón débil",
+     "explain": "Grid, triángulos o cúbico son fuertes; rayo y otros rápidos sacrifican resistencia.",
+     "check": "¿El patrón es rayo (lightning) u otro de los livianos?",
+     "actions": [{"type": "setting", "key": "infill.pattern", "op": "set", "value": "triangles"}]},
+    {"id": "width", "name": "Ancho de línea menor que la boquilla",
+     "explain": "Después de cambiar la boquilla, el ancho puede haber quedado chico.",
+     "check": "¿Se cambió la boquilla hace poco?",
+     "actions": [{"type": "setting", "key": "walls.width", "op": "set_relative", "value": 1.1, "of": "machine.nozzle_diameter"}]}
+   ]
+  },
+  {
+   "id": "blobs",
+   "name": "Gotas o bolitas en la pieza",
+   "symptoms": "Bolitas de plástico pegadas, a veces más oscuras.",
+   "causes": [
+    {"id": "temp_high", "name": "Temperatura alta",
+     "explain": "Más líquido, gotea en cada viaje.",
+     "check": "¿La temperatura está alta?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]},
+    {"id": "dirty_nozzle", "name": "Boquilla sucia por fuera",
+     "explain": "El plástico acumulado se quema, se oscurece y cae sobre la pieza.",
+     "check": "¿Las gotas son más oscuras?",
+     "actions": [{"type": "hardware", "text": "Limpiar la boquilla caliente con un cepillo de cerdas metálicas."}]},
+    {"id": "loose_hotend", "name": "Hotend con fuga",
+     "explain": "Si la boquilla y el barrel no están bien apretados, se escapa plástico.",
+     "check": "¿Hay plástico alrededor del bloque calentador?",
+     "actions": [{"type": "hardware", "text": "Con el hotend caliente, apretar la boquilla contra el barrel como indique el fabricante y limpiar el bloque."}]}
+   ]
+  },
+  {
+   "id": "elephant_foot",
+   "name": "Pie de elefante",
+   "symptoms": "Las primeras capas salen más anchas que el resto.",
+   "causes": [
+    {"id": "too_close", "name": "Primera capa demasiado cerca",
+     "explain": "Es la causa de raíz: el material se aplasta de más. Corregirla también arregla la altura en Z.",
+     "check": "¿La primera capa sale brillante y aplastada?",
+     "actions": [{"type": "procedure", "id": "level_bed"}]},
+    {"id": "compensate", "name": "Compensar en el laminado",
+     "explain": "Achicar la primera capa lo que mide el ensanche. No arregla la altura en Z (puede quedar unos 0,15 mm corta).",
+     "check": "¿Se midió cuánto sobresale la base?",
+     "actions": [{"type": "setting", "key": "slicing.first_layer_shrink", "op": "set", "value": 0.2, "unit": "mm",
+                  "why": "Poner lo que se midió."}]}
+   ]
+  },
+  {
+   "id": "curling",
+   "name": "Puntas que se curvan hacia arriba (curling)",
+   "symptoms": "Bordes finos o voladizos se curvan sobre la capa; la boquilla puede golpearlos.",
+   "causes": [
+    {"id": "temp_high", "name": "Temperatura alta",
+     "explain": "Tarda más en solidificarse y se deforma mientras tanto.",
+     "check": "¿Pasa en zonas chicas o en ángulos?",
+     "actions": [{"type": "calibration", "id": "temperature_tower"}]},
+    {"id": "cooling_low", "name": "Poco enfriamiento",
+     "explain": "En zonas chicas hace falta enfriar bien.",
+     "check": "¿El ventilador no llega al 100 % en esas capas?",
+     "actions": [{"type": "calibration", "id": "cooling"}, {"type": "setting", "key": "cooling.fan_max", "op": "set", "value": 100, "unit": "%"}]},
+    {"id": "speed_high", "name": "Velocidad alta",
+     "explain": "Bajar de 15 a 30 % si el enfriamiento no alcanza.",
+     "check": "¿Ya se probó el enfriamiento?",
+     "actions": [{"type": "setting", "key": "speed.max", "op": "multiply", "value": 0.8}]}
+   ]
+  },
+  {
+   "id": "pillowing",
+   "name": "Huecos en la cara de arriba",
+   "symptoms": "La cara de arriba tiene agujeros o bultos, como almohadillas.",
+   "causes": [
+    {"id": "few_top_layers", "name": "Pocas capas sólidas arriba",
+     "explain": "Con relleno bajo y pocas capas, la cara se hunde entre las líneas del relleno.",
+     "check": "¿Hay menos de 6 capas de 0,2 mm arriba?",
+     "actions": [{"type": "setting", "key": "surfaces.top_layers", "op": "set", "value": 6}]},
+    {"id": "infill_low", "name": "Relleno muy bajo",
+     "explain": "Debajo del 14 % el apoyo de la cara de arriba es poco.",
+     "check": "¿El relleno está debajo del 14 %?",
+     "actions": [{"type": "setting", "key": "infill.density", "op": "set", "value": 15, "unit": "%"},
+                 {"type": "setting", "key": "infill.dense_under_top", "op": "set", "value": true}]},
+    {"id": "big_nozzle_overlap", "name": "La cara no se une a las paredes",
+     "explain": "Con boquillas de más de 0,6 mm, la cara de arriba toca poco las paredes.",
+     "check": "¿Los huecos están junto a las paredes?",
+     "actions": [{"type": "setting", "key": "infill.wall_overlap", "op": "add", "value": 10, "unit": "%"}]}
+   ]
+  },
+  {
+   "id": "tall_parts_detach",
+   "name": "Piezas altas que se despegan a mitad",
+   "symptoms": "Las primeras capas salen bien pero a cierta altura la pieza se suelta.",
+   "causes": [
+    {"id": "lever", "name": "Efecto palanca",
+     "explain": "Una pieza alta con poca base se suelta con el menor roce.",
+     "check": "¿La pieza es mucho más alta que ancha?",
+     "actions": [{"type": "setting", "key": "adhesion.brim_width", "op": "set", "value": 10, "unit": "mm"},
+                 {"type": "model", "text": "O partir la pieza en partes más bajas."}]},
+    {"id": "curling", "name": "La boquilla golpea un borde curvado",
+     "explain": "Ver curling.",
+     "check": "¿Hay puntas curvadas?",
+     "actions": [{"type": "problem", "id": "curling"}]},
+    {"id": "eco_mode", "name": "Modo de ahorro de la impresora",
+     "explain": "Algunas impresoras bajan la cama durante la impresión para ahorrar energía.",
+     "check": "¿La cama baja de temperatura a mitad de la impresión?",
+     "actions": [{"type": "hardware", "text": "Desactivar el modo de ahorro de energía en la impresora."}]}
+   ]
+  },
+  {
+   "id": "wall_marks",
+   "name": "Marcas del relleno en las paredes",
+   "symptoms": "Se ven por fuera las formas del relleno.",
+   "causes": [
+    {"id": "thin_walls", "name": "Paredes finas",
+     "explain": "Con una o dos paredes, la boquilla caliente del relleno las deforma.",
+     "check": "¿La pieza tiene 2 paredes o menos?",
+     "actions": [{"type": "setting", "key": "walls.count", "op": "set", "value": 3}]}
+   ]
+  },
+  {
+   "id": "one_side_hot",
+   "name": "Un lado bien y el otro recalentado",
+   "symptoms": "Una cara sale perfecta y la opuesta, con signos de calor.",
+   "causes": [
+    {"id": "fan_one_side", "name": "Ventilador de un solo lado",
+     "explain": "Algunas impresoras enfrían de un lado.",
+     "check": "¿El ventilador de capa sopla de un solo lado?",
+     "actions": [{"type": "calibration", "id": "cooling"},
+                 {"type": "hardware", "text": "Un conducto de ventilador de dos lados (se encuentra como «layer fan» en sitios de modelos) mejora el enfriamiento."}]}
+   ]
+  },
+  {
+   "id": "bed_one_spot",
+   "name": "La primera capa falla siempre en el mismo lugar",
+   "symptoms": "Con la cama nivelada, un mismo lugar sale mal en todas las impresiones.",
+   "causes": [
+    {"id": "warped_bed", "name": "Cama deformada",
+     "explain": "En impresoras económicas la placa puede no estar plana.",
+     "check": "¿Pasa en el mismo lugar con cualquier archivo y después de nivelar?",
+     "actions": [{"type": "hardware", "text": "Subir esa zona con cinta de papel entre la lámina magnética y la placa metálica, o usar la malla de nivelación si la impresora la tiene."}]}
+   ]
+  },
+  {
+   "id": "temperature_error",
+   "name": "Error de temperatura o la impresora se reinicia",
+   "symptoms": "La impresora se detiene con un error de calentamiento, o se apaga sola al imprimir.",
+   "causes": [
+    {"id": "voltage_switch", "name": "Selector de tensión equivocado",
+     "explain": "Con la fuente en 230 V y la red de 115 V, la impresora puede andar un tiempo y después fallar o reiniciarse.",
+     "check": "¿La fuente tiene un selector de 115/230 V?",
+     "actions": [{"type": "hardware", "text": "Con la impresora desenchufada, poner el selector en la tensión de la red."}]},
+    {"id": "heater", "name": "Resistencia o sensor dañados",
+     "explain": "Si con la tensión correcta sigue el error, puede fallar la resistencia o el sensor del hotend.",
+     "check": "¿Sigue el error con la tensión correcta?",
+     "actions": [{"type": "hardware", "text": "Consultar al vendedor o al soporte técnico (garantía)."}]}
+   ]
+  },
+  {
+   "id": "extruder_clicking",
+   "name": "El extrusor hace «clac clac»",
+   "symptoms": "Golpes en el extrusor mientras imprime, a veces con defectos en la pieza.",
+   "causes": [
+    {"id": "jam", "name": "Algo frena el filamento",
+     "explain": "Es un aviso temprano de atasco: no hay una sola causa.",
+     "check": "¿Sigue sonando unos minutos?",
+     "actions": [{"type": "problem", "id": "under_extrusion"}, {"type": "problem", "id": "incomplete_print"}]}
+   ]
+  },
+  {
+   "id": "z_wobble",
+   "name": "Ondulaciones regulares en Z",
+   "symptoms": "La superficie tiene ondas repetidas a lo alto.",
+   "causes": [
+    {"id": "z_nut", "name": "Tuerca del eje Z apretada",
+     "explain": "La tuerca de bronce del eje Z suele ir algo floja a propósito; si se aprieta, transmite el giro de la varilla.",
+     "check": "¿Se apretaron hace poco los tornillos de la tuerca del eje Z?",
+     "actions": [{"type": "hardware", "text": "Aflojar un poco los tornillos de la tuerca de bronce para que acompañe a la varilla."}]},
+    {"id": "bent_rod", "name": "Varilla doblada",
+     "explain": "Puede venir así de fábrica o doblarse en el transporte.",
+     "check": "¿La varilla gira descentrada?",
+     "actions": [{"type": "hardware", "text": "Reemplazar la varilla roscada."}]}
+   ]
+  },
+  {
+   "id": "tree_supports_fall",
+   "name": "Los soportes de árbol se caen",
+   "symptoms": "Durante la impresión, los soportes de árbol se sueltan y arruinan la pieza.",
+   "causes": [
+    {"id": "branch_angle", "name": "Ramas muy inclinadas",
+     "explain": "Con ramas muy inclinadas y altas, un roce de la boquilla las tira.",
+     "check": "¿Las ramas son altas y muy abiertas?",
+     "actions": [{"type": "hardware", "text": "Bajar el ángulo de las ramas en los ajustes de soporte de árbol para que queden más rectas."}]},
+    {"id": "curling", "name": "Curling",
+     "explain": "La boquilla golpea un borde curvado y empuja el soporte.",
+     "check": "¿Hay puntas curvadas?",
+     "actions": [{"type": "problem", "id": "curling"}]}
+   ]
+  }
+ ]
+}

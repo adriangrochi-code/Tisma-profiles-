@@ -3,7 +3,7 @@
 "Descarga"): one compressed archive per vendor bundle and one for the community data, plus a small index that lists
 them with their size and SHA-256.
 
-Usage: package.py <pack dir> <community dir> <out dir> --version VERSION
+Usage: package.py <pack dir> <community dir> <out dir> --version VERSION [--knowledge DIR]
 """
 
 import argparse
@@ -37,6 +37,7 @@ def main():
     ap.add_argument('community')
     ap.add_argument('out')
     ap.add_argument('--version', required=True)
+    ap.add_argument('--knowledge', help='the knowledge base folder (docs/KNOWLEDGE.md)')
     args = ap.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
@@ -57,6 +58,11 @@ def main():
     tar_xz(path, os.path.dirname(os.path.abspath(args.community)),
            [os.path.join(os.path.basename(os.path.abspath(args.community)), n) for n in community])
     index['community'] = {'name': 'community.tar.xz', 'size': os.path.getsize(path), 'sha256': sha256(path)}
+
+    if args.knowledge:
+        path = os.path.join(args.out, 'knowledge.tar.xz')
+        tar_xz(path, os.path.dirname(os.path.abspath(args.knowledge)), [os.path.basename(os.path.abspath(args.knowledge))])
+        index['knowledge'] = {'name': 'knowledge.tar.xz', 'size': os.path.getsize(path), 'sha256': sha256(path)}
 
     with open(os.path.join(args.out, 'index.json'), 'w', encoding='utf-8', newline='\n') as f:
         json.dump(index, f, ensure_ascii=False, separators=(',', ':'))

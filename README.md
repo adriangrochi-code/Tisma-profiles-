@@ -56,6 +56,12 @@ Lo que se sabe de cada impresora, filamento y resina fuera de los perfiles, siem
 
 Cómo agregarlos: `docs/COMMUNITY.md`.
 
+## Base de conocimiento del asistente
+
+Materiales, problemas con sus causas y arreglos, procedimientos, glosario y tutoriales para el asistente del motor,
+escritos a partir de las guías de Rafa Barajas (`https://www.rafabarajas.com`), con texto propio: `knowledge/` y
+`docs/KNOWLEDGE.md`.
+
 ## Licencias
 
 - **Perfiles de PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0.
