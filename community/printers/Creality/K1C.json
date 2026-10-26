@@ -1,0 +1,94 @@
+{
+ "vendor": "Creality",
+ "model": "K1C",
+ "data": [
+  {
+   "key": "machine.max_feed_x",
+   "value": 600,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Velocidad de impresión máxima"
+  },
+  {
+   "key": "machine.max_feed_y",
+   "value": 600,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Velocidad de impresión máxima"
+  },
+  {
+   "key": "machine.acceleration",
+   "value": 20000,
+   "unit": "mm/s²",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Aceleración máxima (≤ 20000)"
+  },
+  {
+   "key": "machine.max_nozzle_temp",
+   "value": 300,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.max_bed_temp",
+   "value": 100,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.nozzle_diameter",
+   "value": 0.4,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Boquilla de fábrica"
+  },
+  {
+   "key": "machine.filament_diameter",
+   "value": 1.75,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.creality.com/support/k1c-carbon-3d-printer",
+    "title": "K1C Carbon 3D Printer - Support, Parameter",
+    "accessed": "2026-10-26"
+   }
+  }
+ ]
+}

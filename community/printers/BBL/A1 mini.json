@@ -1,0 +1,135 @@
+{
+ "vendor": "Bambu Lab",
+ "model": "A1 mini",
+ "data": [
+  {
+   "key": "machine.bed",
+   "value": [
+    [
+     0,
+     0
+    ],
+    [
+     180,
+     0
+    ],
+    [
+     180,
+     180
+    ],
+    [
+     0,
+     180
+    ]
+   ],
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Volumen de impresión 180 × 180 × 180 mm"
+  },
+  {
+   "key": "machine.max_height",
+   "value": 180,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.max_feed_x",
+   "value": 500,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Velocidad máxima del cabezal"
+  },
+  {
+   "key": "machine.max_feed_y",
+   "value": 500,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Velocidad máxima del cabezal"
+  },
+  {
+   "key": "machine.acceleration",
+   "value": 10000,
+   "unit": "mm/s²",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://store.bblcdn.com/6cddc28fcb5a4a34975cfc7a23c83491.pdf",
+    "title": "Bambu Lab A1 mini Technical Specification (PDF)",
+    "accessed": "2026-10-26"
+   },
+   "conditions": "Aceleración máxima del cabezal (10 m/s² en la hoja técnica)"
+  },
+  {
+   "key": "machine.max_nozzle_temp",
+   "value": 300,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.max_bed_temp",
+   "value": 80,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.enclosed",
+   "value": false,
+   "unit": "",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   }
+  },
+  {
+   "key": "machine.filament_diameter",
+   "value": 1.75,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://bambulab.com/en/a1-mini/tech-specs",
+    "title": "Bambu Lab A1 mini - Technical Specifications",
+    "accessed": "2026-10-26"
+   }
+  }
+ ]
+}
