@@ -6,7 +6,7 @@
   {"id": "barajas_problemas", "title": "Guía de solución de problemas de impresión 3D v3.3.1", "author": "Rafa Barajas",
    "url": "https://www.rafabarajas.com"}
  ],
- "notes": ["Texto propio, a partir de los procedimientos de la guía citada. Cada paso es una acción en la impresora; ningún paso cambia ajustes del laminado."],
+ "notes": ["Basado en los procedimientos de la guía citada, sin copiar su texto. Cada paso es una acción en la impresora; ningún paso cambia ajustes del laminado."],
  "procedures": [
   {
    "id": "level_bed",
