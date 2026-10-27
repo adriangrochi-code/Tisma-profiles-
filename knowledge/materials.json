@@ -425,7 +425,7 @@
   {
    "name": "PLA+",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -504,7 +504,7 @@
   {
    "name": "PLA HS",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -583,7 +583,7 @@
   {
    "name": "PLA mármol",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -662,7 +662,7 @@
   {
    "name": "PLA glitter",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -741,7 +741,7 @@
   {
    "name": "PLA seda",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -813,7 +813,7 @@
   {
    "name": "PLA seda tricolor",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -891,7 +891,7 @@
   {
    "name": "PLA multicolor",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -970,7 +970,7 @@
   {
    "name": "PLA madera",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -1049,7 +1049,7 @@
   {
    "name": "PLA LW",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -1128,7 +1128,7 @@
   {
    "name": "PLA con partículas de metal",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "acero endurecido o inoxidable",
    "abrasive": true,
    "bed_required": "opcional",
@@ -1188,7 +1188,7 @@
   {
    "name": "PLA antibacterial",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "acero endurecido o inoxidable",
    "abrasive": true,
    "nozzle_temp": [
@@ -1256,7 +1256,7 @@
   {
    "name": "PLA fotocromático",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
@@ -1289,7 +1289,7 @@
   {
    "name": "PLA termocromático",
    "family": "PLA",
-   "category": "variantes de PLA de PLA",
+   "category": "variantes de PLA",
    "nozzle_material": "latón",
    "abrasive": false,
    "nozzle_temp": [
