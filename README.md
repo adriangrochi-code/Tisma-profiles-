@@ -59,7 +59,7 @@ Cómo agregarlos: `docs/COMMUNITY.md`.
 ## Base de conocimiento del asistente
 
 Materiales, problemas con sus causas y arreglos, procedimientos, glosario y tutoriales para el asistente del motor,
-escritos a partir de las guías de Rafa Barajas (`https://www.rafabarajas.com`), con texto propio: `knowledge/` y
+basados en las guías de Rafa Barajas (`https://www.rafabarajas.com`), sin copiar su texto: `knowledge/` y
 `docs/KNOWLEDGE.md`.
 
 ## Licencias

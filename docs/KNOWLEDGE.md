@@ -18,13 +18,14 @@ Datos para el asistente y los tutoriales del motor, que funcionan sin conexión.
   problemas v3.3.1, guía de materiales v3.2, glosario v1.4, tabla de parámetros base v2.0 y tabla de secado.
 - **Qué se tomó:** los números de las tablas (temperaturas, retracción, secado), la lista de problemas, causas y
   arreglos, y la lista de términos.
-- **Qué no se tomó:** el texto. Está escrito de nuevo con nuestras palabras; no se copian párrafos, tablas
-  completas ni imágenes, y los PDF no van en este repositorio.
+- **Qué no se tomó:** el texto. No se copian párrafos, tablas completas ni imágenes, y los PDF no van en este
+  repositorio. Aun así, nuestro texto se basa en las guías y no es propio: se acredita «Basado en…», nunca
+  «texto propio» (decisión del dueño, 27-10-2026).
 - **Cita:** cada archivo cita su fuente en `sources`. El asistente la muestra: «Basado en las guías de Rafa Barajas».
 - **Calibraciones** (`calibrations.json`): el orden, los rangos y las fórmulas siguen la wiki de calibración de
   OrcaSlicer, la guía de ajuste de Andrew Ellis (`https://ellis3dp.com/Print-Tuning-Guide/`) y la documentación de
-  Klipper (avance de presión y resonancias). Se tomaron los datos, no el texto: está escrito de nuevo y cada guía
-  nombra sus fuentes.
+  Klipper (avance de presión y resonancias). Se tomaron los datos, no el texto; las guías se basan en esas fuentes
+  y cada una las nombra.
 
 ## Acciones (`problems.json`, `tutorials.json`)
 

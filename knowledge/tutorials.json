@@ -7,7 +7,7 @@
   {"id": "barajas_materiales", "title": "Guía de materiales de impresión 3D v3.2", "author": "Rafa Barajas", "url": "https://www.rafabarajas.com"}
  ],
  "notes": [
-  "Texto propio. Cada paso señala una parte de la interfaz por su ancla (anchor), que la ficha del asistente del motor define, y opcionalmente espera una acción de la persona (wait_for) para avanzar solo.",
+  "Basado en las guías citadas, sin copiar su texto. Cada paso señala una parte de la interfaz por su ancla (anchor), que la ficha del asistente del motor define, y opcionalmente espera una acción de la persona (wait_for) para avanzar solo.",
   "Los tutoriales se pueden saltar, pausar y retomar."
  ],
  "tutorials": [

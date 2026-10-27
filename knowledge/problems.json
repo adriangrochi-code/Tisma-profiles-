@@ -7,7 +7,7 @@
    "url": "https://www.rafabarajas.com"}
  ],
  "notes": [
-  "Texto propio. La lista de problemas, causas y arreglos sigue la guía citada; las acciones apuntan a los ajustes del motor (docs/CONFIG.md del motor).",
+  "Basado en la guía citada, de la que sale la lista de problemas, causas y arreglos, sin copiar su texto; las acciones apuntan a los ajustes del motor (docs/CONFIG.md del motor).",
   "Las causas van de la más común a la menos común. El asistente propone revisar primero las de arriba.",
   "Acciones: setting (cambia un ajuste: op add suma, multiply multiplica, set fija), calibration (abre una prueba de calibración), procedure (abre un procedimiento de procedures.json), problem (lleva a otro problema), hardware y model (consejos para la máquina o el modelo, sin cambio de ajustes)."
  ],
