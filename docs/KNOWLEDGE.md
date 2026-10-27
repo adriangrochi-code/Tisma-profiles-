@@ -131,14 +131,16 @@ La CI no publica si falla.
 
 ## Guías de calibración (`calibrations.json`)
 
-| Campo | Qué es |
-|---|---|
-| `id`, `name` | La prueba y su nombre |
-| `group` | `filament` (se repite con cada filamento) o `printer` (se repite al cambiar la máquina) |
-| `order` | Orden recomendado; `before` son las pruebas que tienen que estar hechas antes |
-| `why`, `repeat` | Para qué sirve y cuándo repetirla |
-| `steps` | Pasos |
-| `read` | Lo que se ve (`look`) y qué significa (`means`) |
-| `result` | El ajuste del motor que fija (`key`) o `where` `printer_firmware` si va en la impresora, y `text` con la fórmula |
-| `tips` | Consejos y valores de referencia |
-| `open` | Opcional: un procedimiento relacionado |
+| Campo | Tipo | Opcional | Qué es |
+|---|---|---|---|
+| `id`, `name` | texto | no | La prueba y su nombre |
+| `group` | texto | no | Exactamente `filament` (se repite con cada filamento) o `printer` (se repite al cambiar la máquina) |
+| `order` | entero | no | Orden recomendado, desde 1, sin repetir |
+| `before` | lista de `id` de guías | no | Las pruebas que conviene hacer antes. Siempre está; puede ser `[]` (la primera) |
+| `why`, `repeat` | texto | no | Para qué sirve y cuándo repetirla |
+| `steps` | lista de textos | no | Pasos, en orden; cada uno es un texto, sin título |
+| `read` | lista de objetos | no | Cada uno con `look` (lo que se ve) y `means` (qué significa) |
+| `result` | objeto | no | `key` (el ajuste del motor que fija) o `where` `printer_firmware` (va en la impresora), y `text`, la fórmula para leer. La cuenta que hace el asistente está en la ficha del asistente del motor, no en estos datos |
+| `tips` | lista de textos | no | Consejos y valores de referencia; puede ser `[]` |
+| `sources` | lista de `id` | no | Fuentes de la guía: `id` de la lista `sources` del archivo |
+| `open` | objeto | sí | `{type, id}` como en los tutoriales; hoy siempre `type` `procedure` |
