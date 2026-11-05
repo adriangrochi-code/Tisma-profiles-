@@ -242,11 +242,18 @@ nombre en el programa de origen o cuyo programa el paquete no lee).
 
 `tools/validate.py` lamina un cubo de 20 mm con el motor con cada variante FDM y su filamento y perfil por defecto, y
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
-26-10-2026 y el motor de `dev` (7f745d8):
-- **variantes:** 2259 de 2261 laminan. Las 2 que no son de pellets, con capas de 2,5 y 4 mm, más que lo que acepta el
-  motor (2 mm);
-- **todo:** 18 011 combinaciones, 24 fallan (0,13 %). Son 20 perfiles de impresión de una boquilla más grande que la
-  de la primera impresora compatible, y las 4 de pellets.
+05-11-2026 y el motor de `dev` (3cb778f):
+- **variantes:** las 2261 laminan;
+- **todo:** 18 346 combinaciones, 20 fallan (0,11 %). Son perfiles de impresión con capas más gruesas que la boquilla
+  de la primera impresora compatible (por ejemplo, uno de 0,6 mm de boquilla probado en una de 0,4).
+
+`tools/check_pack.py` revisa el paquete convertido y la CI falla si encuentra:
+- un conjunto de compatibilidad vacío, o un perfil que apunta a uno que no existe;
+- un G-code de inicio que comparten modelos distintos por error: sale del paquete convertido de Tisma Slicer cuando el
+  programa de origen se puede leer (lo que pasaba con las Bambu Lab). Los modelos que comparten la base general del
+  fabricante porque así están en el programa de origen quedan como notas;
+- un perfil de impresión sin `nozzle` cuando su nombre o su condición dicen una boquilla;
+- un bloque `gcode` sin dialecto conocido o con plantillas que no son texto.
 
 ## Licencias
 
