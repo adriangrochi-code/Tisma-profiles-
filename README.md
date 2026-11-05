@@ -9,23 +9,25 @@ sources.*
 
 ## Qué hay
 
-Versión del 26-10-2026, convertida desde los perfiles de Tisma Slicer y las impresoras de resina de UVtools:
+Versión del 05-11-2026, convertida desde los perfiles de Tisma Slicer y las impresoras de resina de UVtools:
 
 | Qué | Cantidad |
 |---|---|
 | Paquetes de origen (fabricantes) | 236 |
 | Modelos de impresora FDM | 902, con 2261 boquillas o variantes |
 | Modelos de impresora de resina | 156 |
-| Filamentos | 11 651 |
-| Perfiles de impresión | 4483 |
+| Filamentos | 11 636 |
+| Perfiles de impresión | 4449 |
 | Resinas | 484 |
-| Perfiles de impresión de resina | 36 |
+| Perfiles de impresión de resina | 35 |
 
 Cada modelo está una sola vez: lo que comparten sus boquillas se guarda una vez, y cada boquilla solo con lo que
 cambia. Los 24 modelos que venían de dos fuentes se guardan una sola vez.
 
 Cada perfil trae:
 - los ajustes que entiende el motor, con sus nombres;
+- en las impresoras, su G-code propio (inicio, fin, cambio de capa, de herramienta, pausa…) tal cual lo tiene su
+  fuente, con sus macros;
 - todos los valores de origen, para no perder nada;
 - su licencia;
 - las impresoras con las que sirve;
@@ -42,10 +44,15 @@ El motor tiene su propia licencia (no comercial) y no incluye estos perfiles: lo
 
 - `tools/convert.py`: convierte los paquetes de perfiles de Tisma Slicer (`resources/profiles`, del commit de
   `sources.json`) al formato del paquete.
+- `tools/fetch_sources.py`: baja OrcaSlicer, Creality Print, Elegoo Slicer y Cura en el commit del que salieron los
+  paquetes de Tisma Slicer (`sources.json`), para tomar de ahí el G-code de cada impresora.
+- `tools/check_pack.py`: revisa el paquete convertido (conjuntos de compatibilidad vacíos, G-code de inicio compartido
+  por error, perfiles de impresión sin boquilla). La CI falla si encuentra algo.
 - `tools/package.py`: un archivo comprimido por fabricante, más el índice con el tamaño y el SHA-256 de cada uno.
 - `tools/validate.py`: lamina un cubo con el motor con cada impresora, cada filamento y cada perfil de impresión.
 - `tools/check_community.py`: revisa los datos de la comunidad.
-- La CI (`.github/workflows/release.yml`) convierte, empaqueta y publica un release con cada cambio en `main`.
+- La CI (`.github/workflows/release.yml`) convierte, revisa, empaqueta y publica un release con cada cambio en `main`;
+  `.github/workflows/check.yml` convierte y revisa en las otras ramas.
 
 ## Datos de la comunidad
 

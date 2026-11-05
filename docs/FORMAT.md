@@ -1,6 +1,6 @@
 # Formato del paquete de perfiles
 
-Versión 2. Es el formato que lee el motor de Tisma (`tisma_engine`) para instalar impresoras, filamentos, perfiles de
+Versión 2 (con el bloque `gcode` desde la versión del 05-11-2026; ver «G-code de la máquina»). Es el formato que lee el motor de Tisma (`tisma_engine`) para instalar impresoras, filamentos, perfiles de
 impresión y resinas. Los perfiles de adentro usan el formato de perfil del motor (`docs/PROFILES.md` del motor) con
 sus claves (`docs/CONFIG.md` del motor), así que el motor no necesita saber nada de los programas de donde salieron.
 
@@ -27,10 +27,10 @@ Para instalar:
    `community/…`. Una ruta absoluta, con `..` o que no empieza así no se descomprime.
 5. Una versión nueva se reconoce porque `pack_version` del índice cambió.
 
-**Tamaño de la versión del 26-10-2026:**
+**Tamaño de la versión del 05-11-2026:**
 - `index.json`: unos 2,1 MB;
-- cada fabricante: de unos KB a 2,8 MB;
-- todo junto: unos 32 MB, en 218 archivos.
+- cada fabricante: de unos KB a 2,7 MB;
+- todo junto: unos 33 MB, en 240 archivos.
 
 ## `index.json`
 
@@ -76,8 +76,9 @@ comparten:
  "vendor": "…",
  "model": { "id": "…", "name": "…", "family": "…" },
  "default_variant": "0.4",
- "common": { "settings": { } },
- "variants": [ { "id": "0.4", "nozzle": 0.4, "name": "…", "settings": { }, "defaults": { }, "original": { } } ],
+ "common": { "settings": { }, "gcode": { } },
+ "variants": [ { "id": "0.4", "nozzle": 0.4, "name": "…", "settings": { }, "gcode": { }, "defaults": { },
+                 "original": { } } ],
  "original_common": { },
  "also_in": [ ],
  "license": "AGPL-3.0-or-later",
@@ -95,7 +96,11 @@ comparten:
 - **`also_in`:** el mismo modelo venía de otra fuente (por ejemplo, de OrcaSlicer y del paquete del fabricante). Se
   guarda una vez, de la fuente del fabricante; las impresoras de la otra fuente apuntan a la variante de la misma
   boquilla.
-- **`not_converted`** (en una variante): el G-code de inicio o de fin que no se pudo pasar, con el motivo.
+- **`gcode`** (en `common` y en cada variante, FFF): el G-code propio de la máquina tal cual lo tiene su fuente, con
+  sus macros (ver «G-code de la máquina»). Se arma igual que el perfil: `common.gcode` con el `gcode` de la variante
+  encima, campo por campo y, en `templates`, `keys`, `from` y `values`, clave por clave.
+- **`not_converted`** (en una variante): el G-code de inicio o de fin que no se pudo pasar a las variables simples de
+  `profile`, con el motivo. Ese G-code está igual, entero, en `gcode`.
 
 ## Un perfil de filamento, impresión o resina (`vendors/<id>/<grupo>/<nombre>.json`)
 
@@ -122,7 +127,14 @@ comparten:
   - `generic`: el perfil es genérico (de un paquete de plantillas), no de un fabricante.
 - **Filamentos:** `material` con `type` (PLA, PETG…), `vendor`, `density` (g/cm³), `cost_per_kg`, `colour` y
   `soluble`.
-- **Impresión:** `nozzle`, la boquilla para la que está hecho, si todas sus impresoras usan la misma.
+- **Impresión:** `nozzle`, la boquilla para la que está hecho (en mm), cuando lo dice:
+  1. la boquilla de todas sus impresoras, si es una sola;
+  2. si no, la condición de origen, cuando pide `nozzle_diameter[0]==X` para todas (sin `or`);
+  3. si no, su nombre («0.2 nozzle», «0.6mm nozzle», «nozzle 0.4»), si sus impresoras no dicen otra cosa.
+
+  Sin `nozzle`, el perfil sirve para cualquier boquilla de sus impresoras.
+- **Filamentos:** `gcode`, si el perfil trae G-code de inicio o de fin de filamento: el mismo bloque que el de la
+  máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»).
 
 ## `compatible.json`
 
@@ -131,12 +143,78 @@ comparten:
 ```
 
 Cada conjunto es una lista de números de impresora (`index.json`, `printers`). Un filamento con `"compatible": 1`
-sirve para las impresoras 5 y 9. Muchos perfiles comparten conjunto: hay 1663 para más de 16 000 perfiles.
+sirve para las impresoras 5 y 9. Muchos perfiles comparten conjunto: hay unos 1700 para más de 16 000 perfiles.
 
-## G-code de inicio y de fin
+- **Nunca hay un conjunto vacío.** Un perfil que no sirve para ninguna impresora (ni en el programa de origen: una
+  condición que ninguna cumple, o una lista de impresoras que no están) no entra en el paquete; queda en
+  `stats.json`, `left_out`, con su condición. Con la versión del 05-11-2026 son 50 (34 de impresión, 15 filamentos y 1
+  de impresión de resina).
+- **Las condiciones** se evalúan como en el programa de origen: `num_extruders` es la cantidad de boquillas, un número
+  escrito como texto (`"0.2"`) se compara como número, los textos tienen sus saltos de línea, y `=~` pide que la
+  expresión regular cubra todo el valor, con `.` que también toma saltos de línea.
 
-- **Tal cual:** el G-code de inicio y de fin de una impresora entra solo si funciona con las variables simples del
-  motor (`[nombre]`, `{nombre}`, `{nombre[i]}`).
+## G-code de la máquina (`gcode`, con macros)
+
+Cada impresora FFF trae su G-code propio **tal cual** lo tiene su fuente, con el lenguaje de macros del programa de
+origen (condiciones, cuentas, variables). Es lo que hace la nivelación, el Z offset, la calibración de flujo o la
+limpieza de la boquilla de cada modelo. El motor lo interpreta (especificación de macros del motor,
+`gcode_macros.md`).
+
+**Las claves que tienen G-code con macros, sin tocar,** son las de `gcode.templates` (en los modelos y en los
+filamentos). Ninguna otra clave del paquete tiene macros: `profile.settings.machine.start_gcode` y `end_gcode` siguen
+siendo la versión con variables simples (abajo).
+
+| Campo | Qué es |
+|---|---|
+| `dialect` | El lenguaje de macros y los nombres de las variables: `prusaslicer`, `orcaslicer`, `crealityprint`, `elegooslicer` o `cura` |
+| `origin` | De dónde sale: `source_program` (los archivos del programa de origen, en el commit que nombra el paquete de Tisma Slicer), `bundle` (un paquete en formato PrusaSlicer, tal cual) o `converted_bundle` (el paquete que convirtió Tisma Slicer, con las variables ya con nombres de PrusaSlicer, cuando el programa de origen no lo tiene) |
+| `source` | `repository`, `commit` y `preset` (el perfil o la definición de origen), o `bundle` y `section`; en `converted_bundle`, también `program`, `repository` y `commit` del programa del que salió |
+| `templates` | El G-code, por nombre (tabla de abajo). Texto; en `cura`, `extruder_start` y `extruder_end` son una lista, uno por extrusor (`null` si no tiene) |
+| `keys` | El nombre de origen de cada uno |
+| `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer) |
+| `relative_extrusion` | Si el programa de origen extruye en relativo con este G-code (`null` si no lo dice). En `cura` es casi siempre `false`: su G-code de inicio pone `M82`. Al usar `templates`, el motor extruye como dice este campo |
+| `values` | Solo en `source_program` de la familia OrcaSlicer: los valores de la máquina con los nombres del programa de origen, para las variables de sus macros |
+| `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto. No está en `templates` |
+
+**Nombres de `templates`** (otras claves de G-code del origen quedan con su nombre):
+
+| Nombre | `prusaslicer` | `orcaslicer`, `crealityprint`, `elegooslicer` | `cura` |
+|---|---|---|---|
+| `start` | `start_gcode` | `machine_start_gcode` | `machine_start_gcode` |
+| `end` | `end_gcode` | `machine_end_gcode` | `machine_end_gcode` |
+| `before_layer_change` | `before_layer_gcode` | `before_layer_change_gcode` | |
+| `layer_change` | `layer_gcode` | `layer_change_gcode` | |
+| `toolchange` | `toolchange_gcode` | `change_filament_gcode` | |
+| `between_objects` | `between_objects_gcode` | `printing_by_object_gcode` | |
+| `color_change` | `color_change_gcode` | | |
+| `pause` | `pause_print_gcode` | `machine_pause_gcode` | |
+| `custom` | `template_custom_gcode` | `template_custom_gcode` | |
+| `timelapse` | | `time_lapse_gcode` | |
+| `extrusion_role_change` | | `change_extrusion_role_gcode` | |
+| `filament_start`, `filament_end` (filamentos) | `start_filament_gcode`, `end_filament_gcode` | | |
+| `extruder_start`, `extruder_end` | | | `machine_extruder_start_code`, `machine_extruder_end_code` |
+
+**Por qué del programa de origen:** Tisma Slicer convirtió los perfiles de OrcaSlicer, Creality Print, Elegoo Slicer y
+Cura a su formato, y en eso perdió G-code: no siguió los `include` de OrcaSlicer (cada Bambu Lab tiene su G-code en
+plantillas aparte), así que todas las Bambu Lab quedaban con el G-code genérico de la base, y muchas otras con el de
+otro modelo de la misma base. Por eso el convertidor lee esos programas en el commit que dice cada paquete
+(`sources.json`, `converted_from`). Los paquetes que ya eran de PrusaSlicer entran tal cual.
+
+**Variables de los filamentos y la impresión:** los perfiles de filamento y de impresión siguen con los nombres de
+PrusaSlicer (`original`). Un G-code `orcaslicer` usa los nombres de OrcaSlicer (`nozzle_temperature_initial_layer`
+por `first_layer_temperature`, `bed_temperature_initial_layer_single` por `first_layer_bed_temperature`…).
+
+Con la versión del 05-11-2026, de los 2317 perfiles de impresora FFF de origen: 902 de OrcaSlicer, 16 de Creality
+Print, 1 de Elegoo Slicer y 296 de Cura salen del programa de origen; 1060 de paquetes de PrusaSlicer; 42 del paquete
+convertido (las impresoras de cinta de BlackBelt y VertexSlice, y la CR-30 PrintMill, que no tienen un perfil con su
+nombre en el programa de origen o cuyo programa el paquete no lee).
+
+## G-code de inicio y de fin con variables simples (`profile`)
+
+- **Tal cual:** el G-code de inicio y de fin de una impresora entra en `profile.settings.machine` solo si funciona con
+  las variables simples del motor (`[nombre]`, `{nombre}`, `{nombre[i]}`). Sale del mismo texto que `gcode` (con las
+  variables de OrcaSlicer pasadas a los nombres de PrusaSlicer, como hace Tisma Slicer), salvo en Cura, que usa el
+  del paquete convertido.
 - **Valores fijos:** los que salen del perfil de la impresora (boquilla, modelo, tamaño de la cama…) se escriben en el
   texto al convertir.
 - **Temperaturas:** quedan como variables que llena el perfil del filamento: `temperature`, `first_layer_temperature`,
@@ -156,9 +234,9 @@ sirve para las impresoras 5 y 9. Muchos perfiles comparten conjunto: hay 1663 pa
 | `input_filename_base` | Nombre del modelo, sin la extensión |
 
 - **Lo que no entra:** un G-code con condiciones o cuentas (el lenguaje de macros del programa de origen) no entra en
-  `profile`: la impresora queda sin ese G-code y el motor usa el suyo para el dialecto. Queda en `original` y en
-  `not_converted`.
-- **Cuántos entran:** con la versión del 26-10-2026, el de inicio de 1334 de 2317 perfiles de impresora de origen.
+  `profile`: queda entero en `gcode`, y el motivo en `not_converted`.
+- **Cuántos entran:** con la versión del 05-11-2026, el de inicio de 1277 de 2317 perfiles de impresora de origen
+  (antes 1334: ahora salen del G-code verdadero de cada modelo, y en 57 ese tiene macros).
 
 ## Calidad
 

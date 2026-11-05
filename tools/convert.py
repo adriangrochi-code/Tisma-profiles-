@@ -7,6 +7,7 @@ Each profile keeps every value of its source (inheritance resolved) under "origi
 understands, under its own keys (the engine's docs/CONFIG.md), under "profile.settings".
 
 Usage: convert.py <profiles dir> <out dir> [--source-commit SHA] [--uvtools DIR --uvtools-commit SHA]
+                  [--upstream REPOSITORY=DIR ...]
 """
 
 import argparse
@@ -17,7 +18,10 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
+
+import upstream
 
 FORMAT_VERSION = 2
 
@@ -77,6 +81,22 @@ class Bundle:
         out.update(values)
         out.pop('inherits', None)
         return out
+
+    def defined_in(self, kind, name, key, fallback, depth=0):
+        """The name of the section that sets a key for a resolved section (the same order as flat())."""
+        values = self.sections.get((kind, name))
+        if values is None and fallback is not None:
+            values = fallback.get((kind, name))
+        if values is None:
+            return None
+        if key in values:
+            return name
+        found = None
+        parents = values.get('inherits', '')
+        if parents and depth < 30:
+            for parent in [x.strip().strip('"') for x in parents.split(';') if x.strip()]:
+                found = self.defined_in(kind, parent, key, fallback, depth + 1) or found
+        return found
 
 
 class SyntheticBundle(Bundle):
@@ -155,13 +175,21 @@ def split_list(value):
     return [x.strip().strip('"') for x in value.split(sep)]
 
 
+def unescape(v):
+    """A value as the source program holds it: the bundle files write new lines and quotes escaped."""
+    return v.replace('\\n', '\n').replace('\\"', '"').replace('\\\\', '\\')
+
+
 def lookup(config, ident):
     m = re.match(r'(\w+)\[(\d+)\]$', ident)
     if m:
         items = split_list(config.get(m.group(1), ''))
         i = int(m.group(2))
-        return items[i] if i < len(items) else ''
-    return config.get(ident, '').strip('"')
+        return unescape(items[i]) if i < len(items) else ''
+    if ident == 'num_extruders' and ident not in config:
+        # Not a stored setting: the source programs count the extruders from nozzle_diameter.
+        return str(len(split_list(config.get('nozzle_diameter', '0.4'))))
+    return unescape(config.get(ident, '').strip('"'))
 
 
 def as_value(v):
@@ -169,6 +197,13 @@ def as_value(v):
         return float(v)
     except (TypeError, ValueError):
         return v
+
+
+def text_of(v):
+    """A number setting as the source program prints it in a regular expression match (0.4, not 0.4000)."""
+    if isinstance(v, float):
+        return str(int(v)) if v == int(v) else repr(v)
+    return str(v)
 
 
 def compile_condition(text):
@@ -193,11 +228,13 @@ def compile_condition(text):
             if not py or not py[-1].startswith('V('):
                 return None
             subject = py.pop()
-            py.append('%s(re.search(%r, str(%s)) is not None)' % ('not ' if op == '!~' else '', rx, subject))
+            # The source programs match the whole value (boost::regex_match), where "." also takes new lines.
+            py.append('%s(re.fullmatch(%r, S(%s), re.S) is not None)' % ('not ' if op == '!~' else '', rx, subject))
         elif m.group('num'):
             py.append(repr(float(m.group('num'))))
         elif m.group('str'):
-            py.append(repr(m.group('str')[1:-1]))
+            # A number written as a string ("0.2") compares with a number setting as a number.
+            py.append(repr(as_value(m.group('str')[1:-1])))
         elif m.group('id'):
             word = m.group('id')
             if word in ('and', 'or', 'not'):
@@ -217,7 +254,7 @@ def compile_condition(text):
 
     def run(config):
         try:
-            return bool(eval(code, {'re': re, 'V': lambda k: as_value(lookup(config, k))}))
+            return bool(eval(code, {'re': re, 'V': lambda k: as_value(lookup(config, k)), 'S': text_of}))
         except Exception:
             return False
     return run
@@ -363,9 +400,127 @@ def engine_gcode(text, c):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+# The printer's own custom G-code, as its source program has it (docs/FORMAT.md, "G-code de la máquina")
+
+class Sources:
+    """The checkouts of the programs that Tisma Slicer converted its bundles from, by repository."""
+
+    def __init__(self, specs):
+        self.repos = {}
+        for spec in specs or []:
+            url, _, folder = spec.partition('=')
+            commit = ''
+            try:
+                commit = subprocess.run(['git', '-C', folder, 'rev-parse', 'HEAD'], capture_output=True,
+                                        text=True, check=True).stdout.strip()
+            except (OSError, subprocess.CalledProcessError):
+                pass
+            self.repos[url.rstrip('/')] = (folder, commit)
+        self.cache = {}
+
+    def of(self, bundle, stats):
+        """(dialect, repository, commit, reader) of a bundle converted from another program, or None. The reader is
+        None when the checkout is missing or at another commit than the one the bundle was made from."""
+        if not bundle.path or bundle.path in self.cache:
+            return self.cache.get(bundle.path)
+        src = upstream.bundle_source(bundle.path)
+        out = None
+        if src:
+            program, repo, folder, commit = src
+            dialect = upstream.DIALECTS.get(repo)
+            reader = None
+            have = self.repos.get(repo)
+            if dialect is None:
+                stats['bundles from a program the pack does not read (%s)' % program] += 1
+            elif have and (not commit or have[1] == commit):
+                if dialect == 'cura':
+                    reader = upstream.CuraDefinitions(os.path.join(have[0], os.path.dirname(folder)))
+                else:
+                    reader = upstream.OrcaVendor(os.path.join(have[0], folder))
+            else:
+                stats['bundles without their source checkout (%s)' % dialect] += 1
+            out = (dialect, repo, commit, reader)
+        self.cache[bundle.path] = out
+        return out
+
+
+def bundle_gcode(b, kind, name, c, everything, keys):
+    """The G-code block of a section, from the bundle itself (its keys as the bundle writes them)."""
+    templates, source_keys, origin = {}, {}, {}
+    for k, neutral in keys.items():
+        text = gcode_text(c.get(k))
+        if text:
+            templates[neutral] = text
+            source_keys[neutral] = k
+            origin[neutral] = b.defined_in(kind, name, k, everything)
+    return templates, source_keys, origin
+
+
+PRINTER_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if not v.startswith('filament_')}
+FILAMENT_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if v.startswith('filament_')}
+
+
+def printer_gcode(b, name, c, everything, sources, stats):
+    """The printer's G-code block: from the source program when the bundle was converted from another one and its
+    checkout is given, else from the bundle."""
+    src = sources.of(b, stats)
+    rel = flag(c['use_relative_e_distances']) if 'use_relative_e_distances' in c else None
+    if src and src[3] is not None:
+        dialect, repo, commit, reader = src
+        if dialect == 'cura':
+            m = re.search(r'CURA_DEFINITION_(\S+?)(?:\\n|$)', c.get('printer_notes', ''))
+            block = upstream.cura_machine_gcode(reader, m.group(1)) if m else None
+        else:
+            block = upstream.orca_machine_gcode(reader, name)
+        if block is not None and block['templates'] and not block.get('expressions', {}).get('start'):
+            stats['printer G-code from the source program (%s)' % dialect] += 1
+            out = {'dialect': dialect, 'origin': 'source_program',
+                   'source': {'repository': repo, 'commit': commit, 'preset': block['preset']},
+                   'templates': {k: v for k, v in block['templates'].items() if v},
+                   'keys': block['keys'], 'from': block['from'],
+                   'relative_extrusion': rel if block['relative_extrusion'] is None else block['relative_extrusion']}
+            out['keys'] = {k: v for k, v in out['keys'].items() if k in out['templates']}
+            out['from'] = {k: v for k, v in out['from'].items() if k in out['templates']}
+            for k in ('expressions', 'values'):
+                if block.get(k):
+                    out[k] = block[k]
+            return out
+        stats['printer G-code from the bundle: not in the source program (%s)' % dialect] += 1
+    templates, keys, origin = bundle_gcode(b, 'printer', name, c, everything, PRINTER_KEYS)
+    out = {'dialect': 'prusaslicer', 'origin': 'converted_bundle' if src else 'bundle',
+           'source': {'bundle': b.id, 'section': name}, 'templates': templates, 'keys': keys, 'from': origin,
+           'relative_extrusion': rel}
+    if src:
+        # The program the bundle was converted from (its dialect, when the pack reads it), and its repository.
+        out['source'].update({'program': src[0], 'repository': src[1], 'commit': src[2]})
+    stats['printer G-code from the bundle (%s)' % ('converted by Tisma Slicer' if src else 'PrusaSlicer format')] += 1
+    return out
+
+
+def filament_gcode(b, name, c, everything, sources, stats):
+    templates, keys, origin = bundle_gcode(b, 'filament', name, c, everything, FILAMENT_KEYS)
+    if not templates:
+        return None
+    src = sources.of(b, stats)
+    return {'dialect': 'prusaslicer', 'origin': 'converted_bundle' if src else 'bundle',
+            'source': {'bundle': b.id, 'section': name}, 'templates': templates, 'keys': keys, 'from': origin}
+
+
+def engine_texts(block, c):
+    """The start and end G-code to convert for the engine (profile.settings), in the bundle's names: the source
+    program's text with its variables renamed as Tisma Slicer does, or the bundle's own text."""
+    if block['origin'] != 'source_program' or block['dialect'] == 'cura':
+        return {k: gcode_text(c[k]) for k in ('start_gcode', 'end_gcode') if c.get(k)}
+    return {k: upstream.to_prusa_names(block['templates'][n]) for k, n in (('start_gcode', 'start'),
+                                                                         ('end_gcode', 'end'))
+            if block['templates'].get(n)}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 # Mapping to engine keys (docs/CONFIG.md of the engine). Each function returns (settings, used source keys).
 
-def map_printer(c):
+def map_printer(c, texts=None):
+    """texts: the start and end G-code to convert, when not the bundle's own (engine_texts)."""
     s = {}
     used = set()
 
@@ -389,9 +544,11 @@ def map_printer(c):
     put(s, 'machine', 'flavor', flavor); u('gcode_flavor')
     if 'use_relative_e_distances' in c:
         put(s, 'machine', 'relative_extrusion', flag(c['use_relative_e_distances'])); u('use_relative_e_distances')
+    if texts is None:
+        texts = {k: gcode_text(c[k]) for k in ('start_gcode', 'end_gcode') if c.get(k)}
     for key in ('start_gcode', 'end_gcode'):
-        if c.get(key):
-            text, why = engine_gcode(gcode_text(c[key]), c)
+        if texts.get(key):
+            text, why = engine_gcode(texts[key], c)
             if text is not None:
                 put(s, 'machine', key, text); u(key)
             else:
@@ -572,6 +729,32 @@ def map_resin_print(c):
     return s, used
 
 
+NOZZLE_CONDITION = re.compile(r'(?:^|\band\b|&&|\()\s*nozzle_diameter\[0\]\s*==\s*"?(\d+(?:\.\d+)?)"?\s*(?=\)|\band\b|&&|$)')
+NOZZLE_NAME = re.compile(r'(?i)(?<![\d.])(\d+(?:\.\d+)?)\s*(?:mm)?\s*nozzle\b|\bnozzle\s*(\d+(?:\.\d+)?)(?![\d.])')
+
+
+def print_nozzle(name, c, compatible, pool):
+    """(nozzle, how) of a print profile: the nozzle of all its printers; or the one its condition requires (a
+    "nozzle_diameter[0]==X" that every printer must meet); or the one its name says ("0.2 nozzle", "0.6mm nozzle"),
+    when its printers do not say otherwise. (None, None) when nothing says it."""
+    nozzles = set()
+    if compatible:
+        nozzles = {num(dict(pc).get('nozzle_diameter')) for pc, rel in pool if rel in compatible} - {None}
+        if len(nozzles) == 1:
+            return nozzles.pop(), 'printers'
+    cond = c.get('compatible_printers_condition', '').strip().strip('"')
+    if ' or ' not in cond and '||' not in cond:
+        found = {float(x) for x in NOZZLE_CONDITION.findall(cond)}
+        if len(found) == 1:
+            return found.pop(), 'condition'
+    found = {float(a or b) for a, b in NOZZLE_NAME.findall(name)}
+    if len(found) == 1:
+        n = found.pop()
+        if 0.1 <= n <= 3 and (not nozzles or n in nozzles):
+            return n, 'name'
+    return None, None
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # Pack writer
 
@@ -586,6 +769,7 @@ class Writer:
         self.taken = set()
         self.stats = collections.Counter()
         self.unmapped = collections.defaultdict(collections.Counter)
+        self.left_out = []
 
     def path(self, *parts):
         base = os.path.join(*parts)
@@ -667,6 +851,33 @@ def common_flat(dicts):
     return {k: v for k, v in dicts[0].items() if all(d.get(k, object()) == v for d in dicts[1:])}
 
 
+def common_block(blocks):
+    """What every G-code block of a model shares: the plain fields, and each key of the dictionary fields."""
+    out = {}
+    first = blocks[0]
+    for k, v in first.items():
+        if isinstance(v, dict):
+            same = {kk: vv for kk, vv in v.items()
+                    if all(isinstance(b.get(k), dict) and b[k].get(kk, object()) == vv for b in blocks[1:])}
+            if same:
+                out[k] = same
+        elif all(b.get(k, object()) == v for b in blocks[1:]):
+            out[k] = v
+    return out
+
+
+def diff_block(common, block):
+    out = {}
+    for k, v in block.items():
+        if isinstance(v, dict):
+            own = {kk: vv for kk, vv in v.items() if common.get(k, {}).get(kk, object()) != vv}
+            if own:
+                out[k] = own
+        elif common.get(k, object()) != v:
+            out[k] = v
+    return out
+
+
 def build_models(w, index, printer_entries):
     """One file per printer model, with what its nozzles (or variants) share written once and, per variant, only what
     changes. Models that two sources both have are kept once: from the manufacturer's own bundle when there is one.
@@ -712,6 +923,8 @@ def build_models(w, index, printer_entries):
             seen.add(vid)
             variants.append((vid, nozzle, rel, e))
         common = common_settings([e['profile']['settings'] for _, _, _, e in variants])
+        blocks = [e.get('gcode') for _, _, _, e in variants]
+        common_gcode = common_block([g for g in blocks if g]) if all(blocks) else {}
         original_common = common_flat([e['original'] for _, _, _, e in variants])
         first = variants[0][3]
         path = w.path(os.path.dirname(os.path.dirname(keep_m['printers'][0])), 'models', slug(keep_m['name']) + '.json')
@@ -723,10 +936,16 @@ def build_models(w, index, printer_entries):
                'assets': keep_m.get('assets', {}), 'license': first['license'], 'origin': first['origin'],
                'default_variant': default_variant,
                'common': {'settings': common}, 'variants': []}
+        if common_gcode:
+            doc['common']['gcode'] = common_gcode
         for vid, nozzle, rel, e in variants:
             var = {'id': vid, 'nozzle': nozzle, 'name': e['profile']['name'],
                    'settings': diff_settings(common, e['profile']['settings']),
                    'defaults': e.get('defaults', {}), 'source_defaults': e.get('source_defaults', {})}
+            if e.get('gcode'):
+                own = diff_block(common_gcode, e['gcode'])
+                if own:
+                    var['gcode'] = own
             for k in ('not_converted',):
                 if k in e:
                     var[k] = e[k]
@@ -771,7 +990,11 @@ def main():
     ap.add_argument('--source-commit', default='')
     ap.add_argument('--uvtools', help='a checkout of UVtools, for its resin printer profiles')
     ap.add_argument('--uvtools-commit', default='')
+    ap.add_argument('--upstream', action='append', metavar='REPOSITORY=DIR',
+                    help='a checkout of a program that Tisma Slicer converted bundles from, at the commit the bundles '
+                         'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
     args = ap.parse_args()
+    sources = Sources(args.upstream)
 
     bundles = [Bundle(os.path.join(args.profiles, f)) for f in sorted(os.listdir(args.profiles))
                if f.endswith('.ini')]
@@ -818,7 +1041,19 @@ def main():
                 w.stats['broken'] += 1
                 continue
             sla = c.get('printer_technology', 'FFF').upper() == 'SLA'
-            settings, used = (map_resin_printer if sla else map_printer)(c)
+            block = None if sla else printer_gcode(b, name, c, everything, sources, w.stats)
+            if sla:
+                settings, used = map_resin_printer(c)
+            else:
+                settings, used = map_printer(c, engine_texts(block, c))
+            match = c
+            given = (block or {}).get('values', {}).get('nozzle_diameter')
+            if not sla and 'nozzle_diameter' not in c and given:
+                # The bundle lost the nozzle; its source program gives it.
+                nozzle = num(given[0] if isinstance(given, list) else given)
+                put(settings, 'machine', 'nozzle_diameter', nozzle)
+                match = dict(c, nozzle_diameter=str(clean_num(nozzle)))
+                w.stats['printer nozzle from the source program'] += 1
             notes = settings.pop('_notes', {})
             rel = w.path(vdir, 'printers', slug(name) + '.json')
             entry = {'format': 'tisma-pack-entry', 'version': FORMAT_VERSION,
@@ -831,6 +1066,8 @@ def main():
                                   'print': c.get('default_print_profile', '') or c.get('default_sla_print_profile', ''),
                                   'resin': c.get('default_sla_material_profile', '')},
                      'license': lic, 'origin': origin, 'original': c}
+            if block:
+                entry['gcode'] = block
             if notes:
                 entry['not_converted'] = notes
                 for k, why in notes.items():
@@ -842,8 +1079,8 @@ def main():
             vendor['printers'].append(rel)
             printer_ids[rel] = len(printer_ids)
             printer_names[(b.id, name)] = rel
-            printers.append((c, rel, sla))
-            (all_sla if sla else all_printers).append((c, rel))
+            printers.append((match, rel, sla))
+            (all_sla if sla else all_printers).append((match, rel))
             w.stats['sla printers' if sla else 'printers'] += 1
 
         for mid, m in b.models.items():
@@ -901,10 +1138,19 @@ def main():
                 w.stats['conditions not understood'] += 1
             else:
                 compatible = [rel for pc, rel in pool if cond(pc)]
-            nozzle = None
-            if kind == 'print' and compatible:
-                nozzles = {num(dict(pc).get('nozzle_diameter')) for pc, rel in pool if rel in compatible}
-                nozzle = nozzles.pop() if len(nozzles) == 1 else None
+            if compatible is not None and not compatible:
+                # Fits no printer, in the pack or in its source program (a condition no printer meets, or a list of
+                # printers that are not there): left out, and listed in stats.json.
+                w.stats['%s left out: fits no printer' % kind] += 1
+                w.left_out.append({'kind': kind, 'bundle': b.id, 'name': name,
+                                   'condition': c.get('compatible_printers_condition', ''),
+                                   'printers': c.get('compatible_printers', '')})
+                continue
+            nozzle, nozzle_from = None, None
+            if kind == 'print':
+                nozzle, nozzle_from = print_nozzle(name, c, compatible, pool)
+                if nozzle_from:
+                    w.stats['print nozzle from ' + nozzle_from] += 1
             if kind == 'filament':
                 settings, used = map_filament(c)
                 pk, folder, group = 'filament', 'filaments', 'filaments'
@@ -935,6 +1181,10 @@ def main():
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle
+            if kind == 'filament':
+                fblock = filament_gcode(b, name, c, everything, sources, w.stats)
+                if fblock:
+                    entry['gcode'] = fblock
             w.write(rel, entry)
             vendor[group].append(rel)
             w.stats[kind] += 1
@@ -1008,6 +1258,7 @@ def main():
     index['counts'] = dict(w.stats)
     w.write('index.json', index)
     w.write('stats.json', {'counts': dict(w.stats),
+                           'left_out': w.left_out,
                            'unmapped_keys': {k: dict(v.most_common()) for k, v in w.unmapped.items()}})
     print(json.dumps(dict(w.stats)))
 

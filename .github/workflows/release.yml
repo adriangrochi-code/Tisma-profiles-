@@ -50,8 +50,14 @@ jobs:
           python3 tools/check_community.py community
           python3 tools/check_knowledge.py knowledge
 
+      - name: Fetch the programs the bundles were converted from
+        run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
+
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}"
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" $(cat upstream.args)
+
+      - name: Check the pack
+        run: python3 tools/check_pack.py pack --report pack/check.json
 
       - name: Package
         id: pkg
