@@ -204,6 +204,11 @@ otro modelo de la misma base. Por eso el convertidor lee esos programas en el co
 PrusaSlicer (`original`). Un G-code `orcaslicer` usa los nombres de OrcaSlicer (`nozzle_temperature_initial_layer`
 por `first_layer_temperature`, `bed_temperature_initial_layer_single` por `first_layer_bed_temperature`…).
 
+**Las variables de cada dialecto** están en `docs/GCODE_VARIABLES.md`: una tabla por dialecto con cada variable que
+usan los G-code del paquete (contadas en el paquete convertido), su tipo y qué es según las definiciones del programa
+de origen, en qué G-code aparece y su nombre en PrusaSlicer. La genera `tools/gcode_variables.py` con cada versión
+nueva del paquete; no se edita a mano.
+
 Con la versión del 05-11-2026, de los 2317 perfiles de impresora FFF de origen: 902 de OrcaSlicer, 16 de Creality
 Print, 1 de Elegoo Slicer y 296 de Cura salen del programa de origen; 1060 de paquetes de PrusaSlicer; 42 del paquete
 convertido (las impresoras de cinta de BlackBelt y VertexSlice, y la CR-30 PrintMill, que no tienen un perfil con su
