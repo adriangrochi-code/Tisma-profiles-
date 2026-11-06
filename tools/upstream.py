@@ -49,13 +49,15 @@ def bundle_source(path):
 
 
 class OrcaVendor:
-    """The machine presets of one OrcaSlicer-style vendor folder (resources/profiles/<vendor>), by name."""
+    """The presets of one kind ("machine", "process" or "filament") of an OrcaSlicer-style vendor folder
+    (resources/profiles/<vendor>), by name. Parents not in the folder are looked for in the fallback folders (the
+    shared OrcaFilamentLibrary for filaments)."""
 
-    def __init__(self, folder, fallback_folders=()):
+    def __init__(self, folder, fallback_folders=(), kind='machine'):
         self.folder = folder
         self.presets = {}
         for root in (folder,) + tuple(fallback_folders):
-            for f in sorted(glob.glob(os.path.join(root, 'machine', '**', '*.json'), recursive=True)):
+            for f in sorted(glob.glob(os.path.join(root, kind, '**', '*.json'), recursive=True)):
                 try:
                     d = json.load(open(f, encoding='utf-8'))
                 except (ValueError, UnicodeDecodeError):
@@ -64,7 +66,7 @@ class OrcaVendor:
                     self.presets.setdefault(d['name'], (os.path.relpath(f, os.path.dirname(folder)), d))
 
     def find(self, name):
-        """The preset of a Tisma Slicer printer name. Tisma Slicer adds ' @Orca <vendor>' when a name clashes."""
+        """The preset of a Tisma Slicer name. Tisma Slicer adds ' @Orca <vendor>' when a name clashes."""
         if name in self.presets:
             return name
         short = re.sub(r' @(Orca|CrealityPrint|ElegooSlicer)\b.*$', '', name)
@@ -145,6 +147,19 @@ def _setting_defaults(tree):
         if 'default_value' in s and s.get('type') != 'category':
             yield k, s['default_value']
         yield from _setting_defaults(s.get('children') or {})
+
+
+def orca_compatible(vendor, name):
+    """(compatible_printers list, compatible_printers_condition) of a process or filament preset as the source
+    program resolves it (inherited from its parents like every other value), or None if the preset is unknown."""
+    key = vendor.find(name)
+    if key is None:
+        return None
+    values, _ = vendor.resolve(key)
+    printers = values.get('compatible_printers') or []
+    if isinstance(printers, str):
+        printers = [x.strip().strip('"') for x in printers.split(';') if x.strip()]
+    return key, list(printers), str(values.get('compatible_printers_condition') or '')
 
 
 def _gcode_keys(values, table):

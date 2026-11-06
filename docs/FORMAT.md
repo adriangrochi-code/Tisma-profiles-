@@ -145,10 +145,17 @@ comparten:
 Cada conjunto es una lista de números de impresora (`index.json`, `printers`). Un filamento con `"compatible": 1`
 sirve para las impresoras 5 y 9. Muchos perfiles comparten conjunto: hay unos 1700 para más de 16 000 perfiles.
 
-- **Nunca hay un conjunto vacío.** Un perfil que no sirve para ninguna impresora (ni en el programa de origen: una
-  condición que ninguna cumple, o una lista de impresoras que no están) no entra en el paquete; queda en
-  `stats.json`, `left_out`, con su condición. Con la versión del 05-11-2026 son 50 (34 de impresión, 15 filamentos y 1
-  de impresión de resina).
+- **Nunca hay un conjunto vacío.** Un perfil que no sirve para ninguna impresora del paquete no entra; queda en
+  `stats.json`, `left_out`, con su condición o con las impresoras que nombra el programa de origen
+  (`source_printers`). Con la versión del 05-11-2026 son 83 (67 de impresión, 15 filamentos y 1 de impresión de
+  resina): condiciones que ninguna impresora cumple ni en el programa de origen, y perfiles para boquillas de un
+  modelo que el paquete tiene con otras (por ejemplo, la Neptune 3 Max solo con 0,4 mm).
+- **De la familia OrcaSlicer** (OrcaSlicer, Creality Print, Elegoo Slicer): la lista de impresoras sale del programa
+  de origen, heredada de los padres como cualquier otro valor (así lo hace el programa). El paquete de Tisma Slicer la
+  dejaba vacía en los perfiles que solo la heredan, y entonces servían para todas las impresoras de la marca, o le
+  sumaba impresoras que el origen no nombra. Una impresora que Tisma Slicer guardó del paquete del fabricante (el
+  mismo modelo de dos fuentes) se busca por modelo y boquilla. Con la versión del 05-11-2026, 6551 perfiles toman la
+  lista del origen, y 2012 cambian de impresoras (1906 a menos).
 - **Las condiciones** se evalúan como en el programa de origen: `num_extruders` es la cantidad de boquillas, un número
   escrito como texto (`"0.2"`) se compara como número, los textos tienen sus saltos de línea, y `=~` pide que la
   expresión regular cubra todo el valor, con `.` que también toma saltos de línea.
@@ -249,8 +256,9 @@ nombre en el programa de origen o cuyo programa el paquete no lee).
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
 05-11-2026 y el motor de `dev` (3cb778f):
 - **variantes:** las 2261 laminan;
-- **todo:** 18 346 combinaciones, 20 fallan (0,11 %). Son perfiles de impresión con capas más gruesas que la boquilla
-  de la primera impresora compatible (por ejemplo, uno de 0,6 mm de boquilla probado en una de 0,4).
+- **todo:** 18 313 combinaciones, 11 fallan (0,06 %). Son perfiles de impresión que el programa de origen da con capas
+  más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron de 0,25 y 0,3 mm), más de lo
+  que acepta el motor.
 
 `tools/check_pack.py` revisa el paquete convertido y la CI falla si encuentra:
 - un conjunto de compatibilidad vacío, o un perfil que apunta a uno que no existe;

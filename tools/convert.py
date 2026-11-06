@@ -417,6 +417,21 @@ class Sources:
                 pass
             self.repos[url.rstrip('/')] = (folder, commit)
         self.cache = {}
+        self.bases = {}
+        self.kinds = {}
+        self.names = {}  # (repository, preset name in the source program) -> printer entry path
+        self.matched = set()  # bundles with printers that the source program has
+        self.unmatched = set()  # bundles with printers that it has not (made by hand from it, like the belt ones)
+
+    def presets(self, bundle, kind):
+        """The source program's "process" or "filament" presets of an OrcaSlicer-style bundle, or None."""
+        base = self.bases.get(bundle.path)
+        if base is None:
+            return None
+        if (base, kind) not in self.kinds:
+            library = os.path.join(os.path.dirname(base), 'OrcaFilamentLibrary')
+            self.kinds[(base, kind)] = upstream.OrcaVendor(base, (library,) if kind == 'filament' else (), kind=kind)
+        return self.kinds[(base, kind)]
 
     def of(self, bundle, stats):
         """(dialect, repository, commit, reader) of a bundle converted from another program, or None. The reader is
@@ -437,6 +452,7 @@ class Sources:
                     reader = upstream.CuraDefinitions(os.path.join(have[0], os.path.dirname(folder)))
                 else:
                     reader = upstream.OrcaVendor(os.path.join(have[0], folder))
+                    self.bases[bundle.path] = os.path.join(have[0], folder)
             else:
                 stats['bundles without their source checkout (%s)' % dialect] += 1
             out = (dialect, repo, commit, reader)
@@ -810,6 +826,32 @@ def canonical_vendor(bundle_id):
     return re.sub(r'[^a-z0-9]', '', s)
 
 
+def vendor_words(vendor_name, bundle_id):
+    return {vendor_name.lower(), canonical_vendor(bundle_id)} | set(vendor_name.lower().split())
+
+
+def is_hf(name):
+    return bool(re.search(r'(?i)\bhf|high[- ]flow', name))
+
+
+def same_model(machines, name, vendor_name, bundle_id, model_index):
+    """The pack printers of the same model and nozzle as a printer preset of the source program, or None."""
+    if machines is None or not hasattr(machines, 'find') or machines.find(name) is None:
+        return None
+    try:
+        values, _ = machines.resolve(machines.find(name))
+    except KeyError:
+        return None
+    model = values.get('printer_model')
+    nozzle = values.get('nozzle_diameter')
+    nozzle = num(nozzle[0] if isinstance(nozzle, list) and nozzle else nozzle)
+    if not model or nozzle is None:
+        return None
+    key = (canonical_vendor(bundle_id), canonical_model(model, vendor_words(vendor_name, bundle_id)))
+    hits = [rel for rel, n, hf in model_index.get(key, []) if n == nozzle and hf == is_hf(name)]
+    return hits or None
+
+
 def canonical_model(name, vendor_words):
     s = name.lower().replace('original ', '')
     for word in sorted(vendor_words, key=len, reverse=True):
@@ -885,7 +927,7 @@ def build_models(w, index, printer_entries):
     refs = {}
     groups = collections.OrderedDict()  # canonical (vendor, model) -> [(vendor dict, model dict)]
     for v in index['vendors']:
-        words = {v['name'].lower(), canonical_vendor(v['id'])} | set(v['name'].lower().split())
+        words = vendor_words(v['name'], v['id'])
         for m in v['models']:
             if not m['printers']:
                 continue
@@ -1022,6 +1064,7 @@ def main():
     compat_sets = {}  # tuple of printer numbers -> set number
     printer_entries = {}  # written last, with their defaults resolved to pack entries
     printer_names = {}  # (bundle, name) -> entry path
+    model_index = {}  # (canonical vendor, canonical model) -> [(entry path, nozzle, high flow)], FFF
     by_name = {}  # (kind, bundle or None, name) -> (entry path, compatible set number)
 
     for b in bundles:
@@ -1079,6 +1122,17 @@ def main():
             vendor['printers'].append(rel)
             printer_ids[rel] = len(printer_ids)
             printer_names[(b.id, name)] = rel
+            if not sla:
+                mid = c.get('pack_model', c.get('printer_model', ''))
+                words = vendor_words(vendor_name, b.id)
+                model_index.setdefault((canonical_vendor(b.id), canonical_model(
+                    b.models.get(mid, {}).get('name', mid) or name, words)), []).append(
+                    (rel, num(match.get('nozzle_diameter')), is_hf(name)))
+            if block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
+                sources.names[(block['source']['repository'], block['source']['preset'])] = rel
+                sources.matched.add(b.path)
+            elif block and block.get('origin') == 'converted_bundle':
+                sources.unmatched.add(b.path)
             printers.append((match, rel, sla))
             (all_sla if sla else all_printers).append((match, rel))
             w.stats['sla printers' if sla else 'printers'] += 1
@@ -1130,7 +1184,30 @@ def main():
             listed = [x for x in split_list(c.get('compatible_printers', '')) if x] \
                 if c.get('compatible_printers', '').strip() else []
             pool = sla_targets if kind.startswith('sla') else [t for t in targets]
-            if listed:
+            src = sources.of(b, w.stats) if kind in ('filament', 'print') else None
+            straight = b.path in sources.matched or (not printers and b.path not in sources.unmatched)
+            vendor_presets = sources.presets(b, 'process' if kind == 'print' else 'filament') \
+                if src and straight else None
+            from_source = upstream.orca_compatible(vendor_presets, name) if vendor_presets else None
+            if from_source and from_source[1]:
+                # The source program's list, inherited from the parents like any other value (Tisma Slicer's bundle
+                # writes it empty in a preset that only inherits it, or with printers the source does not name).
+                # The source program lets a profile fit printers of other vendors.
+                wanted = set()
+                for x in from_source[1]:
+                    hit = sources.names.get((src[1], x)) or printer_names.get((b.id, x))
+                    if hit is None:
+                        # Tisma Slicer keeps a model that two sources have once, from the maker's own bundle: the
+                        # printer of the same model and nozzle there (the rule build_models merges models by).
+                        hit = same_model(src[3], x, vendor['name'], b.id, model_index)
+                        if hit:
+                            w.stats['%s compatible printer matched by model and nozzle' % kind] += 1
+                    if hit:
+                        wanted.update(hit if isinstance(hit, list) else [hit])
+                compatible = [rel for pc, rel in all_printers if rel in wanted]
+                pool = all_printers
+                w.stats['%s compatible printers from the source program' % kind] += 1
+            elif listed:
                 wanted = {printer_names.get((b.id, x)) for x in listed}
                 compatible = [rel for pc, rel in pool if rel in wanted]
             elif cond is None:
@@ -1145,6 +1222,9 @@ def main():
                 w.left_out.append({'kind': kind, 'bundle': b.id, 'name': name,
                                    'condition': c.get('compatible_printers_condition', ''),
                                    'printers': c.get('compatible_printers', '')})
+                if from_source and from_source[1]:
+                    # The printers the source program names, none of them in the pack.
+                    w.left_out[-1]['source_printers'] = from_source[1]
                 continue
             nozzle, nozzle_from = None, None
             if kind == 'print':

@@ -17,6 +17,9 @@ changes.
 2. **Compatible sets:** no set is empty. Condition evaluation fixed (`num_extruders`, numbers written as strings,
    escaped new lines in notes, whole-value regex match). 392 → 50 entries fit nothing, and those fit no printer in
    their source program either: left out, listed in `stats.json` → `left_out`.
+2b. **Compatible lists of the OrcaSlicer family from the source program** (inherited like any value, as
+   PresetBundle.cpp does). Tisma Slicer's bundle wrote them empty (profile for every printer of the brand) or added
+   printers. 2012 profiles change; validate failures 20 → 11 (the rest: layer > nozzle in the source itself).
 3. **Print nozzle:** from all printers, else the condition's `nozzle_diameter[0]==X`, else the name. Printers whose
    bundle lost `nozzle_diameter` take it from the source program (3 UltiMaker 2 extended+ variants).
 4. **CI check:** `tools/check_pack.py` (in `release.yml` before packaging, and the new `check.yml` on other branches).
@@ -34,6 +37,8 @@ changes.
   `profile.settings.machine.relative_extrusion` (from Tisma Slicer's bundle, which forced `M83`) is `true`.
 - 42 printers still take their G-code from Tisma Slicer's converted bundle (BlackBelt, VertexSlice, CR-30 PrintMill):
   their programs are not read, or the preset has another name there.
+- Tisma Slicer kept one copy of a model that two sources have (the maker's bundle), losing the other source's
+  nozzle variants (e.g. Neptune 3 Max only 0.4): their profiles are in `left_out` with `source_printers`.
 - 4 groups of models share the vendor-wide base start G-code of OrcaSlicer (DeltaMaker, LONGER LK10, E3NG/VIRTU,
   WonderMaker): that is how the source has them; reported as notes, not failures.
 
