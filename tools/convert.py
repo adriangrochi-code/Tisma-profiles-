@@ -1076,6 +1076,15 @@ def main():
                         # (Tisma Slicer's bundle does not keep all of them).
                         entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
                         w.stats['filaments with source_values (%s)' % src[0]] += 1
+                # Nozzle temperatures that the bundle lost and the source program gives (its own names for them).
+                for prusa, own in (('temperature', 'nozzle_temperature'),
+                                   ('first_layer_temperature', 'nozzle_temperature_initial_layer')):
+                    v = source_values.get(own) if source_values else None
+                    if prusa not in c and v:
+                        value = str(v[0] if isinstance(v, list) else v).strip()
+                        entry['profile']['settings'].setdefault('machine', {}).setdefault('variables', {})[prusa] = value
+                        entry.setdefault('from_source_program', []).append('machine.variables.' + prusa)
+                        w.stats['filament %s from the source program' % prusa] += 1
                 if fblock:
                     entry['gcode'] = fblock
             w.write(rel, entry)

@@ -61,6 +61,15 @@ def nozzle_said(entry):
     return None
 
 
+def prune(d):
+    """Removes the groups left empty."""
+    for k in list(d):
+        if isinstance(d[k], dict):
+            prune(d[k])
+            if not d[k]:
+                del d[k]
+
+
 KINDS = {'filaments': 'filament', 'prints': 'print', 'resins': 'sla_material', 'resin_prints': 'sla_print'}
 GROUPS = ('translated', 'similar', 'none')
 
@@ -138,7 +147,15 @@ def main():
         for group in ('filaments', 'prints', 'resins', 'resin_prints'):
             for rel in v[group]:
                 e = load(args.pack, rel)
-                same_translation(KINDS[group], e['original'], e['profile']['settings'], rel, problems, counts,
+                settings = json.loads(json.dumps(e['profile']['settings']))
+                for path in e.get('from_source_program', []):  # filled from the source program, not translated
+                    parts = path.split('.')
+                    node = settings
+                    for part in parts[:-1]:
+                        node = node.get(part, {})
+                    node.pop(parts[-1], None)
+                prune(settings)
+                same_translation(KINDS[group], e['original'], settings, rel, problems, counts,
                                  nozzle=e.get('nozzle'))
                 counts[group] += 1
                 c = e.get('compatible')

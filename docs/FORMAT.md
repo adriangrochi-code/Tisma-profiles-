@@ -143,6 +143,9 @@ comparten:
   G-code de las máquinas de ese dialecto (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
   y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
   del 05-11-2026, 4121 filamentos de OrcaSlicer y 316 de Creality Print.
+- **`from_source_program`:** las claves del perfil (`grupo.clave`) que no salen del paquete de Tisma Slicer sino del
+  programa de origen, porque el paquete las perdió: las temperaturas de la boquilla de 3 filamentos de la UltiMaker 2
+  extended+.
 
 ## `compatible.json`
 
