@@ -31,11 +31,13 @@ el origen da con capas más gruesas que la boquilla.
 
 ## Con el motor actual
 
-Con el motor de `dev` (70f9335) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
+Con el motor de `dev` (b3f296b) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
 laminan con su G-code, y en todas cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden (GM13).
 
 ## También
 
 - Los filamentos de la familia OrcaSlicer traen los valores del programa de origen que usa el G-code de las máquinas
   (`source_values`).
-- Tablas de traducción de claves por programa (`translation.tar.xz`), para abrir proyectos de otros programas.
+- Tablas de traducción de claves por programa (`translation.tar.xz`), para abrir proyectos de otros programas; los
+  perfiles ganan 86 ajustes del motor que antes no tenían (aceleraciones por tipo, límites de la máquina, planchado,
+  retracción, MMU…), con el mismo sentido que en el programa de origen.

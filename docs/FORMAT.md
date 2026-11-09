@@ -318,10 +318,8 @@ paquete, da exactamente su `profile.settings`.
   cambió también los valores, `prusaslicer_values` da cada valor de origen con el suyo (por ejemplo, el relleno
   `crosshatch` de OrcaSlicer es `grid`). Una clave sin `prusaslicer` no tiene un nombre que los perfiles muestren.
 - **Solo lo que significa lo mismo:** una clave entra con el sentido y las unidades que le dan PrusaSlicer (su
-  `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor). Si el valor de origen no tiene equivalente en el motor
-  (un `restart_extra` negativo, una velocidad de MMU en 0 que dice «no se usa»), no se escribe y `note` lo dice.
-  Quedan fuera `max_layer_height` y `min_layer_height`: en PrusaSlicer solo limitan la altura variable y en el motor
-  son un límite de toda capa.
+  `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor, desde `dev` b3f296b). Si el valor de origen no tiene
+  equivalente en el motor, no se escribe y `note` lo dice (por ejemplo, el ancho de la pared externa en %).
 - **Con poca base:** Elegoo Slicer tiene una sola impresora en el paquete y Cura solo impresoras: casi todas sus
   claves quedan `none`.
 
@@ -329,9 +327,9 @@ Con la versión del 05-11-2026:
 
 | Dialecto | Claves | Al motor | Con nombre de PrusaSlicer |
 |---|---|---|---|
-| `prusaslicer` | 806 | 169 | — |
-| `orcaslicer` | 881 | 114 | 205 |
-| `crealityprint` | 509 | 78 | 147 |
+| `prusaslicer` | 806 | 171 | — |
+| `orcaslicer` | 881 | 116 | 205 |
+| `crealityprint` | 509 | 80 | 147 |
 | `elegooslicer` | 90 | 0 | 0 |
 | `cura` | 739 | 3 | 3 |
 
@@ -339,7 +337,7 @@ Con la versión del 05-11-2026:
 
 `tools/validate.py` lamina un cubo de 20 mm con el motor con cada variante FDM y su filamento y perfil por defecto, y
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
-05-11-2026 y el motor de `dev` (70f9335):
+05-11-2026 y el motor de `dev` (b3f296b):
 - **variantes:** las 2261 laminan, también con el G-code propio de cada máquina (`--macros`), y en todas cada línea
   fija de su G-code de inicio y de fin sale igual y en el mismo orden (GM13);
 - **todo:** 18 313 combinaciones, 14 fallan (0,08 %). 11 son perfiles de impresión que el programa de origen da con
