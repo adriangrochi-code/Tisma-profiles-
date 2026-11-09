@@ -33,7 +33,9 @@ jobs:
           repository: ${{ steps.src.outputs.repo }}
           ref: ${{ steps.src.outputs.commit }}
           path: source
-          sparse-checkout: ${{ steps.src.outputs.dir }}
+          sparse-checkout: |
+            ${{ steps.src.outputs.dir }}
+            src/libslic3r
 
       - uses: actions/checkout@v4
         with:
@@ -55,7 +57,7 @@ jobs:
         run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
 
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" $(cat upstream.args)
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
 
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json

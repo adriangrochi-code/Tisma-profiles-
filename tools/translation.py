@@ -530,3 +530,51 @@ class Renames:
             if not any(o[0] == v[0] for o in out.values()):
                 out[k] = v
         return out
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Values of a PrusaSlicer-format section with the types PrusaSlicer gives them (its PrintConfig.cpp)
+
+def option_types(print_config_cpp):
+    """{key: coType} of a PrintConfig.cpp (this->add("key", coType), and the per-axis machine limits)."""
+    text = open(print_config_cpp, encoding='utf-8', errors='replace').read()
+    out = {m.group(1): m.group(2) for m in re.finditer(r'this->add(?:_nullable)?\("(\w+)",\s*(co\w+)\)', text)}
+    for m in re.finditer(r'this->add\("(\w+_)"\s*\+\s*axis\.name,\s*(co\w+)\)', text):
+        for axis in 'xyze':
+            out.setdefault(m.group(1) + axis, m.group(2))
+    return out
+
+
+def _strings(text):
+    """A PrusaSlicer list of texts: "a";"b" (or a;b, or a,b without quotes)."""
+    if '"' in text:
+        return [unescape(x) for x in re.findall(r'"((?:\\.|[^"\\])*)"', text)]
+    return [x.strip() for x in re.split(r'[;,]', text)] if text else []
+
+
+def typed(value, kind):
+    """A bundle value (text) as PrusaSlicer holds it, for a coType; the text when the type is not known."""
+    v = value.strip()
+    scalar = {'coFloat': float, 'coInt': int}
+
+    def number(x):
+        x = x.strip()
+        if x.endswith('%'):
+            return x
+        n = num(x)
+        return clean_num(n) if n is not None else x
+    if kind == 'coBool':
+        return flag(v)
+    if kind == 'coBools':
+        return [flag(x) for x in v.split(',')] if v else []
+    if kind in scalar or kind in ('coPercent', 'coFloatOrPercent'):
+        return number(v)
+    if kind in ('coFloats', 'coInts', 'coPercents', 'coFloatsOrPercents'):
+        return [number(x) for x in v.split(',')] if v else []
+    if kind == 'coStrings':
+        return _strings(v)
+    if kind in ('coString', 'coEnum'):
+        return unescape(v[1:-1] if len(v) >= 2 and v[0] == v[-1] == '"' else v)
+    if kind == 'coPoints':
+        return [p.strip() for p in v.split(',')] if v else []
+    return unescape(v[1:-1] if len(v) >= 2 and v[0] == v[-1] == '"' else v)

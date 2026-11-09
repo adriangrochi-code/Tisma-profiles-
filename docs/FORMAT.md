@@ -140,7 +140,7 @@ comparten:
   máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»).
 - **`source_values`** (filamentos), con `dialect`, `preset` y `values`: los valores del filamento para las variables
   que usa el G-code de las máquinas de ese dialecto. En los paquetes de PrusaSlicer, los de la sección del paquete,
-  como texto, también para su propio G-code de filamento (por ejemplo `filament_abrasive`, `filament_notes`). En la
+  con su tipo (como `values`), también para su propio G-code de filamento (por ejemplo `filament_abrasive`, `filament_notes`). En la
   familia OrcaSlicer, los del mismo perfil en el programa de origen, con sus nombres (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
   y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
   del 05-11-2026, 7199 filamentos de paquetes de PrusaSlicer, 4121 de OrcaSlicer y 316 de Creality Print.
@@ -192,7 +192,7 @@ siendo la versión con variables simples (abajo).
 | `keys` | El nombre de origen de cada uno |
 | `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer) |
 | `relative_extrusion` | Si el programa de origen extruye en relativo con este G-code (`null` si no lo dice). En `cura` es casi siempre `false`: su G-code de inicio pone `M82`. Al usar `templates`, el motor extruye como dice este campo |
-| `values` | Los valores de la máquina para las variables de sus macros. En `source_program` de la familia OrcaSlicer, todos los de la máquina en el programa de origen, con sus nombres (listas como listas). En `bundle` y `converted_bundle`, los de la sección del paquete que usa su G-code, como texto (sin escapes; las listas, separadas por coma) |
+| `values` | Los valores de la máquina para las variables de sus macros. En `source_program` de la familia OrcaSlicer, todos los de la máquina en el programa de origen, con sus nombres (listas como listas). En `bundle` y `converted_bundle`, los de la sección del paquete que usan su G-code y el G-code de los filamentos, con el tipo que les da PrusaSlicer (su `PrintConfig.cpp`, el de Tisma Slicer en el commit de los paquetes): sí/no, números, textos y listas; como texto si el tipo no se conoce |
 | `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto. No está en `templates` |
 
 **Nombres de `templates`** (otras claves de G-code del origen quedan con su nombre):

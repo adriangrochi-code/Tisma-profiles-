@@ -425,7 +425,7 @@ PRINTER_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if not v.startswith
 FILAMENT_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if v.startswith('filament_')}
 
 
-def printer_gcode(b, name, c, everything, sources, stats):
+def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozenset()):
     """The printer's G-code block: from the source program when the bundle was converted from another one and its
     checkout is given, else from the bundle."""
     src = sources.of(b, stats)
@@ -458,7 +458,8 @@ def printer_gcode(b, name, c, everything, sources, stats):
     if src:
         # The program the bundle was converted from (its dialect, when the pack reads it), and its repository.
         out['source'].update({'program': src[0], 'repository': src[1], 'commit': src[2]})
-    values = bundle_values(templates, c)
+    # The variables of its own G-code and of the filaments' G-code, which runs with the printer's values too.
+    values = bundle_values(templates, c, template_names(templates) | filament_names)
     if values:
         out['values'] = values
     stats['printer G-code from the bundle (%s)' % ('converted by Tisma Slicer' if src else 'PrusaSlicer format')] += 1
@@ -474,11 +475,14 @@ def template_names(templates):
     return names
 
 
+OPTION_TYPES = {}  # PrusaSlicer's type of each key (its PrintConfig.cpp), when given (--prusa-config)
+
+
 def bundle_values(templates, c, names=None):
-    """The section's values (as the program holds them: new lines and quotes unescaped, lists as written, separated
-    by commas) of the variables that its G-code uses, for a PrusaSlicer-format bundle."""
+    """The section's values of the variables that its G-code uses, for a PrusaSlicer-format bundle, typed as
+    PrusaSlicer holds them (yes/no, numbers, lists; translation.typed); as text when the type is not known."""
     names = template_names(templates) if names is None else names
-    return {k: translation.unescape(c[k].strip('"') if c[k].count('"') == 2 and c[k][:1] == '"' else c[k])
+    return {k: translation.typed(c[k], OPTION_TYPES.get(k, ''))
             for k in sorted(names) if k in c and not k.endswith('_gcode')}
 
 
@@ -833,7 +837,11 @@ def main():
     ap.add_argument('--upstream', action='append', metavar='REPOSITORY=DIR',
                     help='a checkout of a program that Tisma Slicer converted bundles from, at the commit the bundles '
                          'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
+    ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
+                                           "for the types of the values in the G-code blocks")
     args = ap.parse_args()
+    if args.prusa_config:
+        OPTION_TYPES.update(translation.option_types(args.prusa_config))
     sources = Sources(args.upstream)
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
@@ -846,6 +854,15 @@ def main():
     for b in bundles:
         for key, values in b.sections.items():
             everything.setdefault(key, values)
+
+    # The variables that the filaments' own G-code uses (the bundles' text), for the printers' values.
+    filament_names = set()
+    for (kind, _), values in everything.items():
+        if kind == 'filament':
+            for key in FILAMENT_KEYS:
+                if values.get(key):
+                    filament_names.update(n for n, local in gcode_variables.variables(gcode_text(values[key]))
+                                          if not local)
 
     w = Writer(args.out)
     index = {'format': 'tisma-profile-pack', 'version': FORMAT_VERSION,
@@ -884,7 +901,7 @@ def main():
                 w.stats['broken'] += 1
                 continue
             sla = c.get('printer_technology', 'FFF').upper() == 'SLA'
-            block = None if sla else printer_gcode(b, name, c, everything, sources, w.stats)
+            block = None if sla else printer_gcode(b, name, c, everything, sources, w.stats, filament_names)
             if sla:
                 settings, used = map_resin_printer(c)
             else:
