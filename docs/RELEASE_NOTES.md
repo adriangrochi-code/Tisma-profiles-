@@ -31,7 +31,13 @@ el origen da con capas más gruesas que la boquilla.
 
 ## Con el motor actual
 
-Con el motor de `dev` (2b6ab4b) y el G-code propio de cada máquina (`validate.py --macros`), de las 56 variantes Bambu
-Lab: 8 laminan con su G-code (A2L y P2S); 20 vuelven al G-code simple porque el motor no puede leer el suyo (A1, A1
-mini, H2D, H2D Pro y X2D); y 28 no pasan la revisión del G-code del motor (H2C, H2S, P1P, P1S, X1, X1C y X1E): sus
-velocidades salen de variables que el motor todavía deja en 0. Lo corrige el motor (BH45); el paquete no cambia.
+Con el motor de `dev` (ba03c61) y el G-code propio de cada máquina (`validate.py --macros`), de las 2261 variantes FDM
+laminan 2101. Fallan 160 de Prusa, porque el G-code de inicio de sus filamentos usa `filament_extruder_id`, que el
+motor todavía no conoce, y 2 más. En 25 el motor no puede leer el G-code y usa la versión simple. Lo corrige el motor;
+el paquete no cambia.
+
+## También
+
+- Los filamentos de la familia OrcaSlicer traen los valores del programa de origen que usa el G-code de las máquinas
+  (`source_values`).
+- Tablas de traducción de claves por programa (`translation.tar.xz`), para abrir proyectos de otros programas.

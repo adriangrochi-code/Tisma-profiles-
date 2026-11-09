@@ -37,8 +37,11 @@ changes.
 
 - `docs/RELEASE_NOTES.md` is the text of the next release (the CI puts it first in the release notes). The owner
   publishes by merging `profiles/next` into `main`.
-- Before publishing: with engine dev 2b6ab4b, 28 Bambu Lab variants fail the engine's G-code check with their own
-  G-code (F0 from variables the engine leaves at 0, BH45 on the engine side) and 20 fall back to the simple one.
+- Before publishing: with engine dev ba03c61 and their own G-code, 2101 of 2261 FFF variants slice; 160 Prusa ones
+  fail on `filament_extruder_id` (filament start G-code), 2 more on a heater at 0; 25 fall back to the simple G-code.
+  Re-run `validate.py --macros` after each engine commit and send the grouped list to the spec and engine sessions.
+- PR to `main`: asked through the spec session; waiting for the owner's own confirmation (no PRs unless the owner
+  asks).
 - Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
 
 ## Open
