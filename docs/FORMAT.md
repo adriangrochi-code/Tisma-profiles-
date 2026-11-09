@@ -138,6 +138,11 @@ comparten:
   Sin `nozzle`, el perfil sirve para cualquier boquilla de sus impresoras.
 - **Filamentos:** `gcode`, si el perfil trae G-code de inicio o de fin de filamento: el mismo bloque que el de la
   máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»).
+- **Filamentos de la familia OrcaSlicer:** `source_values`, con `dialect`, `preset` (el perfil en el programa de
+  origen) y `values`: los valores de ese perfil, con los nombres del programa de origen, de las variables que usa el
+  G-code de las máquinas de ese dialecto (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
+  y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
+  del 05-11-2026, 4121 filamentos de OrcaSlicer y 316 de Creality Print.
 
 ## `compatible.json`
 

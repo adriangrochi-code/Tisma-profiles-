@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import sys
 
+import gcode_variables
 import translation
 import upstream
 from translation import FILAMENT_VARIABLES, clean_num, fix_point, flag, num, pct_or_abs
@@ -955,6 +956,17 @@ def main():
         return compat_sets.setdefault(key, len(compat_sets))
 
     # Filaments, prints and resins, once every printer is known (the template bundles fit printers of all vendors).
+    # The variables that the printers' own G-code uses, by dialect: the filament values the source program has for
+    # them go with each filament (source_values).
+    template_variables = collections.defaultdict(set)
+    for entry in printer_entries.values():
+        g = entry.get('gcode') or {}
+        for t in (g.get('templates') or {}).values():
+            for text in (t if isinstance(t, list) else [t]):
+                if text:
+                    template_variables[g.get('dialect')].update(n for n, local in gcode_variables.variables(text)
+                                                                if not local)
+
     for b, vendor, printers, vdir, lic, origin in deferred:
         generic = b.id in ('Templates',) or not printers
         targets = [(c, rel) for c, rel in all_printers] if generic else [(c, rel) for c, rel, sla in printers]
@@ -977,7 +989,10 @@ def main():
                 if src and straight else None
             from_source = upstream.orca_compatible(vendor_presets, name) if vendor_presets else None
             if from_source:
-                renames.add(src[0], kind, vendor_presets.resolve(from_source[0])[0], c)
+                source_values = vendor_presets.resolve(from_source[0])[0]
+                renames.add(src[0], kind, source_values, c)
+            else:
+                source_values = None
             if from_source and from_source[1]:
                 # The source program's list, inherited from the parents like any other value (Tisma Slicer's bundle
                 # writes it empty in a preset that only inherits it, or with printers the source does not name).
@@ -1053,6 +1068,14 @@ def main():
                 entry['nozzle'] = nozzle
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
+                wanted = template_variables.get(src[0]) if src and source_values else None
+                if wanted:
+                    given = {k: v for k, v in sorted(source_values.items()) if k in wanted}
+                    if given:
+                        # The filament's values in the source program for the variables of the machines' G-code
+                        # (Tisma Slicer's bundle does not keep all of them).
+                        entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
+                        w.stats['filaments with source_values (%s)' % src[0]] += 1
                 if fblock:
                     entry['gcode'] = fblock
             w.write(rel, entry)

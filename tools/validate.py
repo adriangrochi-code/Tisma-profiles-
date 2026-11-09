@@ -169,8 +169,10 @@ def main():
                     pass
             res['macro_warnings'] = [w.get('message', w.get('text', json.dumps(w))) for w in notes]
         if p.returncode != 0:
-            res['error'] = ([l for l in (p.stderr + p.stdout).splitlines() if 'error' in l.lower()] or
-                            (p.stderr + p.stdout).splitlines()[-1:] or [''])[0][:300]
+            first = ([l for l in (p.stderr + p.stdout).splitlines() if 'error' in l.lower()] or
+                     (p.stderr + p.stdout).splitlines()[-1:] or [''])[0]
+            res['error'] = first[:300]
+            res['error_full'] = first
         elif os.path.exists(out):
             text = open(out, encoding='utf-8', errors='replace').read()
             left = sorted(set(re.findall(r'\{(\w+)(?:\[\d+\])?\}|\[(\w+)\]', text.split(';TYPE')[0])))
