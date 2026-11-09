@@ -28,6 +28,14 @@ changes.
    program, Cura's fdmprinter/fdmextruder.def.json and StartSliceJob.py). Regenerate it with each new pack.
 6. Release candidate: built locally, see the numbers in the last commit. The owner publishes.
 
+## Release
+
+- `docs/RELEASE_NOTES.md` is the text of the next release (the CI puts it first in the release notes). The owner
+  publishes by merging `profiles/next` into `main`.
+- Before publishing: with engine dev 2b6ab4b, 28 Bambu Lab variants fail the engine's G-code check with their own
+  G-code (F0 from variables the engine leaves at 0, BH45 on the engine side) and 20 fall back to the simple one.
+- Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
+
 ## Open
 
 - Variables in `orcaslicer`/`cura` G-code use the source program's names; filament and print profiles keep

@@ -73,5 +73,5 @@ jobs:
         run: |
           gh release create "pack-${{ steps.pkg.outputs.version }}" dist/* \
             --title "Profile pack ${{ steps.pkg.outputs.version }}" \
-            --notes "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md." \
+            --notes "$( { cat docs/RELEASE_NOTES.md 2>/dev/null; echo; echo "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md."; } )" \
             --latest
