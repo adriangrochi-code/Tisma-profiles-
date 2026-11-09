@@ -1,0 +1,101 @@
+{
+ "vendor": "Prusa Research",
+ "model": "Original Prusa MK4S",
+ "pack_model": {
+  "bundle": "PrusaResearch",
+  "id": "MK4S"
+ },
+ "data": [
+  {
+   "key": "machine.bed",
+   "value": [
+    [
+     0,
+     0
+    ],
+    [
+     250,
+     0
+    ],
+    [
+     250,
+     210
+    ],
+    [
+     0,
+     210
+    ]
+   ],
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "Volumen de impresión 250 × 210 × 220 mm"
+  },
+  {
+   "key": "machine.max_height",
+   "value": 220,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   }
+  },
+  {
+   "key": "machine.max_nozzle_temp",
+   "value": 290,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   }
+  },
+  {
+   "key": "machine.max_bed_temp",
+   "value": 120,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   }
+  },
+  {
+   "key": "machine.nozzle_diameter",
+   "value": 0.4,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "La boquilla de fábrica (latón, CHT de alto flujo)"
+  },
+  {
+   "key": "machine.filament_diameter",
+   "value": 1.75,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.prusa3d.com/product/original-prusa-mk4s-3d-printer-5/",
+    "title": "Original Prusa MK4S 3D printer - Technical Parameters",
+    "accessed": "2026-11-09"
+   }
+  }
+ ]
+}
