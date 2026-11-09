@@ -296,18 +296,19 @@ paquete, da exactamente su `profile.settings`.
 
 | `how` | Qué hace |
 |---|---|
-| `number` | El número (el primero de una lista). `nonzero`: no se escribe si es 0; `positive`: solo si es mayor que 0 |
-| `flag` | `1` o `true` es verdadero; solo si la clave está |
+| `number` | El número (el primero de una lista). `nonzero`: no se escribe si es 0; `positive`: solo si es mayor que 0; `nonnegative`: no se escribe si es negativo; `max`: no se escribe si es mayor |
+| `numbers` | La lista de números, uno por extrusor; `nonnegative`: no se escribe si alguno es negativo |
+| `flag` | `1` o `true` es verdadero (el primer extrusor); solo si la clave está |
 | `factor` | El número por `factor` (no se escribe si es 0) |
 | `map` | El valor por la tabla `values` (desconocido: no se escribe); `only`: solo esos resultados; `exclude`: esos no |
 | `percent_of` | `"N%"` es ese porcentaje de la clave del motor `base` (ya traducida); un número queda como está |
 | `first_item` | El texto del primer extrusor |
 | `number_strip_percent` | El número sin el `%` |
-| `number_or_percent` | `"N%"` queda como texto; si no, el número |
+| `number_or_percent` | `"N%"` queda como texto; si no, el número; `nonzero`: no se escribe si es 0 |
 | `absolute_only` | El número; un porcentaje no se escribe |
 | `at_least` | El número si es al menos `min` |
 | `points` | `"XxY,XxY,…"` como lista de puntos, con 3 o más |
-| `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `fastest`, `correction`, `resin_notes`, `gcode_template` |
+| `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `fastest`, `gap_fill`, `limits_usage`, `correction`, `resin_notes`, `gcode_template` |
 
 - **`with`:** las otras claves que usa la misma regla (nombres de PrusaSlicer).
 - **Los otros dialectos** pasan cada clave a su nombre de PrusaSlicer (`prusaslicer`) y usan su traducción. El nombre
@@ -316,6 +317,11 @@ paquete, da exactamente su `profile.settings`.
   dos claves que casi siempre valen 0). `seen`: en cuántos perfiles coincide y en cuántos está. Si Tisma Slicer
   cambió también los valores, `prusaslicer_values` da cada valor de origen con el suyo (por ejemplo, el relleno
   `crosshatch` de OrcaSlicer es `grid`). Una clave sin `prusaslicer` no tiene un nombre que los perfiles muestren.
+- **Solo lo que significa lo mismo:** una clave entra con el sentido y las unidades que le dan PrusaSlicer (su
+  `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor). Si el valor de origen no tiene equivalente en el motor
+  (un `restart_extra` negativo, una velocidad de MMU en 0 que dice «no se usa»), no se escribe y `note` lo dice.
+  Quedan fuera `max_layer_height` y `min_layer_height`: en PrusaSlicer solo limitan la altura variable y en el motor
+  son un límite de toda capa.
 - **Con poca base:** Elegoo Slicer tiene una sola impresora en el paquete y Cura solo impresoras: casi todas sus
   claves quedan `none`.
 
@@ -323,9 +329,9 @@ Con la versión del 05-11-2026:
 
 | Dialecto | Claves | Al motor | Con nombre de PrusaSlicer |
 |---|---|---|---|
-| `prusaslicer` | 806 | 88 | — |
-| `orcaslicer` | 881 | 57 | 205 |
-| `crealityprint` | 509 | 35 | 147 |
+| `prusaslicer` | 806 | 169 | — |
+| `orcaslicer` | 881 | 114 | 205 |
+| `crealityprint` | 509 | 78 | 147 |
 | `elegooslicer` | 90 | 0 | 0 |
 | `cura` | 739 | 3 | 3 |
 
@@ -333,11 +339,13 @@ Con la versión del 05-11-2026:
 
 `tools/validate.py` lamina un cubo de 20 mm con el motor con cada variante FDM y su filamento y perfil por defecto, y
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
-05-11-2026 y el motor de `dev` (3cb778f):
-- **variantes:** las 2261 laminan;
-- **todo:** 18 313 combinaciones, 11 fallan (0,06 %). Son perfiles de impresión que el programa de origen da con capas
-  más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron de 0,25 y 0,3 mm), más de lo
-  que acepta el motor.
+05-11-2026 y el motor de `dev` (70f9335):
+- **variantes:** las 2261 laminan, también con el G-code propio de cada máquina (`--macros`), y en todas cada línea
+  fija de su G-code de inicio y de fin sale igual y en el mismo orden (GM13);
+- **todo:** 18 313 combinaciones, 14 fallan (0,08 %). 11 son perfiles de impresión que el programa de origen da con
+  capas más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron de 0,25 y 0,3 mm), y 3
+  perfiles de Geeetech de 0,08 mm cuyo ancho de la primera capa (0,133 mm) es menos de lo que acepta el motor con una
+  boquilla de 0,6 mm.
 
 `tools/check_pack.py` revisa el paquete convertido y la CI falla si encuentra:
 - un conjunto de compatibilidad vacío, o un perfil que apunta a uno que no existe;

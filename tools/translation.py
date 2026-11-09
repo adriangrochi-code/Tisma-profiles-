@@ -5,7 +5,7 @@ claves») for the engine to open other programs' projects with the same translat
 TABLE has the PrusaSlicer names (the ones of Tisma Slicer's bundles). Each entry:
   from   the source key (or keys, the first one that gives a value)
   to     the engine key, "group.key" (None for a value the engine computes from others)
-  how    the conversion: number, flag, factor, map, percent_of, first_item, number_strip_percent,
+  how    the conversion: number, numbers, flag, factor, map, percent_of, first_item, number_strip_percent,
          number_or_percent, absolute_only, at_least, points, or rule (a conversion with its own steps, named)
   group  translated (the same setting), similar (the closest the engine has; the note says what differs)
   note   what the conversion does, when it is not plain
@@ -72,6 +72,36 @@ TABLE = {
         E('retract_speed', 'retraction.speed', nonzero=True),
         E('retract_lift', 'retraction.lift'),
         E('retract_before_travel', 'retraction.min_travel'),
+        E('deretract_speed', 'retraction.unretract_speed', note='0: the retraction speed'),
+        E('retract_restart_extra', 'retraction.restart_extra', nonnegative=True, max=10, group='similar',
+          note='only 0 to 10 mm, what the engine takes: a negative value (less filament back) or a longer one '
+               '(pellet printers) is not written'),
+        E('retract_layer_change', 'retraction.on_layer_change', 'flag'),
+        E('wipe', 'retraction.wipe', 'flag'),
+        E('retract_before_wipe', 'retraction.before_wipe', 'number_strip_percent', note='percent of the retraction'),
+        E('retract_lift_above', 'retraction.lift_above'),
+        E('retract_lift_below', 'retraction.lift_below'),
+        E('use_firmware_retraction', 'retraction.firmware', 'flag'),
+        E('retract_length_toolchange', 'retraction.toolchange_length', 'numbers', note='one per extruder'),
+        E('retract_restart_extra_toolchange', 'retraction.toolchange_restart_extra', 'numbers', nonnegative=True,
+          group='similar', note='one per extruder; with a negative value (less filament back), not written'),
+        E('z_offset', 'machine.z_offset'),
+        E('silent_mode', 'machine.silent_mode', 'flag'),
+        E('single_extruder_multi_material', 'machine.single_extruder_mmu', 'flag'),
+        E('machine_limits_usage', 'machine.limits_usage', 'rule', rule='limits_usage', group='similar',
+          values={'emit_to_gcode': 'emit', 'time_estimate_only': 'time_only', 'ignore': 'ignore'},
+          note='emit_to_gcode with Klipper is not written: Klipper takes the limits from its own configuration'),
+        E('machine_max_acceleration_x', 'machine.max_accel_x', note='the normal mode (the first value)'),
+        E('machine_max_acceleration_y', 'machine.max_accel_y', note='the normal mode (the first value)'),
+        E('machine_max_acceleration_z', 'machine.max_accel_z', note='the normal mode (the first value)'),
+        E('machine_max_acceleration_e', 'machine.max_accel_e', note='the normal mode (the first value)'),
+        E('machine_max_acceleration_retracting', 'machine.retract_acceleration',
+          note='the normal mode (the first value)'),
+        E('machine_max_jerk_y', 'machine.jerk_y', note='the normal mode (the first value)'),
+        E('machine_max_jerk_z', 'machine.jerk_z', note='the normal mode (the first value)'),
+        E('machine_max_jerk_e', 'machine.jerk_e', note='the normal mode (the first value)'),
+        E('machine_min_extruding_rate', 'machine.min_extrude_feed', note='the normal mode (the first value)'),
+        E('machine_min_travel_rate', 'machine.min_travel_feed', note='the normal mode (the first value)'),
     ],
     'filament': [
         E('filament_diameter', 'machine.filament_diameter'),
@@ -87,6 +117,29 @@ TABLE = {
         E('extrusion_multiplier', 'extrusion.flow', 'factor', factor=100, note='times 100 (percent)'),
         E('filament_max_volumetric_speed', 'extrusion.max_flow'),
         E('filament_abrasive', 'extrusion.abrasive', 'flag'),
+        E('fan_below_layer_time', 'cooling.fan_below_time'),
+        E('bridge_fan_speed', 'cooling.fan_bridges'),
+        E('full_fan_speed_layer', 'cooling.full_fan_layer'),
+        E('cooling_slowdown_logic', 'cooling.slowdown_logic', 'map',
+          values={'uniform_cooling': 'uniform', 'consistent_surface': 'consistent_surface'}),
+        E('cooling_perimeter_transition_distance', 'cooling.transition_distance'),
+        E('filament_density', 'extrusion.density'),
+        E('filament_cost', 'extrusion.cost'),
+        E('filament_spool_weight', 'extrusion.spool_weight'),
+        E('filament_type', 'extrusion.type', 'first_item'),
+        E('filament_minimal_purge_on_wipe_tower', 'extrusion.min_purge_on_tower'),
+        E('filament_infill_max_speed', 'extrusion.infill_max_speed'),
+        E('filament_infill_max_crossing_speed', 'extrusion.infill_max_crossing_speed'),
+        E('filament_loading_speed', 'extrusion.loading_speed', nonzero=True, note='0 (not used) is not written'),
+        E('filament_loading_speed_start', 'extrusion.loading_speed_start', nonzero=True, note='0 (not used) is not written'),
+        E('filament_unloading_speed', 'extrusion.unloading_speed', nonzero=True, note='0 (not used) is not written'),
+        E('filament_unloading_speed_start', 'extrusion.unloading_speed_start', nonzero=True, note='0 (not used) is not written'),
+        E('filament_cooling_moves', 'extrusion.cooling_moves'),
+        E('filament_cooling_initial_speed', 'extrusion.cooling_initial_speed', nonzero=True, note='0 (not used) is not written'),
+        E('filament_cooling_final_speed', 'extrusion.cooling_final_speed', nonzero=True, note='0 (not used) is not written'),
+        E('filament_toolchange_delay', 'extrusion.toolchange_delay'),
+        E('filament_load_time', 'extrusion.load_time'),
+        E('filament_unload_time', 'extrusion.unload_time'),
     ],
     'print': [
         E('layer_height', 'layers.height'),
@@ -131,6 +184,49 @@ TABLE = {
         E('support_material_xy_spacing', 'support.xy_gap', 'percent_of', base='walls.width'),
         E('support_material_spacing', 'support.spacing'),
         E('support_material_interface_layers', 'support.interface_layers'),
+        E('support_material_bottom_interface_layers', 'support.bottom_interface_layers',
+          note='-1: as the top interface'),
+        E('support_material_interface_spacing', 'support.interface_spacing'),
+        E('support_material_buildplate_only', 'support.buildplate_only', 'flag'),
+        E('support_material_auto', 'support.automatic', 'flag'),
+        E('support_material_interface_speed', 'speed.support_interface', 'number_or_percent',
+          note='"N%" of the support speed'),
+        E('bridge_speed', 'speed.bridges', nonzero=True),
+        E('gap_fill_speed', 'speed.gap_fill, walls.gap_fill', 'rule', rule='gap_fill',
+          note='0: no gap fill (walls.gap_fill false)'),
+        E('small_perimeter_speed', 'speed.small_loops', 'number_or_percent', nonzero=True,
+          note='"N%" of the wall speed; 0: automatic, not written'),
+        E('first_layer_infill_speed', 'speed.first_layer_infill', 'number_or_percent', nonzero=True,
+          note='"N%" of the solid infill speed; 0: the first layer speed, not written'),
+        E('first_layer_extrusion_width', 'layers.first_line_width', 'number_or_percent',
+          note='"N%" of the first layer height; 0: as the other layers'),
+        E('external_perimeter_extrusion_width', 'walls.outer_width', 'absolute_only', group='similar', used='written',
+          note='in mm; a percent is not written (its base differs between versions of the source); 0: automatic'),
+        E('bridge_flow_ratio', 'extrusion.bridge_flow_ratio'),
+        E('external_perimeters_first', 'walls.outer_first', 'flag'),
+        E('avoid_crossing_perimeters', 'travel.avoid_crossing_walls', 'flag'),
+        E('avoid_crossing_perimeters_max_detour', 'travel.max_detour', 'number_or_percent',
+          note='"N%" of the straight travel'),
+        E('raft_layers', 'adhesion.raft_layers'),
+        E('brim_separation', 'adhesion.brim_gap'),
+        E('spiral_vase', 'vase.enabled', 'flag'),
+        E('wipe_tower', 'wipe_tower.enabled', 'flag'),
+        E('wipe_tower_width', 'wipe_tower.width'),
+        E('default_acceleration', 'acceleration.default'),
+        E('perimeter_acceleration', 'acceleration.walls'),
+        E('external_perimeter_acceleration', 'acceleration.outer_wall'),
+        E('infill_acceleration', 'acceleration.infill'),
+        E('solid_infill_acceleration', 'acceleration.solid_infill'),
+        E('top_solid_infill_acceleration', 'acceleration.top_solid_infill'),
+        E('bridge_acceleration', 'acceleration.bridges'),
+        E('first_layer_acceleration', 'acceleration.first_layer'),
+        E('travel_acceleration', 'acceleration.travel'),
+        E('wipe_tower_acceleration', 'acceleration.wipe_tower'),
+        E('ironing', 'ironing.enabled', 'flag'),
+        E('ironing_type', 'ironing.surfaces', 'map', values={'top': 'top', 'topmost': 'topmost', 'solid': 'solid'}),
+        E('ironing_flowrate', 'ironing.flow', 'number_strip_percent', note='percent of a normal layer'),
+        E('ironing_spacing', 'ironing.spacing'),
+        E('ironing_speed', 'ironing.speed'),
     ],
     'printer_sla': [
         E('display_pixels_x', 'machine.display_pixels_x'),
@@ -255,6 +351,21 @@ def _rule(name, e, c, s, ctx):
         if fastest:
             put(s, 'speed.max', fastest)
         return bool(fastest), ()
+    if name == 'limits_usage':
+        v = e['values'].get((c.get('machine_limits_usage') or '').strip())
+        if v == 'emit' and (c.get('gcode_flavor') or '').strip() == 'klipper':
+            v = None
+        put(s, 'machine.limits_usage', v)
+        return v is not None, ('machine_limits_usage',)
+    if name == 'gap_fill':
+        n = num(c.get('gap_fill_speed'))
+        if n is None:
+            return False, ('gap_fill_speed',)
+        if n:
+            put(s, 'speed.gap_fill', n)
+        else:
+            put(s, 'walls.gap_fill', False)
+        return True, ('gap_fill_speed',)
     if name == 'correction':
         corr = [num(x) for x in c.get('material_correction', '').split(',') if x.strip()]
         if len(corr) == 3 and all(x is not None for x in corr):
@@ -282,11 +393,20 @@ def value_of(e, c, s):
         n = num(v)
         if e.get('nonzero') and not n:
             return None
+        if e.get('nonnegative') and n is not None and n < 0:
+            return None
+        if e.get('max') is not None and n is not None and n > e['max']:
+            return None
         if e.get('positive') and not (n and n > 0):
             return None
         return n
     if how == 'flag':
-        return flag(v) if key in c else None
+        return flag(str(v).split(',')[0]) if key in c else None  # the first extruder's
+    if how == 'numbers':
+        items = [num(x) for x in str(v).split(',')] if v not in (None, '') else []
+        if not items or any(x is None for x in items) or (e.get('nonnegative') and any(x < 0 for x in items)):
+            return None
+        return [clean_num(x) for x in items]
     if how == 'factor':
         n = num(v)
         return n * e['factor'] if n else None
@@ -303,6 +423,8 @@ def value_of(e, c, s):
         return num(str(v if v is not None else '').rstrip('%'))
     if how == 'number_or_percent':
         if not v:
+            return None
+        if e.get('nonzero') and not num(v.rstrip('%')):
             return None
         return v if v.endswith('%') else num(v)
     if how == 'absolute_only':
