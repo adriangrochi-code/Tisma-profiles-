@@ -59,6 +59,34 @@ def printer_entry(pack, ref, cache={}):
             'gcode': gcode}
 
 
+CONDITION = re.compile(r'\{\s*(if|elsif|else|endif|unless)\b')
+
+
+def literal_lines(template):
+    """The lines of a template that the engine must write as they are (spec GM13): no {…} or […] in them, and
+    not inside an {if}…{endif} (the branch may not be taken). Trailing spaces do not count."""
+    out, depth = [], 0
+    for line in template.split('\n'):
+        opens = len(re.findall(r'\{\s*(?:if|unless)\b', line))
+        closes = len(re.findall(r'\{\s*endif\s*\}', line))
+        if '{' not in line and '[' not in line and depth == 0 and line.strip():
+            out.append(line.rstrip())
+        depth = max(0, depth + opens - closes)
+    return out
+
+
+def missing_in_order(wanted, lines, start=0):
+    """(index of the first wanted line not found in order in lines, index in lines after the last match)."""
+    i = start
+    for n, w in enumerate(wanted):
+        while i < len(lines) and lines[i].rstrip() != w:
+            i += 1
+        if i == len(lines):
+            return n, i
+        i += 1
+    return None, i
+
+
 def macros_of(gcode):
     """The engine's machine.macros from a pack G-code block (its docs/CONFIG.md, machine.macros)."""
     if not gcode or not gcode.get('templates'):
@@ -181,6 +209,24 @@ def main():
             res['error_full'] = first
         elif os.path.exists(out):
             text = open(out, encoding='utf-8', errors='replace').read()
+            if macros and e.get('gcode', {}).get('templates') and not any('could not be read' in m for m in
+                                                                          res.get('macro_warnings', [])):
+                # GM13: the lines of the machine's own start and end G-code without {…} or […], in order.
+                lines = text.split('\n')
+                gm13 = []
+                pos = 0
+                for name in ('start', 'end'):
+                    t = e['gcode']['templates'].get(name)
+                    if not isinstance(t, str) or not t:
+                        continue
+                    wanted = literal_lines(t)
+                    miss, pos2 = missing_in_order(wanted, lines, pos if name == 'end' else 0)
+                    if miss is not None:
+                        gm13.append({'template': name, 'line': wanted[miss], 'number': miss + 1,
+                                     'of': len(wanted)})
+                    else:
+                        pos = pos2
+                res['gm13'] = gm13
             left = sorted(set(re.findall(r'\{(\w+)(?:\[\d+\])?\}|\[(\w+)\]', text.split(';TYPE')[0])))
             res['placeholders_left'] = sorted({a or b for a, b in left})
             res['size'] = len(text)
@@ -196,6 +242,7 @@ def main():
     summary = collections.Counter('ok' if r['exit'] == 0 else 'exit %d' % r['exit'] for r in results)
     errors = collections.Counter(re.sub(r'[\d.]+', 'N', r.get('error', ''))[:160] for r in results if r['exit'])
     left = collections.Counter(n for r in results for n in r.get('placeholders_left', []))
+    gm13 = collections.Counter(r['printer'] for r in results if r.get('gm13'))
     unfilled = collections.defaultdict(collections.Counter)  # dialect -> variable -> printers
     unread = collections.Counter()
     for r in results:
@@ -209,6 +256,7 @@ def main():
     report = {'summary': dict(summary), 'no_filament': sum(1 for r in results if not r['filament']),
               'macros_unfilled': {d: dict(c.most_common()) for d, c in unfilled.items()},
               'macros_not_read': dict(unread.most_common()),
+              'gm13_checked': sum(1 for r in results if 'gm13' in r), 'gm13_broken': len(gm13),
               'no_print': sum(1 for r in results if not r['print']), 'errors': dict(errors.most_common()),
               'placeholders_left': dict(left.most_common()), 'results': results}
     json.dump(report, open(args.report, 'w'), indent=1)
@@ -221,6 +269,8 @@ def main():
             print('unfilled (%s): %d variables' % (d, len(c)), dict(c.most_common(30)))
         for k, n in unread.most_common(10):
             print(n, 'not read:', k)
+        print('GM13 (literal lines of the own G-code written as they are): %d checked, %d with a line missing or '
+              'changed' % (report['gm13_checked'], report['gm13_broken']))
 
 
 if __name__ == '__main__':
