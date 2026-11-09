@@ -7,7 +7,9 @@
   every Bambu Lab printer got the shared base's start G-code). Models that share the vendor-wide base of an
   OrcaSlicer-style source (fdm_machine_common) because they have none of their own there are listed as notes;
 - a print profile without "nozzle" when its name or its condition gives one;
-- a printer G-code block without its dialect, or with a template that is not text.
+- a printer G-code block without its dialect, or with a template that is not text;
+- a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
+  that does not give, applied to a profile's "original", the profile's settings (the converter's translation).
 
 Usage: check_pack.py <pack dir> [--report FILE]
 Exits with 1 and lists the problems when there are any.
@@ -19,6 +21,8 @@ import json
 import os
 import re
 import sys
+
+import translation
 
 NOZZLE_CONDITION = re.compile(r'(?:^|\band\b|&&|\()\s*nozzle_diameter\[0\]\s*==\s*"?(\d+(?:\.\d+)?)"?\s*'
                               r'(?=\)|\band\b|&&|$)')
@@ -57,6 +61,60 @@ def nozzle_said(entry):
     return None
 
 
+KINDS = {'filaments': 'filament', 'prints': 'print', 'resins': 'sla_material', 'resin_prints': 'sla_print'}
+GROUPS = ('translated', 'similar', 'none')
+
+
+def same_translation(kind, original, settings, where, problems, counts, nozzle=None):
+    """The translation table applied to a profile's source values gives the profile's settings."""
+
+    def copy_gcode(e, c, s):  # converted with the engine's simple variables: taken as written
+        for key in ('start_gcode', 'end_gcode'):
+            if (settings.get('machine') or {}).get(key) is not None:
+                s.setdefault('machine', {})[key] = settings['machine'][key]
+        return True, ()
+    expected, _ = translation.translate(kind, original, nozzle=nozzle, rules={'gcode_template': copy_gcode})
+    got = json.loads(json.dumps(settings))
+    if kind == 'printer' and 'nozzle_diameter' not in original:
+        got.get('machine', {}).pop('nozzle_diameter', None)  # from the source program (docs/FORMAT.md)
+    counts['profiles translated again'] += 1
+    if expected != got:
+        problems['translation table does not give the profile\'s settings'].append(where)
+
+
+def check_tables(pack, index, problems, counts):
+    tables = {}
+    for dialect, rel in (index.get('translation') or {}).items():
+        try:
+            t = load(pack, rel)
+        except (OSError, ValueError):
+            problems['translation table missing or not JSON'].append(rel)
+            continue
+        if t.get('format') != 'tisma-pack-translation' or t.get('dialect') != dialect:
+            problems['translation table with a wrong header'].append(rel)
+        tables[dialect] = t
+        for kind, rows in t.get('kinds', {}).items():
+            for key, row in rows.items():
+                counts['translation rows'] += 1
+                bad = row.get('group') not in GROUPS or (row['group'] == 'none') != (row.get('engine') is None) or \
+                    (row['group'] != 'none' and 'how' not in row.get('conversion', {}))
+                if bad:
+                    problems['malformed translation row'].append('%s %s %s' % (dialect, kind, key))
+    if 'prusaslicer' not in tables:
+        problems['no prusaslicer translation table'].append('index.json')
+        return
+    base = tables['prusaslicer']['kinds']
+    for dialect, t in tables.items():
+        if dialect == 'prusaslicer':
+            continue
+        for kind, rows in t['kinds'].items():
+            for key, row in rows.items():
+                p = row.get('prusaslicer')
+                ref = base.get(kind, {}).get(p) if p else None
+                if ref and (ref['engine'] != row['engine'] or ref['group'] != row['group']):
+                    problems['translation row unlike its PrusaSlicer key'].append('%s %s %s' % (dialect, kind, key))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pack')
@@ -80,6 +138,8 @@ def main():
         for group in ('filaments', 'prints', 'resins', 'resin_prints'):
             for rel in v[group]:
                 e = load(args.pack, rel)
+                same_translation(KINDS[group], e['original'], e['profile']['settings'], rel, problems, counts,
+                                 nozzle=e.get('nozzle'))
                 counts[group] += 1
                 c = e.get('compatible')
                 if c is not None and not (isinstance(c, int) and 0 <= c < len(sets)):
@@ -97,9 +157,14 @@ def main():
     by_text = collections.defaultdict(list)
     for v in index['vendors']:
         for m in v['models']:
+            doc = load(args.pack, m['file'])
+            for var in doc['variants']:
+                original = dict(doc.get('original_common', {}), **var.get('original', {}))
+                settings = merged_block(doc['common']['settings'], var['settings'])
+                same_translation('printer' if m['technology'] == 'fff' else 'printer_sla', original, settings,
+                                 '%s#%s' % (m['file'], var['id']), problems, counts)
             if m['technology'] != 'fff':
                 continue
-            doc = load(args.pack, m['file'])
             for var in doc['variants']:
                 counts['fff variants'] += 1
                 g = merged_block(doc['common'].get('gcode'), var.get('gcode'))
@@ -133,6 +198,7 @@ def main():
             # As the source program has it (these models have no start G-code of their own there): not an error.
             notes['start G-code of the vendor-wide base, as in the source program'].append(names)
 
+    check_tables(args.pack, index, problems, counts)
     report = {'counts': dict(counts), 'problems': dict(problems), 'notes': dict(notes)}
     if args.report:
         with open(args.report, 'w', encoding='utf-8') as f:

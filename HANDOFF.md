@@ -28,6 +28,11 @@ changes.
    program, Cura's fdmprinter/fdmextruder.def.json and StartSliceJob.py). Regenerate it with each new pack.
 6. Release candidate: built locally, see the numbers in the last commit. The owner publishes.
 
+7. **Key translation tables** (spec project_import.md, rule 11): `tools/translation.py` is the converter's mapping
+   as data (the pack is byte-for-byte the same after the change); the pack ships `translation/<dialect>.json` in
+   `translation.tar.xz`; other dialects get their PrusaSlicer names from the same presets in the source program and
+   the bundle. `check_pack.py` re-translates every profile and compares.
+
 ## Release
 
 - `docs/RELEASE_NOTES.md` is the text of the next release (the CI puts it first in the release notes). The owner

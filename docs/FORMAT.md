@@ -14,6 +14,7 @@ Cada versión es un release de este repositorio, con estos archivos:
 | `compatible.json` | Qué impresoras sirve cada filamento y cada perfil de impresión |
 | `<fabricante>.tar.xz` | Un archivo por fabricante: sus perfiles y sus imágenes (`vendors/<fabricante>/…`) |
 | `community.tar.xz` | Los datos de la comunidad (`docs/COMMUNITY.md`) |
+| `translation.tar.xz` | Las tablas de traducción de las claves de cada programa a las del motor (`translation/<dialecto>.json`; «Traducción de claves») |
 | `stats.json` | Cuentas de la conversión y las claves de origen que no tienen equivalente en el motor |
 
 **La última versión** está siempre en
@@ -23,8 +24,9 @@ Para instalar:
 1. Bajar `index.json`, y guardarlo como está.
 2. Bajar `compatible.json` y los archivos de los fabricantes que se quieran (o todos).
 3. Comprobar el tamaño y el SHA-256 de cada uno contra el índice. Si no coinciden, descartarlo.
-4. Descomprimir cada `.tar.xz` en la carpeta del paquete. Adentro solo hay rutas relativas `vendors/<id>/…` o
-   `community/…`. Una ruta absoluta, con `..` o que no empieza así no se descomprime.
+4. Descomprimir cada `.tar.xz` en la carpeta del paquete. Adentro solo hay rutas relativas `vendors/<id>/…`,
+   `community/…`, `knowledge/…` o `translation/…`. Una ruta absoluta, con `..` o que no empieza así no se
+   descomprime.
 5. Una versión nueva se reconoce porque `pack_version` del índice cambió.
 
 **Tamaño de la versión del 05-11-2026:**
@@ -43,7 +45,8 @@ Para instalar:
 | `license` | `AGPL-3.0-or-later` (ver «Licencias») |
 | `vendors` | Los fabricantes (abajo) |
 | `printers` | Todas las impresoras como `<archivo del modelo>#<variante>`, en orden: el número de una impresora es su lugar en esta lista (para `compatible.json`) |
-| `compatible`, `community` | Nombre, tamaño y SHA-256 de esos archivos |
+| `compatible`, `community`, `translation_archive` | Nombre, tamaño y SHA-256 de esos archivos |
+| `translation` | La ruta de la tabla de traducción de cada dialecto, dentro de la carpeta del paquete: `{"prusaslicer": "translation/prusaslicer.json", …}` |
 | `counts` | Cuentas de la conversión |
 
 **Un fabricante** (`vendors[i]`):
@@ -249,6 +252,73 @@ nombre en el programa de origen o cuyo programa el paquete no lee).
   `profile`: queda entero en `gcode`, y el motivo en `not_converted`.
 - **Cuántos entran:** con la versión del 05-11-2026, el de inicio de 1277 de 2317 perfiles de impresora de origen
   (antes 1334: ahora salen del G-code verdadero de cada modelo, y en 57 ese tiene macros).
+
+## Traducción de claves (`translation/<dialecto>.json`)
+
+Para abrir proyectos de otros programas (3MF de PrusaSlicer, OrcaSlicer, Creality Print, Elegoo Slicer o Cura), el
+motor traduce sus ajustes con las mismas reglas que usa el convertidor: un archivo por dialecto, en
+`translation.tar.xz`, con las rutas en `index.json`, `translation`. La tabla está en `tools/translation.py`, el
+convertidor la aplica a cada perfil, y `tools/check_pack.py` comprueba que, aplicada al `original` de cada perfil del
+paquete, da exactamente su `profile.settings`.
+
+```json
+{
+ "format": "tisma-pack-translation",
+ "version": 1,
+ "dialect": "orcaslicer",
+ "source": { "how": "…", "presets": { "printer": 902, "print": 2280, "filament": 4121 } },
+ "kinds": {
+  "print": {
+   "wall_loops": { "engine": "walls.count", "group": "translated", "conversion": { "how": "number" },
+                   "prusaslicer": "perimeters", "seen": [2218, 2276] },
+   "bridge_flow": { "engine": null, "group": "none", "prusaslicer": "bridge_flow_ratio", "seen": [2202, 2268] }
+  }
+ }
+}
+```
+
+- **`kinds`:** `printer`, `filament`, `print` y, en `prusaslicer`, `resin_printer`, `resin` y `resin_print`. Adentro,
+  cada clave de origen que tienen los perfiles de ese programa.
+- **`engine`:** la clave del motor (`grupo.clave`), o varias separadas por coma cuando una regla escribe más de una;
+  `null` si no hay equivalente.
+- **`group`:** `translated` (el mismo ajuste), `similar` (lo más parecido que tiene el motor; `note` dice en qué
+  difiere) o `none` (sin equivalente).
+- **`conversion`:** `how` y sus datos:
+
+| `how` | Qué hace |
+|---|---|
+| `number` | El número (el primero de una lista). `nonzero`: no se escribe si es 0; `positive`: solo si es mayor que 0 |
+| `flag` | `1` o `true` es verdadero; solo si la clave está |
+| `factor` | El número por `factor` (no se escribe si es 0) |
+| `map` | El valor por la tabla `values` (desconocido: no se escribe); `only`: solo esos resultados; `exclude`: esos no |
+| `percent_of` | `"N%"` es ese porcentaje de la clave del motor `base` (ya traducida); un número queda como está |
+| `first_item` | El texto del primer extrusor |
+| `number_strip_percent` | El número sin el `%` |
+| `number_or_percent` | `"N%"` queda como texto; si no, el número |
+| `absolute_only` | El número; un porcentaje no se escribe |
+| `at_least` | El número si es al menos `min` |
+| `points` | `"XxY,XxY,…"` como lista de puntos, con 3 o más |
+| `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `fastest`, `correction`, `resin_notes`, `gcode_template` |
+
+- **`with`:** las otras claves que usa la misma regla (nombres de PrusaSlicer).
+- **Los otros dialectos** pasan cada clave a su nombre de PrusaSlicer (`prusaslicer`) y usan su traducción. El nombre
+  sale de los mismos perfiles en el programa de origen y en el paquete de Tisma Slicer: la clave tiene el mismo valor
+  con ese nombre en al menos el 90 % de los perfiles, también donde el valor no es el más común (para no confundir
+  dos claves que casi siempre valen 0). `seen`: en cuántos perfiles coincide y en cuántos está. Si Tisma Slicer
+  cambió también los valores, `prusaslicer_values` da cada valor de origen con el suyo (por ejemplo, el relleno
+  `crosshatch` de OrcaSlicer es `grid`). Una clave sin `prusaslicer` no tiene un nombre que los perfiles muestren.
+- **Con poca base:** Elegoo Slicer tiene una sola impresora en el paquete y Cura solo impresoras: casi todas sus
+  claves quedan `none`.
+
+Con la versión del 05-11-2026:
+
+| Dialecto | Claves | Al motor | Con nombre de PrusaSlicer |
+|---|---|---|---|
+| `prusaslicer` | 806 | 88 | — |
+| `orcaslicer` | 881 | 57 | 205 |
+| `crealityprint` | 509 | 35 | 147 |
+| `elegooslicer` | 90 | 0 | 0 |
+| `cura` | 739 | 3 | 3 |
 
 ## Calidad
 

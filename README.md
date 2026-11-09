@@ -48,6 +48,8 @@ El motor tiene su propia licencia (no comercial) y no incluye estos perfiles: lo
   paquetes de Tisma Slicer (`sources.json`), para tomar de ahí el G-code de cada impresora.
 - `tools/check_pack.py`: revisa el paquete convertido (conjuntos de compatibilidad vacíos, G-code de inicio compartido
   por error, perfiles de impresión sin boquilla). La CI falla si encuentra algo.
+- `tools/translation.py`: la traducción de las claves de cada programa a las del motor; el convertidor la usa y el
+  paquete la lleva como datos (`translation/<dialecto>.json`), para abrir proyectos de otros programas.
 - `tools/package.py`: un archivo comprimido por fabricante, más el índice con el tamaño y el SHA-256 de cada uno.
 - `tools/validate.py`: lamina un cubo con el motor con cada impresora, cada filamento y cada perfil de impresión.
 - `tools/check_community.py`: revisa los datos de la comunidad.

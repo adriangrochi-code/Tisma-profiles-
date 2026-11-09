@@ -53,6 +53,13 @@ def main():
     index['compatible'] = {'name': 'compatible.json', 'size': os.path.getsize(os.path.join(args.out, 'compatible.json')),
                            'sha256': sha256(os.path.join(args.out, 'compatible.json'))}
 
+    if os.path.isdir(os.path.join(args.pack, 'translation')):
+        # The translation tables of each dialect (docs/FORMAT.md, «Traducción de claves»).
+        path = os.path.join(args.out, 'translation.tar.xz')
+        tar_xz(path, args.pack, ['translation'])
+        index['translation_archive'] = {'name': 'translation.tar.xz', 'size': os.path.getsize(path),
+                                        'sha256': sha256(path)}
+
     community = [n for n in sorted(os.listdir(args.community)) if os.path.isdir(os.path.join(args.community, n))]
     path = os.path.join(args.out, 'community.tar.xz')
     tar_xz(path, os.path.dirname(os.path.abspath(args.community)),

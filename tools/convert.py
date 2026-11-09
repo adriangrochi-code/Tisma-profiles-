@@ -21,7 +21,9 @@ import shutil
 import subprocess
 import sys
 
+import translation
 import upstream
+from translation import FILAMENT_VARIABLES, clean_num, fix_point, flag, num, pct_or_abs
 
 FORMAT_VERSION = 2
 
@@ -263,37 +265,6 @@ def compile_condition(text):
 # ---------------------------------------------------------------------------------------------------------------------
 # Value helpers
 
-def num(v, default=None):
-    if v is None:
-        return default
-    v = str(v).strip().split(',')[0].strip('"')
-    try:
-        return float(v)
-    except ValueError:
-        return default
-
-
-def pct_or_abs(v, base):
-    """'50%' of base, or an absolute number; None if unknown."""
-    if v is None:
-        return None
-    v = str(v).strip()
-    if v.endswith('%'):
-        p = num(v[:-1])
-        return None if p is None or base is None else base * p / 100
-    return num(v)
-
-
-def flag(v):
-    return str(v).strip() in ('1', 'true', 'True')
-
-
-def clean_num(x):
-    if x is None:
-        return None
-    x = round(x, 6)
-    return int(x) if x == int(x) else x
-
 
 def put(settings, group, key, value):
     if value is None:
@@ -312,21 +283,6 @@ def gcode_text(v):
     return v.replace('\\n', '\n').replace('\\"', '"').replace('\\\\', '\\')
 
 
-FLAVORS = {'marlin': 'marlin', 'marlin2': 'marlin', 'marlinlegacy': 'marlin', 'klipper': 'klipper',
-           'reprap': 'reprap', 'reprapfirmware': 'reprap', 'repetier': 'marlin', 'sprinter': 'marlin',
-           'smoothie': 'marlin', 'teacup': 'marlin', 'makerware': None, 'sailfish': None, 'mach3': None,
-           'machinekit': None, 'no-extrusion': None}
-
-PATTERNS = {'rectilinear': 'rectilinear', 'monotonic': 'monotonic', 'grid': 'grid', 'gyroid': 'gyroid',
-            'triangles': 'triangles', 'stars': 'stars', 'cubic': 'cubic', 'adaptivecubic': 'adaptive_cubic',
-            'supportcubic': 'support_cubic', 'lightning': 'lightning', 'alignedrectilinear': 'aligned_rectilinear',
-            'zigzag': 'zigzag', 'line': 'line', 'honeycomb': 'honeycomb', 'concentric': 'concentric',
-            'hilbertcurve': 'hilbert', 'archimedeanchords': 'archimedean', 'octagramspiral': 'octagram'}
-
-SEAMS = {'aligned': 'aligned', 'nearest': 'nearest', 'random': 'random', 'rear': 'rear'}
-
-
-
 # Placeholders of the source G-code templates. Values known from the printer profile are written in; values that only
 # exist while slicing get the pack's own names (docs/FORMAT.md, "Variables"); filament temperatures stay as variables
 # that the filament profile fills.
@@ -339,15 +295,7 @@ RUNTIME = {('first_layer_print_min', 0): 'first_layer_min_x', ('first_layer_prin
            ('first_layer_height', None): 'first_layer_height', ('year', None): 'year', ('month', None): 'month',
            ('day', None): 'day', ('hour', None): 'hour', ('minute', None): 'minute', ('second', None): 'second',
            ('input_filename_base', None): 'input_filename_base'}
-FILAMENT_VARIABLES = ('temperature', 'first_layer_temperature', 'bed_temperature', 'first_layer_bed_temperature',
-                      'chamber_temperature', 'chamber_minimal_temperature', 'idle_temperature')
 PLACEHOLDER = re.compile(r'\[(\w+)\]|\{(\w+)(?:\[(\d+)\])?\}')
-
-
-def fix_point(p):
-    """A bed point written '235-0' instead of '235x0' (a typo in one source bundle)."""
-    p = p.strip()
-    return p.replace('-', 'x', 1) if 'x' not in p and re.match(r'^\d+(\.\d+)?-\d+(\.\d+)?$', p) else p
 
 
 def bed_box(c):
@@ -537,212 +485,41 @@ def engine_texts(block, c):
 
 def map_printer(c, texts=None):
     """texts: the start and end G-code to convert, when not the bundle's own (engine_texts)."""
-    s = {}
-    used = set()
-
-    def u(*keys):
-        used.update(keys)
-    nozzle = num(c.get('nozzle_diameter'))
-    put(s, 'machine', 'nozzle_diameter', nozzle); u('nozzle_diameter')
-    bed = c.get('bed_shape')
-    if bed:
-        pts = []
-        for p in bed.split(','):
-            p = fix_point(p)
-            if 'x' in p:
-                x, y = p.split('x', 1)
-                if num(x) is not None and num(y) is not None:
-                    pts.append([clean_num(num(x)), clean_num(num(y))])
-        if len(pts) >= 3:
-            put(s, 'machine', 'bed', pts); u('bed_shape')
-    put(s, 'machine', 'max_height', num(c.get('max_print_height'))); u('max_print_height')
-    flavor = FLAVORS.get(c.get('gcode_flavor', '').strip())
-    put(s, 'machine', 'flavor', flavor); u('gcode_flavor')
-    if 'use_relative_e_distances' in c:
-        put(s, 'machine', 'relative_extrusion', flag(c['use_relative_e_distances'])); u('use_relative_e_distances')
     if texts is None:
         texts = {k: gcode_text(c[k]) for k in ('start_gcode', 'end_gcode') if c.get(k)}
-    for key in ('start_gcode', 'end_gcode'):
-        if texts.get(key):
-            text, why = engine_gcode(texts[key], c)
-            if text is not None:
-                put(s, 'machine', key, text); u(key)
-            else:
-                s.setdefault('_notes', {})[key] = why
-    for axis in 'xyze':
-        put(s, 'machine', 'max_feed_' + axis, num(c.get('machine_max_feedrate_' + axis)))
-        u('machine_max_feedrate_' + axis)
-    acc = num(c.get('machine_max_acceleration_extruding'))
-    if acc:
-        put(s, 'machine', 'acceleration', acc)
-        travel = num(c.get('machine_max_acceleration_travel')) or acc
-        put(s, 'machine', 'travel_acceleration', travel)
-        u('machine_max_acceleration_extruding', 'machine_max_acceleration_travel')
-    jerk = num(c.get('machine_max_jerk_x'))
-    if jerk:
-        put(s, 'machine', 'corner_speed', jerk); u('machine_max_jerk_x')
-    put(s, 'retraction', 'length', num(c.get('retract_length'))); u('retract_length')
-    put(s, 'retraction', 'speed', num(c.get('retract_speed')) or None); u('retract_speed')
-    put(s, 'retraction', 'lift', num(c.get('retract_lift'))); u('retract_lift')
-    put(s, 'retraction', 'min_travel', num(c.get('retract_before_travel'))); u('retract_before_travel')
-    return s, used
+
+    def gcode_template(e, c, s):
+        used = []
+        for key in ('start_gcode', 'end_gcode'):
+            if texts.get(key):
+                text, why = engine_gcode(texts[key], c)
+                if text is not None:
+                    put(s, 'machine', key, text)
+                    used.append(key)
+                else:
+                    s.setdefault('_notes', {})[key] = why
+        return bool(used), used
+    return translation.translate('printer', c, rules={'gcode_template': gcode_template})
 
 
 def map_filament(c):
-    s = {}
-    used = set()
-
-    def u(*keys):
-        used.update(keys)
-    put(s, 'machine', 'filament_diameter', num(c.get('filament_diameter'))); u('filament_diameter')
-    variables = {}
-    for key in FILAMENT_VARIABLES:
-        if key in c:
-            variables[key] = c[key].split(',')[0].strip(); u(key)
-    if variables:
-        put(s, 'machine', 'variables', variables)
-    chamber = num(c.get('chamber_temperature'))
-    if chamber:
-        put(s, 'extrusion', 'chamber_temperature', chamber)
-    if 'cooling' in c and not flag(c['cooling']) and not flag(c.get('fan_always_on', '0')):
-        put(s, 'cooling', 'fan_min', 0); put(s, 'cooling', 'fan_max', 0); u('cooling', 'fan_always_on')
-    else:
-        put(s, 'cooling', 'fan_min', num(c.get('min_fan_speed'))); u('min_fan_speed')
-        put(s, 'cooling', 'fan_max', num(c.get('max_fan_speed'))); u('max_fan_speed')
-    put(s, 'cooling', 'min_layer_time', num(c.get('slowdown_below_layer_time'))); u('slowdown_below_layer_time')
-    ms = num(c.get('min_print_speed'))
-    put(s, 'cooling', 'min_speed', ms if ms and ms > 0 else None); u('min_print_speed')
-    put(s, 'cooling', 'fan_off_layers', num(c.get('disable_fan_first_layers'))); u('disable_fan_first_layers')
-    em = num(c.get('extrusion_multiplier'))
-    put(s, 'extrusion', 'flow', em * 100 if em else None); u('extrusion_multiplier')
-    put(s, 'extrusion', 'max_flow', num(c.get('filament_max_volumetric_speed'))); u('filament_max_volumetric_speed')
-    if 'filament_abrasive' in c:
-        put(s, 'extrusion', 'abrasive', flag(c['filament_abrasive'])); u('filament_abrasive')
-    return s, used
+    return translation.translate('filament', c)
 
 
 def map_print(c, nozzle):
-    s = {}
-    used = set()
-
-    def u(*keys):
-        used.update(keys)
-    lh = num(c.get('layer_height'))
-    put(s, 'layers', 'height', lh); u('layer_height')
-    put(s, 'layers', 'first_height', pct_or_abs(c.get('first_layer_height'), lh)); u('first_layer_height')
-    put(s, 'slicing', 'gap_closing_radius', num(c.get('slice_closing_radius'))); u('slice_closing_radius')
-    put(s, 'slicing', 'xy_offset', num(c.get('xy_size_compensation'))); u('xy_size_compensation')
-    put(s, 'slicing', 'first_layer_shrink', num(c.get('elefant_foot_compensation'))); u('elefant_foot_compensation')
-    put(s, 'walls', 'count', num(c.get('perimeters'))); u('perimeters')
-    width = None
-    for key in ('perimeter_extrusion_width', 'extrusion_width'):
-        w = pct_or_abs(c.get(key), nozzle)
-        if w:
-            width = w; u(key)
-            break
-    if width is None and nozzle:
-        width = nozzle * 1.125
-    put(s, 'walls', 'width', width)
-    put(s, 'walls', 'seam', SEAMS.get(c.get('seam_position', ''))); u('seam_position')
-    put(s, 'surfaces', 'top_layers', num(c.get('top_solid_layers'))); u('top_solid_layers')
-    put(s, 'surfaces', 'bottom_layers', num(c.get('bottom_solid_layers'))); u('bottom_solid_layers')
-    put(s, 'surfaces', 'top_min_thickness', num(c.get('top_solid_min_thickness'))); u('top_solid_min_thickness')
-    put(s, 'surfaces', 'bottom_min_thickness', num(c.get('bottom_solid_min_thickness')))
-    u('bottom_solid_min_thickness')
-    top = PATTERNS.get(c.get('top_fill_pattern', ''))
-    if top in ('monotonic', 'rectilinear'):
-        put(s, 'surfaces', 'top_pattern', top); u('top_fill_pattern')
-    put(s, 'infill', 'density', num(str(c.get('fill_density', '')).rstrip('%'))); u('fill_density')
-    put(s, 'infill', 'angle', num(c.get('fill_angle'))); u('fill_angle')
-    pattern = PATTERNS.get(c.get('fill_pattern', ''))
-    if pattern and pattern != 'monotonic':
-        put(s, 'infill', 'pattern', pattern); u('fill_pattern')
-    every = num(c.get('infill_every_layers'))
-    put(s, 'infill', 'combine_layers', every if every and every >= 1 else None); u('infill_every_layers')
-    put(s, 'infill', 'solid_every', num(c.get('solid_infill_every_layers'))); u('solid_infill_every_layers')
-    put(s, 'infill', 'solid_below_area', num(c.get('solid_infill_below_area'))); u('solid_infill_below_area')
-    walls = num(c.get('perimeter_speed'))
-    put(s, 'speed', 'walls', walls); u('perimeter_speed')
-    outer = c.get('external_perimeter_speed')
-    if outer:
-        put(s, 'speed', 'outer_wall', outer if outer.endswith('%') else num(outer)); u('external_perimeter_speed')
-    infill = num(c.get('infill_speed'))
-    put(s, 'speed', 'infill', infill); u('infill_speed')
-    solid = pct_or_abs(c.get('solid_infill_speed'), infill)
-    put(s, 'speed', 'solid_infill', solid); u('solid_infill_speed')
-    put(s, 'speed', 'top_solid_infill', pct_or_abs(c.get('top_solid_infill_speed'), solid))
-    u('top_solid_infill_speed')
-    put(s, 'speed', 'support', num(c.get('support_material_speed'))); u('support_material_speed')
-    put(s, 'speed', 'travel', num(c.get('travel_speed'))); u('travel_speed')
-    first = c.get('first_layer_speed')
-    if first and not first.endswith('%'):
-        put(s, 'speed', 'first_layer', num(first)); u('first_layer_speed')
-    fastest = max([x for x in (walls, infill, solid, num(c.get('support_material_speed'))) if x] or [0])
-    if fastest:
-        put(s, 'speed', 'max', fastest)
-    put(s, 'adhesion', 'skirt_loops', num(c.get('skirts'))); u('skirts')
-    put(s, 'adhesion', 'skirt_distance', num(c.get('skirt_distance'))); u('skirt_distance')
-    put(s, 'adhesion', 'skirt_layers', num(c.get('skirt_height'))); u('skirt_height')
-    put(s, 'adhesion', 'brim_width', num(c.get('brim_width'))); u('brim_width')
-    if 'support_material' in c:
-        put(s, 'support', 'enabled', flag(c['support_material'])); u('support_material')
-    put(s, 'support', 'threshold_angle', num(c.get('support_material_threshold'))); u('support_material_threshold')
-    put(s, 'support', 'z_gap', num(c.get('support_material_contact_distance')))
-    u('support_material_contact_distance')
-    put(s, 'support', 'xy_gap', pct_or_abs(c.get('support_material_xy_spacing'), width))
-    u('support_material_xy_spacing')
-    put(s, 'support', 'spacing', num(c.get('support_material_spacing'))); u('support_material_spacing')
-    put(s, 'support', 'interface_layers', num(c.get('support_material_interface_layers')))
-    u('support_material_interface_layers')
-    return s, used
-
-
-RESIN_NOTE_KEYS = {'LIFT_DISTANCE': 'lift_distance', 'LIFT_SPEED': 'lift_speed',
-                   'BOTTOM_LIFT_DISTANCE': 'bottom_lift_distance', 'BOTTOM_LIFT_SPEED': 'bottom_lift_speed',
-                   'RETRACT_SPEED': 'retract_speed', 'BOTTOM_RETRACT_SPEED': 'bottom_retract_speed',
-                   'WAIT_BEFORE_EXPOSURE': 'wait_before_exposure', 'BOTTOM_WAIT_BEFORE_EXPOSURE':
-                   'bottom_wait_before_exposure', 'WAIT_AFTER_CURE': 'wait_after_cure',
-                   'WAIT_AFTER_LIFT': 'wait_after_lift', 'LIGHT_PWM': 'light_pwm', 'BOTTOM_LIGHT_PWM':
-                   'bottom_light_pwm', 'ANTIALIASING': 'antialiasing', 'DENSITY': 'density'}
+    return translation.translate('print', c, nozzle=nozzle)
 
 
 def map_resin_printer(c):
-    s = {}
-    used = set()
-    for key in ('display_pixels_x', 'display_pixels_y', 'display_width', 'display_height'):
-        put(s, 'machine', key, num(c.get(key))); used.add(key)
-    for key in ('display_mirror_x', 'display_mirror_y'):
-        if key in c:
-            put(s, 'machine', key, flag(c[key])); used.add(key)
-    put(s, 'machine', 'max_height', num(c.get('max_print_height'))); used.add('max_print_height')
-    return s, used
+    return translation.translate('printer_sla', c)
 
 
 def map_resin_material(c):
-    s = {}
-    used = set()
-    put(s, 'resin', 'layer_height', num(c.get('initial_layer_height'))); used.add('initial_layer_height')
-    put(s, 'resin', 'exposure', num(c.get('exposure_time'))); used.add('exposure_time')
-    put(s, 'resin', 'bottom_exposure', num(c.get('initial_exposure_time'))); used.add('initial_exposure_time')
-    corr = [num(x) for x in c.get('material_correction', '').split(',') if x.strip()]
-    if len(corr) == 3 and all(x is not None for x in corr):
-        for axis, v in zip('xyz', corr):
-            put(s, 'resin', 'scale_' + axis, v)
-        used.add('material_correction')
-    notes = gcode_text(c.get('material_notes', '')) or ''
-    for m in re.finditer(r'^\s*([A-Z_]+)\s*=\s*([-\d.]+)', notes, re.M):
-        key = RESIN_NOTE_KEYS.get(m.group(1))
-        if key and key not in ('bottom_retract_speed', 'bottom_wait_before_exposure'):
-            put(s, 'resin', key, num(m.group(2)))
-    return s, used
+    return translation.translate('sla_material', c)
 
 
 def map_resin_print(c):
-    s = {}
-    used = set()
-    put(s, 'resin', 'layer_height', num(c.get('layer_height'))); used.add('layer_height')
-    put(s, 'resin', 'bottom_layers', num(c.get('faded_layers'))); used.add('faded_layers')
-    return s, used
+    return translation.translate('sla_print', c)
 
 
 NOZZLE_CONDITION = re.compile(r'(?:^|\band\b|&&|\()\s*nozzle_diameter\[0\]\s*==\s*"?(\d+(?:\.\d+)?)"?\s*(?=\)|\band\b|&&|$)')
@@ -1037,6 +814,8 @@ def main():
                          'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
     args = ap.parse_args()
     sources = Sources(args.upstream)
+    keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
+    renames = translation.Renames()  # the other dialects' names, from the same presets
 
     bundles = [Bundle(os.path.join(args.profiles, f)) for f in sorted(os.listdir(args.profiles))
                if f.endswith('.ini')]
@@ -1115,6 +894,7 @@ def main():
                 entry['not_converted'] = notes
                 for k, why in notes.items():
                     w.stats['%s not converted (%s)' % (k, why.split(':')[0])] += 1
+            keys_seen['printer_sla' if sla else 'printer'].update(c)
             for k in c:
                 if k not in used:
                     w.unmapped['printer_sla' if sla else 'printer'][k] += 1
@@ -1131,6 +911,13 @@ def main():
             if block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
                 sources.names[(block['source']['repository'], block['source']['preset'])] = rel
                 sources.matched.add(b.path)
+                if block.get('values'):
+                    renames.add(block['dialect'], 'printer', block['values'], c)
+            elif block and block.get('origin') == 'source_program' and block['dialect'] == 'cura':
+                defs = sources.of(b, w.stats)[3]
+                values, _, _ = defs.resolve(block['source']['preset'])
+                renames.add('cura', 'printer', {k: dv for k, (dv, ex) in values.items()
+                                                if dv is not None and ex is None}, c)
             elif block and block.get('origin') == 'converted_bundle':
                 sources.unmatched.add(b.path)
             printers.append((match, rel, sla))
@@ -1189,6 +976,8 @@ def main():
             vendor_presets = sources.presets(b, 'process' if kind == 'print' else 'filament') \
                 if src and straight else None
             from_source = upstream.orca_compatible(vendor_presets, name) if vendor_presets else None
+            if from_source:
+                renames.add(src[0], kind, vendor_presets.resolve(from_source[0])[0], c)
             if from_source and from_source[1]:
                 # The source program's list, inherited from the parents like any other value (Tisma Slicer's bundle
                 # writes it empty in a preset that only inherits it, or with printers the source does not name).
@@ -1243,6 +1032,7 @@ def main():
             else:
                 settings, used = map_resin_print(c)
                 pk, folder, group = 'resin_print', 'resin_prints', 'resin_prints'
+            keys_seen[kind].update(c)
             for k in c:
                 if k not in used:
                     w.unmapped[kind][k] += 1
@@ -1334,6 +1124,27 @@ def main():
 
     for v in index['vendors']:
         v['counts'] = {k: len(v[k]) for k in ('models', 'printers', 'filaments', 'prints', 'resins', 'resin_prints')}
+    # The translation of each dialect's keys to the engine's (docs/FORMAT.md, «Traducción de claves»).
+    index['translation'] = {}
+    tables = {'prusaslicer': translation.table_json('prusaslicer', keys_seen)}
+    for dialect in ('orcaslicer', 'crealityprint', 'elegooslicer', 'cura'):
+        kinds = {k for d, k in renames.samples if d == dialect}
+        if not kinds:
+            continue
+        seen = {k: set().union(*[set(x for x, v in sv.items() if not isinstance(v, dict))
+                                  for sv, _ in renames.samples[(dialect, k)]]) for k in kinds}
+        found = {k: renames.renames(dialect, k) for k in kinds}
+        tables[dialect] = translation.table_json(dialect, seen, found, source={
+            'how': 'the same presets in the source program and in Tisma Slicer\'s bundle: a key whose value the bundle '
+                   'has under a PrusaSlicer name in nearly every preset', 'presets': {
+                       translation.KIND_NAMES[k]: len(renames.samples[(dialect, k)]) for k in kinds}})
+    for dialect, table in tables.items():
+        rel = os.path.join('translation', dialect + '.json')
+        w.write(rel, table)
+        index['translation'][dialect] = rel
+        for kind, rows in table['kinds'].items():
+            for row in rows.values():
+                w.stats['translation %s %s: %s' % (dialect, kind, row['group'])] += 1
     w.write('compatible.json', {'format': 'tisma-pack-compatible', 'version': FORMAT_VERSION, 'sets': compat_out})
     index['counts'] = dict(w.stats)
     w.write('index.json', index)
