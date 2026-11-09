@@ -31,10 +31,8 @@ el origen da con capas más gruesas que la boquilla.
 
 ## Con el motor actual
 
-Con el motor de `dev` (711a7ba) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
-laminan, y en las 2259 que el motor lee, cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden
-(GM13). En 2 (Prusa CORE One INDX 4T) el motor todavía no lee una construcción de su G-code de capa y usa la versión
-simple.
+Con el motor de `dev` (70f9335) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
+laminan con su G-code, y en todas cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden (GM13).
 
 ## También
 

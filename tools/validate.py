@@ -65,13 +65,16 @@ CONDITION = re.compile(r'\{\s*(if|elsif|else|endif|unless)\b')
 def literal_lines(template):
     """The lines of a template that the engine must write as they are (spec GM13): no {…} or […] in them, and
     not inside an {if}…{endif} (the branch may not be taken). Trailing spaces do not count."""
-    out, depth = [], 0
+    out, depth, code = [], 0, 0
     for line in template.split('\n'):
         opens = len(re.findall(r'\{\s*(?:if|unless)\b', line))
         closes = len(re.findall(r'\{\s*endif\s*\}', line))
-        if '{' not in line and '[' not in line and depth == 0 and line.strip():
+        if '{' not in line and '[' not in line and depth == 0 and code == 0 and line.strip():
             out.append(line.rstrip())
         depth = max(0, depth + opens - closes)
+        # A {…} block of code over several lines: its lines are code, not text.
+        bare = re.sub(r'"(?:\\.|[^"\\])*"', '', line)
+        code = max(0, code + bare.count('{') - bare.count('}'))
     return out
 
 
