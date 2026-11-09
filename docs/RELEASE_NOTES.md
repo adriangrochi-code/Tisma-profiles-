@@ -31,10 +31,9 @@ el origen da con capas más gruesas que la boquilla.
 
 ## Con el motor actual
 
-Con el motor de `dev` (ba03c61) y el G-code propio de cada máquina (`validate.py --macros`), de las 2261 variantes FDM
-laminan 2101. Fallan 160 de Prusa, porque el G-code de inicio de sus filamentos usa `filament_extruder_id`, que el
-motor todavía no conoce, y 2 más. En 25 el motor no puede leer el G-code y usa la versión simple. Lo corrige el motor;
-el paquete no cambia.
+Con el motor de `dev` (40adede) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
+laminan. En 2 (Prusa CORE One INDX 4T) el motor todavía no lee una construcción de su G-code de capa y usa la
+versión simple.
 
 ## También
 

@@ -138,11 +138,12 @@ comparten:
   Sin `nozzle`, el perfil sirve para cualquier boquilla de sus impresoras.
 - **Filamentos:** `gcode`, si el perfil trae G-code de inicio o de fin de filamento: el mismo bloque que el de la
   máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»).
-- **Filamentos de la familia OrcaSlicer:** `source_values`, con `dialect`, `preset` (el perfil en el programa de
-  origen) y `values`: los valores de ese perfil, con los nombres del programa de origen, de las variables que usa el
-  G-code de las máquinas de ese dialecto (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
+- **`source_values`** (filamentos), con `dialect`, `preset` y `values`: los valores del filamento para las variables
+  que usa el G-code de las máquinas de ese dialecto. En los paquetes de PrusaSlicer, los de la sección del paquete,
+  como texto, también para su propio G-code de filamento (por ejemplo `filament_abrasive`, `filament_notes`). En la
+  familia OrcaSlicer, los del mismo perfil en el programa de origen, con sus nombres (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
   y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
-  del 05-11-2026, 4121 filamentos de OrcaSlicer y 316 de Creality Print.
+  del 05-11-2026, 7199 filamentos de paquetes de PrusaSlicer, 4121 de OrcaSlicer y 316 de Creality Print.
 - **`from_source_program`:** las claves del perfil (`grupo.clave`) que no salen del paquete de Tisma Slicer sino del
   programa de origen, porque el paquete las perdió: las temperaturas de la boquilla de 3 filamentos de la UltiMaker 2
   extended+.
@@ -191,7 +192,7 @@ siendo la versión con variables simples (abajo).
 | `keys` | El nombre de origen de cada uno |
 | `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer) |
 | `relative_extrusion` | Si el programa de origen extruye en relativo con este G-code (`null` si no lo dice). En `cura` es casi siempre `false`: su G-code de inicio pone `M82`. Al usar `templates`, el motor extruye como dice este campo |
-| `values` | Solo en `source_program` de la familia OrcaSlicer: los valores de la máquina con los nombres del programa de origen, para las variables de sus macros |
+| `values` | Los valores de la máquina para las variables de sus macros. En `source_program` de la familia OrcaSlicer, todos los de la máquina en el programa de origen, con sus nombres (listas como listas). En `bundle` y `converted_bundle`, los de la sección del paquete que usa su G-code, como texto (sin escapes; las listas, separadas por coma) |
 | `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto. No está en `templates` |
 
 **Nombres de `templates`** (otras claves de G-code del origen quedan con su nombre):

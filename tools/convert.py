@@ -458,8 +458,28 @@ def printer_gcode(b, name, c, everything, sources, stats):
     if src:
         # The program the bundle was converted from (its dialect, when the pack reads it), and its repository.
         out['source'].update({'program': src[0], 'repository': src[1], 'commit': src[2]})
+    values = bundle_values(templates, c)
+    if values:
+        out['values'] = values
     stats['printer G-code from the bundle (%s)' % ('converted by Tisma Slicer' if src else 'PrusaSlicer format')] += 1
     return out
+
+
+def template_names(templates):
+    names = set()
+    for t in templates.values():
+        for text in (t if isinstance(t, list) else [t]):
+            if text:
+                names.update(n for n, local in gcode_variables.variables(text) if not local)
+    return names
+
+
+def bundle_values(templates, c, names=None):
+    """The section's values (as the program holds them: new lines and quotes unescaped, lists as written, separated
+    by commas) of the variables that its G-code uses, for a PrusaSlicer-format bundle."""
+    names = template_names(templates) if names is None else names
+    return {k: translation.unescape(c[k].strip('"') if c[k].count('"') == 2 and c[k][:1] == '"' else c[k])
+            for k in sorted(names) if k in c and not k.endswith('_gcode')}
 
 
 def filament_gcode(b, name, c, everything, sources, stats):
@@ -1068,6 +1088,15 @@ def main():
                 entry['nozzle'] = nozzle
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
+                if not source_values:
+                    # A PrusaSlicer-format filament: its own values for the variables of the machines' G-code and of
+                    # its own.
+                    names = template_variables.get('prusaslicer', set()) | \
+                        template_names((entry.get('gcode') or {}).get('templates') or {})
+                    given = bundle_values({}, c, names)
+                    if given:
+                        entry['source_values'] = {'dialect': 'prusaslicer', 'preset': name, 'values': given}
+                        w.stats['filaments with source_values (prusaslicer)'] += 1
                 wanted = template_variables.get(src[0]) if src and source_values else None
                 if wanted:
                     given = {k: v for k, v in sorted(source_values.items()) if k in wanted}
