@@ -65,7 +65,10 @@ Para instalar:
 
 **Un modelo** (`models[i]`): `id`, `name`, `technology` (`fff` o `sla`), `family`, `default_materials` (nombres),
 `assets` (rutas de `bed_model` en STL, `bed_texture` en SVG o PNG y `thumbnail` en PNG, si las hay), `file` (su archivo,
-abajo), `variants` (`id` y `nozzle` de cada una) y `default_variant`.
+abajo), `variants` (`id` y `nozzle` de cada una) y `default_variant`. `from_source_program` (también en el archivo del
+modelo), cuando el paquete de Tisma Slicer perdió algo del modelo que su programa de origen tiene (su `machine_model`):
+qué campos salen de ahí (`family`, `default_materials`, `assets.thumbnail`, `assets.bed_model`, `assets.bed_texture`).
+Pasa en los 12 modelos de Creality Print y Elegoo Slicer, cuyo paquete no guarda imágenes ni materiales.
 
 ## Un modelo de impresora (`vendors/<id>/models/<nombre>.json`)
 

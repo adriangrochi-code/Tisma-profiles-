@@ -533,6 +533,32 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
+def model_from_source(model, assets, base, mid, out, vdir):
+    """Fills what the bundle lost of a model and its source program has (the machine_model file of its
+    OrcaSlicer-style vendor folder `base`): family, default materials and pictures, copied into the pack. Tisma
+    Slicer's Creality Print and Elegoo Slicer bundles keep none of them. The filled fields."""
+    sm = upstream.orca_machine_model(base, mid)
+    if not sm:
+        return []
+    filled = []
+    if not model['family'] and sm.get('family'):
+        model['family'] = sm['family']
+        filled.append('family')
+    if not model['default_materials'] and sm.get('default_materials'):
+        model['default_materials'] = [x.strip() for x in sm['default_materials'].split(';') if x.strip()]
+        filled.append('default_materials')
+    for key, f in (('thumbnail', mid + '_cover.png'), ('bed_model', sm.get('bed_model', '')),
+                   ('bed_texture', sm.get('bed_texture', ''))):
+        src = os.path.join(base, f) if f else ''
+        if key not in assets and f and os.path.isfile(src):
+            rel = os.path.join(vdir, 'assets', f)
+            os.makedirs(os.path.dirname(os.path.join(out, rel)), exist_ok=True)
+            shutil.copyfile(src, os.path.join(out, rel))
+            assets[key] = rel
+            filled.append('assets.' + key)
+    return filled
+
+
 def lost_values(kind, c, source):
     """{PrusaSlicer key: bundle text} of the options of the translation table of a kind that the bundle lacks and the
     source program's preset (its values, with the source names) gives."""
@@ -864,6 +890,8 @@ def build_models(w, index, printer_entries):
                'assets': keep_m.get('assets', {}), 'license': first['license'], 'origin': first['origin'],
                'default_variant': default_variant,
                'common': {'settings': common}, 'variants': []}
+        if keep_m.get('from_source_program'):
+            doc['from_source_program'] = keep_m['from_source_program']
         if common_gcode:
             doc['common']['gcode'] = common_gcode
         for vid, nozzle, rel, e in variants:
@@ -1094,6 +1122,7 @@ def main():
             (all_sla if sla else all_printers).append((match, rel))
             w.stats['sla printers' if sla else 'printers'] += 1
 
+        base = sources.bases.get(b.path) if sources.of(b, w.stats) else None
         for mid, m in b.models.items():
             model = {'id': mid, 'name': m.get('name', mid), 'technology': m.get('technology', 'FFF').lower(),
                      'family': m.get('family', ''), 'variants': [x.strip() for x in m.get('variants', '').split(';')
@@ -1109,6 +1138,10 @@ def main():
                     os.makedirs(os.path.dirname(os.path.join(args.out, rel)), exist_ok=True)
                     shutil.copyfile(src, os.path.join(args.out, rel))
                     assets[key] = rel
+            filled = model_from_source(model, assets, base, mid, args.out, vdir) if base else []
+            if filled:
+                model['from_source_program'] = filled
+                w.stats['models with values from the source program'] += 1
             model['assets'] = assets
             model['printers'] = [rel for c, rel, sla in printers if c.get('pack_model', c.get('printer_model')) == mid]
             vendor['models'].append(model)

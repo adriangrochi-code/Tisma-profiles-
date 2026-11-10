@@ -5,7 +5,9 @@ Usage: python3 -m unittest discover -s tools -p 'test_*.py'
 """
 
 import os
+import json
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -70,6 +72,29 @@ class DialectTables(unittest.TestCase):
         self.assertEqual(got['seam_position'][0], 'seam_position')
         self.assertEqual(got['seam_position'][3], {'aligned': 'aligned', 'back': 'rear', 'nearest': 'nearest'})
         self.assertEqual(len(got['layer_height']), 3)  # numbers: no value names
+
+
+class Models(unittest.TestCase):
+    def test_model_takes_what_the_bundle_lost_from_the_source_program(self):
+        # As Creality Print's "Creality Z2": the bundle keeps the name and family, no materials nor pictures.
+        with tempfile.TemporaryDirectory() as tmp:
+            base = os.path.join(tmp, 'Creality')
+            os.makedirs(os.path.join(base, 'machine'))
+            json.dump({'type': 'machine_model', 'name': 'Creality Z2', 'family': 'Creality',
+                       'bed_model': 'k1_bed.stl', 'bed_texture': 'missing.svg',
+                       'default_materials': 'Hyper PLA;CR-PETG'},
+                      open(os.path.join(base, 'machine', 'Creality Z2.json'), 'w'))
+            for f in ('k1_bed.stl', 'Creality Z2_cover.png'):
+                open(os.path.join(base, f), 'w').write('x')
+            out = os.path.join(tmp, 'pack')
+            model = {'family': 'Creality', 'default_materials': []}
+            assets = {}
+            filled = convert.model_from_source(model, assets, base, 'Creality Z2', out, 'vendors/V')
+            self.assertEqual(filled, ['default_materials', 'assets.thumbnail', 'assets.bed_model'])
+            self.assertEqual(model['default_materials'], ['Hyper PLA', 'CR-PETG'])
+            self.assertTrue(os.path.isfile(os.path.join(out, assets['bed_model'])))
+            self.assertNotIn('bed_texture', assets)  # the source names a file it does not have
+            self.assertEqual(convert.model_from_source(model, assets, base, 'Other', out, 'vendors/V'), [])
 
 
 class Quotes(unittest.TestCase):

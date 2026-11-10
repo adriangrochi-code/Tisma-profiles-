@@ -286,6 +286,11 @@ def main():
     for v in index['vendors']:
         for m in v['models']:
             doc = load(args.pack, m['file'])
+            for key, rel in (doc.get('assets') or {}).items():
+                if not os.path.isfile(os.path.join(args.pack, rel)):
+                    problems['model picture or bed that is not in the pack'].append('%s: %s' % (m['file'], key))
+            if doc.get('assets') != m.get('assets'):
+                problems['model whose index entry and file give other pictures'].append(m['file'])
             for var in doc['variants']:
                 original = dict(doc.get('original_common', {}), **var.get('original', {}))
                 settings = merged_block(doc['common']['settings'], var['settings'])

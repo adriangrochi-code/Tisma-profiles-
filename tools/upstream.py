@@ -238,6 +238,19 @@ def cura_machine_gcode(cura, def_id):
 # The variables of the OrcaSlicer family that Tisma Slicer renames to PrusaSlicer's when it converts a G-code template,
 # as its bundles show (the same template in the source program and in the bundle). Only used to convert the start and
 # end G-code for the engine's simple variables (profile.settings); the G-code block keeps the source's own names.
+def orca_machine_model(folder, name):
+    """The machine_model preset (the printer model: family, default materials, pictures) of an OrcaSlicer-style
+    vendor folder, by name, or None."""
+    for f in sorted(glob.glob(os.path.join(folder, 'machine', '*.json'))):
+        try:
+            d = json.load(open(f, encoding='utf-8'))
+        except (ValueError, UnicodeDecodeError):
+            continue
+        if isinstance(d, dict) and d.get('type') == 'machine_model' and d.get('name') == name:
+            return d
+    return None
+
+
 ORCA_TO_PRUSA = {'nozzle_temperature_initial_layer': 'first_layer_temperature', 'nozzle_temperature': 'temperature',
                  'bed_temperature_initial_layer_single': 'first_layer_bed_temperature',
                  'bed_temperature_initial_layer': 'first_layer_bed_temperature',
