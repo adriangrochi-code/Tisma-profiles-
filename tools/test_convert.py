@@ -97,6 +97,15 @@ class Models(unittest.TestCase):
             self.assertEqual(convert.model_from_source(model, assets, base, 'Other', out, 'vendors/V'), [])
 
 
+class Assets(unittest.TestCase):
+    def test_file_named_in_another_case(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            open(os.path.join(tmp, '125x130.svg'), 'w').write('x')
+            self.assertEqual(convert.asset_file(tmp, '125X130.svg'), '125x130.svg')
+            self.assertEqual(convert.asset_file(tmp, 'other.svg'), 'other.svg')
+            self.assertEqual(convert.asset_file(os.path.join(tmp, 'none'), 'a.svg'), 'a.svg')
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

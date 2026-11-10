@@ -533,6 +533,18 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
+def asset_file(folder, name):
+    """The file of a bundle folder that a model names, also when the name differs in case only (Geeetech names
+    125X130.svg, the file is 125x130.svg; PrusaSlicer finds it on a case-insensitive disk)."""
+    if not name or os.path.isfile(os.path.join(folder, name)):
+        return name
+    try:
+        same = [f for f in os.listdir(folder) if f.lower() == name.lower()]
+    except OSError:
+        return name
+    return same[0] if len(same) == 1 else name
+
+
 def model_from_source(model, assets, base, mid, out, vdir):
     """Fills what the bundle lost of a model and its source program has (the machine_model file of its
     OrcaSlicer-style vendor folder `base`): family, default materials and pictures, copied into the pack. Tisma
@@ -1131,7 +1143,8 @@ def main():
                                            if x.strip()]}
             assets = {}
             for key in ('bed_model', 'bed_texture', 'thumbnail'):
-                f = m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else '')
+                f = asset_file(os.path.join(args.profiles, b.id),
+                               m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else ''))
                 src = os.path.join(args.profiles, b.id, f) if f else ''
                 if f and os.path.isfile(src):
                     rel = os.path.join(vdir, 'assets', f)
