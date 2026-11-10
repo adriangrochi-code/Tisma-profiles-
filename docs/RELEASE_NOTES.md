@@ -24,6 +24,8 @@ AGPL-3.0-or-later.
   valores de 37 impresiones y 11 filamentos que el paquete dejó casi vacíos (por ejemplo la altura de la primera
   capa de las impresiones de Elegoo y Artillery), del programa de origen.
 - **Datos de comunidad** enlazados a su modelo del paquete.
+- **Camas de UltiMaker Cura:** 151 modelos de Cura traen la malla de su cama, convertida de Cura (LGPL-3.0); el paquete
+  pesa unos 6 MB más.
 - **Imágenes y materiales de los modelos de Creality Print y Elegoo Slicer** (12 modelos, por ejemplo la Creality
   Z2): miniatura, modelo de cama y materiales por defecto, del programa de origen.
 - **Tablas de traducción:** la de OrcaSlicer da ahora los valores que tienen otro nombre en una clave con el mismo

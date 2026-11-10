@@ -22,6 +22,7 @@ import subprocess
 import sys
 
 import gcode_variables
+import cura_platform
 import translation
 import upstream
 from translation import FILAMENT_VARIABLES, clean_num, first_text, fix_point, flag, num, pct_or_abs
@@ -643,6 +644,52 @@ def asset_file(folder, name):
     return same[0] if len(same) == 1 else name
 
 
+PLATE_SHARE = 0.5  # a Cura platform enters when its plate (Z 0 +-3 mm) is under this share of the bed
+
+
+def cura_bed(model, assets, mid, printers, printer_entries, sources, b, out, vdir, stats):
+    """UltiMaker Cura's bed mesh of a model (its definition's platform and platform_offset), in the pack's bed frame
+    (cura_platform), as assets.bed_model: when it has its plate where the bed is. The filled fields."""
+    src = sources.of(b, stats)
+    defs = src[3] if src and src[0] == 'cura' else None
+    entry = next((printer_entries[r] for c, r, sla in printers
+                  if c.get('pack_model', c.get('printer_model')) == mid and r in printer_entries), None)
+    g = (entry or {}).get('gcode') or {}
+    preset = (g.get('source') or {}).get('preset')
+    if not defs or g.get('dialect') != 'cura' or preset not in defs.defs:
+        return []
+    meta = defs.resolve(preset)[2]
+    mesh = meta.get('platform')
+    bed = (entry['profile']['settings'].get('machine') or {}).get('bed')
+    if not mesh or not bed:
+        return []
+    offset = meta.get('platform_offset')
+    if isinstance(offset, str):
+        offset = [float(x) for x in offset.split(',')]
+    path = os.path.join(defs.resources, 'meshes', mesh)
+    try:
+        data, share = cura_platform.bed_model(path, offset, bed)
+    except (OSError, ValueError, KeyError, IndexError) as e:
+        stats['Cura bed mesh not read'] += 1
+        return []
+    if share < PLATE_SHARE:
+        stats['Cura bed mesh left out: no plate at Z 0 under the bed'] += 1
+        return []
+    rel = os.path.join(vdir, 'assets', os.path.splitext(os.path.basename(mesh))[0] + '_bed.stl')
+    full = os.path.join(out, rel)
+    os.makedirs(os.path.dirname(full), exist_ok=True)
+    if not os.path.exists(full):
+        with open(full, 'wb') as f:
+            f.write(data)
+    elif open(full, 'rb').read() != data:  # the same mesh with another offset or bed
+        rel = os.path.join(vdir, 'assets', os.path.splitext(os.path.basename(mesh))[0] + '_' + slug(mid) + '_bed.stl')
+        with open(os.path.join(out, rel), 'wb') as f:
+            f.write(data)
+    assets['bed_model'] = rel
+    stats['Cura bed meshes'] += 1
+    return ['assets.bed_model']
+
+
 def model_from_source(model, assets, base, mid, out, vdir):
     """Fills what the bundle lost of a model and its source program has (the machine_model file of its
     OrcaSlicer-style vendor folder `base`): family, default materials and pictures, copied into the pack. Tisma
@@ -1260,6 +1307,8 @@ def main():
                     shutil.copyfile(src, os.path.join(args.out, rel))
                     assets[key] = rel
             filled = model_from_source(model, assets, base, mid, args.out, vdir) if base else []
+            if 'bed_model' not in assets:
+                filled += cura_bed(model, assets, mid, printers, printer_entries, sources, b, args.out, vdir, w.stats)
             if filled:
                 model['from_source_program'] = filled
                 w.stats['models with values from the source program'] += 1

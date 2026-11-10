@@ -175,6 +175,31 @@ class MergedPresets(unittest.TestCase):
         self.assertEqual(len(convert.upstream.merged_groups(vendor, converted)), 1)
 
 
+class CuraBeds(unittest.TestCase):
+    def test_platform_in_the_bed_frame(self):
+        # A 100 x 80 mm plate 5 mm thick, top at Z 0, as an STL in Cura's files (Z up, around the bed's centre), and
+        # the same as an OBJ; Cura moves it by platform_offset in its scene (Y up): (1, -5, 2) is 1 mm right, 5 mm
+        # down and 2 mm toward the front (-2 on the printer's Y).
+        import cura_platform
+        quad = [((-50, -40, 0), (50, -40, 0), (50, 40, 0)), ((-50, -40, 0), (50, 40, 0), (-50, 40, 0)),
+                ((-50, -40, -5), (50, 40, -5), (50, -40, -5))]
+        with tempfile.TemporaryDirectory() as tmp:
+            stl = os.path.join(tmp, 'p.stl')
+            with open(stl, 'wb') as f:
+                f.write(cura_platform.binary_stl(quad))
+            obj = os.path.join(tmp, 'p.obj')
+            with open(obj, 'w') as f:
+                f.write('v -50 -40 0\nv 50 -40 0\nv 50 40 0\nv -50 40 0\nf 1 2 3 4\n')
+            tris = cura_platform.platform_triangles(stl, [1, -5, 2])
+            self.assertEqual(tris[0][0], (-49.0, -42.0, -5.0))
+            self.assertEqual(cura_platform.platform_triangles(obj)[1], ((-50, -40, 0), (50, 40, 0), (-50, 40, 0)))
+            bed = [[0, 0], [100, 0], [100, 80], [0, 80]]
+            data, share = cura_platform.bed_model(stl, None, bed)
+            self.assertAlmostEqual(share, 1.0)
+            self.assertEqual(cura_platform.read_binary_stl(data)[0][0], (0.0, 0.0, 0.0))
+            self.assertEqual(cura_platform.bed_model(stl, [0, -10, 0], bed)[1], 0.0)  # plate 10 mm down: none
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

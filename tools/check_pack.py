@@ -16,6 +16,7 @@
   another one does, and an FFF variant that no filament or print fits;
 - a printer of the OrcaSlicer family without a translated value that its source program's preset gives (its
   gcode.values) and its bundle lost;
+- a bed converted from UltiMaker Cura whose plate (faces up within 3 mm of Z 0) is not under half the bed;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
   that does not give, applied to a profile's "original", the profile's settings (the converter's translation).
 
@@ -30,6 +31,7 @@ import os
 import re
 import sys
 
+import cura_platform
 import translation
 import upstream
 
@@ -294,6 +296,18 @@ def main():
             for key, rel in (doc.get('assets') or {}).items():
                 if not os.path.isfile(os.path.join(args.pack, rel)):
                     problems['model picture or bed that is not in the pack'].append('%s: %s' % (m['file'], key))
+            bed_file = (doc.get('assets') or {}).get('bed_model')
+            if bed_file and 'assets.bed_model' in (doc.get('from_source_program') or []) and \
+                    os.path.isfile(os.path.join(args.pack, bed_file)) and \
+                    (doc['common'].get('gcode') or {}).get('dialect') == 'cura':
+                # A bed converted from UltiMaker Cura's platform: its plate at Z 0, under the printer's bed.
+                counts['beds converted from Cura'] += 1
+                bed = merged_block(doc['common']['settings'], doc['variants'][0]['settings']).get('machine', {}).get(
+                    'bed')
+                with open(os.path.join(args.pack, bed_file), 'rb') as f:
+                    tris = cura_platform.read_binary_stl(f.read())
+                if not bed or cura_platform.plate_coverage(tris, bed) < 0.5:
+                    problems['bed converted from Cura without its plate at Z 0 under the bed'].append(m['file'])
             if doc.get('assets') != m.get('assets'):
                 problems['model whose index entry and file give other pictures'].append(m['file'])
             for var in doc['variants']:

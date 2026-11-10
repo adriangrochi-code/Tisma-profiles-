@@ -69,6 +69,13 @@ abajo), `variants` (`id` y `nozzle` de cada una) y `default_variant`. `from_sour
 modelo), cuando el paquete de Tisma Slicer perdió algo del modelo que su programa de origen tiene (su `machine_model`):
 qué campos salen de ahí (`family`, `default_materials`, `assets.thumbnail`, `assets.bed_model`, `assets.bed_texture`).
 Pasa en los 12 modelos de Creality Print y Elegoo Slicer, cuyo paquete no guarda imágenes ni materiales.
+En los modelos de UltiMaker Cura, `assets.bed_model` es la malla de la cama de su definición (`platform`), convertida al
+marco de las demás camas (mm, Z hacia arriba, X e Y de la impresora, el centro de la cama donde lo tiene su polígono)
+como la coloca Cura: un punto (x, y, z) de un STL u OBJ es (x, z, -y) en su escena (Y hacia arriba); de un 3MF, los
+vértices del objeto con más caras tal como están; después el desplazamiento `platform_offset`, y un punto de la escena
+(x, y, z) es (x, -z, y) en la impresora. Se escribe en STL binario, sin reducir. Entra solo si tiene su placa (caras
+hacia arriba a menos de 3 mm de Z 0) bajo la mitad de la cama por lo menos: 151 modelos; 8 quedan sin cama. Suma unos
+6 MB al paquete comprimido y unos 50 MB descomprimido.
 
 ## Un modelo de impresora (`vendors/<id>/models/<nombre>.json`)
 
@@ -399,10 +406,10 @@ Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabr
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
-- **mallas e imágenes de las camas de UltiMaker Cura** (`resources/meshes`, `resources/images`, en el commit de
-  `sources.json`): LGPL-3.0, la licencia del repositorio; no tienen aviso propio, y `licenses_thirdparty` solo nombra
-  a Qt. Se pueden redistribuir con esa licencia. El paquete todavía no las trae: Cura las coloca en su propio sistema
-  de coordenadas, con un desplazamiento (`platform_offset`), y la mitad no son STL; hace falta un campo propio.
+- **mallas de las camas de UltiMaker Cura** (`resources/meshes`, en el commit de `sources.json`): LGPL-3.0, la licencia
+  del repositorio; no tienen aviso propio, y `licenses_thirdparty` solo nombra a Qt. Van convertidas en
+  `assets.bed_model` de los modelos de Cura (abajo). Las imágenes de `resources/images` son la placa trasera de Cura,
+  no una textura de la cama, y no van.
 
 El paquete entero se distribuye bajo la AGPL-3.0 o posterior (`LICENSE`). Un programa que lo descarga y lo lee como
 datos no se vuelve parte del paquete.

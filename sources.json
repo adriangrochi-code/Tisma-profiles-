@@ -32,7 +32,7 @@
    "program": "UltiMaker Cura",
    "repository": "https://github.com/Ultimaker/Cura",
    "commit": "5bea2f86153faed3a1c2d9081b8d6b753684678a",
-   "directory": "resources/definitions resources/extruders plugins/CuraEngineBackend"
+   "directory": "resources/definitions resources/extruders plugins/CuraEngineBackend resources/meshes"
   }
  ]
 }

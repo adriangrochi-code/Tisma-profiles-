@@ -105,6 +105,7 @@ class CuraDefinitions:
     """UltiMaker Cura machine definitions (resources/definitions) and their extruders (resources/extruders)."""
 
     def __init__(self, resources):
+        self.resources = resources
         self.defs = {}
         for kind in ('definitions', 'extruders'):
             for f in glob.glob(os.path.join(resources, kind, '*.def.json')):
