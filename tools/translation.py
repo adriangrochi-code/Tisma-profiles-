@@ -417,7 +417,7 @@ def value_of(e, c, s):
     if how == 'percent_of':
         return pct_or_abs(v, get(s, e['base']))
     if how == 'first_item':
-        return v.split(',')[0].strip() if key in c else None
+        return first_text(v) if key in c else None
     if how == 'number_strip_percent':
         return num(str(v if v is not None else '').rstrip('%'))
     if how == 'number_or_percent':
@@ -664,6 +664,16 @@ def option_types(print_config_cpp):
         for axis in 'xyze':
             out.setdefault(m.group(1) + axis, m.group(2))
     return out
+
+
+def first_text(text):
+    """The first item of a PrusaSlicer list, as the program holds it: without the quotes the bundle may write
+    ("PLA";"PETG" is PLA)."""
+    text = (text or '').strip()
+    if text.startswith('"'):
+        items = _strings(text)
+        return items[0] if items else ''
+    return text.split(',')[0].strip()
 
 
 def _strings(text):

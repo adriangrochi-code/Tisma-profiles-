@@ -16,8 +16,10 @@ AGPL-3.0-or-later.
 - **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, y la altura de 9
   impresoras (por ejemplo la Meltingplot MBL 480).
 - **Datos de comunidad** enlazados a su modelo del paquete.
+- **Tipo de material sin comillas:** 4682 filamentos de la familia OrcaSlicer decían `"PLA"` (con las comillas del
+  archivo) en vez de `PLA`.
 - **Más revisiones en la CI** (`tools/check_pack.py`): perfiles por defecto, boquilla de los perfiles de impresión,
-  variantes sin fabricante, G-code de filamento de la familia OrcaSlicer, datos de comunidad.
+  variantes sin fabricante, G-code de filamento de la familia OrcaSlicer, datos de comunidad, textos con comillas.
 
 El formato sigue en la versión 2: un lector anterior ignora los campos nuevos.
 

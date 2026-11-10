@@ -24,7 +24,7 @@ import sys
 import gcode_variables
 import translation
 import upstream
-from translation import FILAMENT_VARIABLES, clean_num, fix_point, flag, num, pct_or_abs
+from translation import FILAMENT_VARIABLES, clean_num, first_text, fix_point, flag, num, pct_or_abs
 
 FORMAT_VERSION = 2
 
@@ -1170,10 +1170,11 @@ def main():
                      'compatible': compat_id(compatible), 'generic': generic,
                      'license': lic, 'origin': origin, 'original': c}
             if kind == 'filament':
-                entry['material'] = {'type': c.get('filament_type', ''), 'vendor': c.get('filament_vendor', ''),
+                entry['material'] = {'type': first_text(c.get('filament_type')),
+                                     'vendor': first_text(c.get('filament_vendor')),
                                      'density': num(c.get('filament_density')),
                                      'cost_per_kg': num(c.get('filament_cost')),
-                                     'colour': c.get('filament_colour', ''),
+                                     'colour': first_text(c.get('filament_colour')),
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle

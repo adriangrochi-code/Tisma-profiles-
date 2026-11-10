@@ -95,6 +95,18 @@ def same_translation(kind, original, settings, where, problems, counts, nozzle=N
         problems['translation table does not give the profile\'s settings'].append(where)
 
 
+def quoted_texts(d, path=''):
+    """Paths of the texts still written with the quotes of the bundle files ("PLA" for PLA)."""
+    if isinstance(d, dict):
+        for k, v in d.items():
+            yield from quoted_texts(v, path + '.' + k if path else k)
+    elif isinstance(d, list):
+        for v in d:
+            yield from quoted_texts(v, path)
+    elif isinstance(d, str) and len(d) >= 2 and d[0] == d[-1] == '"':
+        yield path
+
+
 def check_print_nozzles(pack, index, sets, problems, counts):
     """A print profile made for one nozzle fits no printer with another one."""
     nozzle, cache = {}, {}
@@ -222,6 +234,8 @@ def main():
                         any(isinstance(t, str) and t.strip() for t in (g.get('templates') or {}).values()) and \
                         g.get('origin') != 'source_program':
                     problems['filament G-code from the converted bundle while its source program is read'].append(rel)
+                for path in quoted_texts({'settings': e['profile']['settings'], 'material': e.get('material')}):
+                    problems['text written with the quotes of the bundle file: ' + path].append(rel)
                 counts[group] += 1
                 c = e.get('compatible')
                 if c is not None and not (isinstance(c, int) and 0 <= c < len(sets)):
@@ -247,6 +261,9 @@ def main():
                 for path in var.get('from_source_program', []):  # filled from the source, not translated
                     group, _, key = path.partition('.')
                     settings.get(group, {}).pop(key, None)
+                for path in quoted_texts(settings):
+                    problems['text written with the quotes of the bundle file: ' + path].append(
+                        '%s#%s' % (m['file'], var['id']))
                 prune(settings)
                 same_translation('printer' if m['technology'] == 'fff' else 'printer_sla', original, settings,
                                  '%s#%s' % (m['file'], var['id']), problems, counts)
