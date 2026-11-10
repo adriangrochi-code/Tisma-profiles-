@@ -533,12 +533,12 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
-def lost_machine_values(c, source):
-    """{PrusaSlicer key: bundle text} of the translated printer options that the bundle lacks and the source
-    program's preset (its values, with the source names) gives."""
+def lost_values(kind, c, source):
+    """{PrusaSlicer key: bundle text} of the options of the translation table of a kind that the bundle lacks and the
+    source program's preset (its values, with the source names) gives."""
     back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
     out = {}
-    for e in translation.TABLE['printer']:
+    for e in translation.TABLE[kind]:
         for key in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]):
             if not key or key in c or key in out:
                 continue
@@ -552,11 +552,27 @@ def lost_machine_values(c, source):
 
 
 def leaves(d, prefix=''):
+    """(group.key, value) of a profile's settings; the G-code variables one level deeper (machine.variables.x)."""
     for k, v in d.items():
-        if isinstance(v, dict) and not prefix:
-            yield from leaves(v, k + '.')
+        if isinstance(v, dict) and (not prefix or prefix == 'machine.' and k == 'variables'):
+            yield from leaves(v, prefix + k + '.')
         else:
             yield prefix + k, v
+
+
+def fill_lost(settings, full):
+    """Puts in settings the values of full (the translation with the lost values) that settings lacks; their paths."""
+    have = dict(leaves(settings))
+    filled = []
+    for path, value in leaves(full):
+        if path not in have and not path.startswith('_'):
+            node = settings
+            parts = path.split('.')
+            for part in parts[:-1]:
+                node = node.setdefault(part, {})
+            node[parts[-1]] = clean_num(value) if isinstance(value, float) else value
+            filled.append(path)
+    return filled
 
 
 def map_printer(c, texts=None):
@@ -1018,15 +1034,11 @@ def main():
                 # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
                 # most of the values of a few): translated from the source program's preset, as the bundle would
                 # have them.
-                lost = lost_machine_values(c, source)
+                lost = lost_values('printer', c, source)
                 if lost:
                     full, _ = map_printer(dict(c, **lost), engine_texts(block, dict(c, **lost)))
                     full.pop('_notes', None)
-                    for path, value in leaves(full):
-                        if path not in dict(leaves(settings)):
-                            group, key = path.split('.', 1)
-                            put(settings, group, key, value)
-                            filled.append(path)
+                    filled += fill_lost(settings, full)
                     if any(p not in ('machine.nozzle_diameter', 'machine.max_height') for p in filled):
                         w.stats['printer values from the source program'] += 1
             notes = settings.pop('_notes', {})
@@ -1226,6 +1238,26 @@ def main():
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle
+            lost = lost_values(kind, c, source_values) if source_values and kind in ('filament', 'print') else None
+            if lost:
+                # Values the bundle lost and the source program's preset gives: translated as the bundle would have
+                # them.
+                full, _ = map_filament(dict(c, **lost)) if kind == 'filament' else \
+                    map_print(dict(c, **lost), nozzle)
+                filled = fill_lost(settings, full)
+                if filled:
+                    entry['from_source_program'] = filled
+                    w.stats['%s values from the source program' % kind] += 1
+                if kind == 'filament':
+                    for field, key in (('type', 'filament_type'), ('vendor', 'filament_vendor'),
+                                       ('colour', 'filament_colour')):
+                        if key in lost and not entry['material'][field]:
+                            entry['material'][field] = first_text(lost[key])
+                            entry.setdefault('from_source_program', []).append('material.' + field)
+                    for field, key in (('density', 'filament_density'), ('cost_per_kg', 'filament_cost')):
+                        if key in lost and entry['material'][field] is None:
+                            entry['material'][field] = num(lost[key])
+                            entry.setdefault('from_source_program', []).append('material.' + field)
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
                 own = source_filament_gcode(src, from_source, source_values) \
@@ -1260,15 +1292,6 @@ def main():
                         # (Tisma Slicer's bundle does not keep all of them).
                         entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
                         w.stats['filaments with source_values (%s)' % src[0]] += 1
-                # Nozzle temperatures that the bundle lost and the source program gives (its own names for them).
-                for prusa, own in (('temperature', 'nozzle_temperature'),
-                                   ('first_layer_temperature', 'nozzle_temperature_initial_layer')):
-                    v = source_values.get(own) if source_values else None
-                    if prusa not in c and v:
-                        value = str(v[0] if isinstance(v, list) else v).strip()
-                        entry['profile']['settings'].setdefault('machine', {}).setdefault('variables', {})[prusa] = value
-                        entry.setdefault('from_source_program', []).append('machine.variables.' + prusa)
-                        w.stats['filament %s from the source program' % prusa] += 1
                 if fblock:
                     entry['gcode'] = fblock
             w.write(rel, entry)

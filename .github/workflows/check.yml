@@ -53,6 +53,9 @@ jobs:
           python3 tools/check_community.py community
           python3 tools/check_knowledge.py knowledge
 
+      - name: Converter tests
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+
       - name: Fetch the programs the bundles were converted from
         run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
 

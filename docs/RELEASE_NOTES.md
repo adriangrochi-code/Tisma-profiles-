@@ -17,8 +17,9 @@ AGPL-3.0-or-later.
   venían de dos fuentes; sus perfiles ya no quedan en la variante de 0,4.
 - **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, la altura de 9
   impresoras (por ejemplo la Meltingplot MBL 480), y los límites de velocidad, aceleración y jerk por eje de 857
-  variantes de la familia OrcaSlicer (más la retracción de la Elegoo Neptune y la UltiMaker 2 extended+), del
-  programa de origen.
+  variantes de la familia OrcaSlicer (más la retracción de la Elegoo Neptune y la UltiMaker 2 extended+), y los
+  valores de 37 impresiones y 11 filamentos que el paquete dejó casi vacíos (por ejemplo la altura de la primera
+  capa de las impresiones de Elegoo y Artillery), del programa de origen.
 - **Datos de comunidad** enlazados a su modelo del paquete.
 - **Tipo de material sin comillas:** 4682 filamentos de la familia OrcaSlicer decían `"PLA"` (con las comillas del
   archivo) en vez de `PLA`.
