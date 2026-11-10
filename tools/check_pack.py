@@ -8,6 +8,7 @@
   OrcaSlicer-style source (fdm_machine_common) because they have none of their own there are listed as notes;
 - a print profile without "nozzle" when its name or its condition gives one;
 - a printer G-code block without its dialect, or with a template that is not text;
+- a filament of the OrcaSlicer family whose G-code comes from the converted bundle instead of its source program;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
   another one does;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
@@ -191,6 +192,12 @@ def main():
                 prune(settings)
                 same_translation(KINDS[group], e['original'], settings, rel, problems, counts,
                                  nozzle=e.get('nozzle'))
+                sv = (e.get('source_values') or {}).get('dialect')
+                g = e.get('gcode') or {}
+                if group == 'filaments' and sv in SOURCE_PROGRAMS and \
+                        any(isinstance(t, str) and t.strip() for t in (g.get('templates') or {}).values()) and \
+                        g.get('origin') != 'source_program':
+                    problems['filament G-code from the converted bundle while its source program is read'].append(rel)
                 counts[group] += 1
                 c = e.get('compatible')
                 if c is not None and not (isinstance(c, int) and 0 <= c < len(sets)):

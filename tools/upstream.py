@@ -251,3 +251,57 @@ _WORD = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
 
 def to_prusa_names(text):
     return _SPAN.sub(lambda m: _WORD.sub(lambda w: ORCA_TO_PRUSA.get(w.group(0), w.group(0)), m.group(0)), text)
+
+
+# The default values of a program's options (its PrintConfig.cpp), for the variables a G-code uses that a preset does
+# not set: the program takes them from there.
+_DEFAULT = re.compile(r'set_default_value\(\s*new\s+ConfigOption(\w+?)(?:<[^>]*>)?\s*(\(|\{)(.*?)(\)|\})\s*\)\s*;',
+                      re.S)
+
+
+def _default_value(kind, body):
+    body = body.strip()
+    items = [x.strip() for x in re.split(r',(?![^{]*\})', body) if x.strip()] if body else []
+
+    def one(x, scalar):
+        x = x.strip().rstrip('f').strip()
+        if scalar == 'Bool':
+            return {'true': True, 'false': False, '1': True, '0': False}.get(x)
+        if scalar in ('Int', 'Float', 'Percent'):
+            try:
+                n = float(x.rstrip('.'))
+            except ValueError:
+                return None
+            return int(n) if scalar == 'Int' or n == int(n) else n
+        if scalar == 'String':
+            m = re.fullmatch(r'L?\(?"((?:\\.|[^"\\])*)"\)?', x)
+            return m.group(1) if m else None
+        return None
+    base = kind[:-1] if kind.endswith('s') and kind[:-1] in ('Bool', 'Int', 'Float', 'Percent', 'String') else None
+    if base:
+        values = [one(x, base) for x in items]
+        return values if all(v is not None for v in values) else None
+    if kind in ('Bool', 'Int', 'Float', 'Percent', 'String'):
+        return one(body, kind) if body else ('' if kind == 'String' else None)
+    return None
+
+
+def program_defaults(print_config_cpp):
+    """{key: default value} of the options of a PrintConfig.cpp whose default is a plain yes/no, number or text, or a
+    list of them."""
+    text = open(print_config_cpp, encoding='utf-8', errors='replace').read()
+    out = {}
+    for m in re.finditer(r'this->add(?:_nullable)?\("(\w+)",\s*co\w+\)', text):
+        rest = text[m.end():m.end() + 4000]
+        nxt = re.search(r'this->add', rest)
+        rest = rest[:nxt.start()] if nxt else rest
+        d = _DEFAULT.search(rest)
+        if d:
+            v = _default_value(d.group(1), d.group(3))
+            if v is not None:
+                out.setdefault(m.group(1), v)
+    return out
+
+
+# How the programs rewrite an old name when they load a preset (their PrintConfig.cpp, handle_legacy).
+LEGACY_RENAMES = {'crealityprint': {'filament_start_gcode': [('initial_layer_height', 'first_layer_height')]}}

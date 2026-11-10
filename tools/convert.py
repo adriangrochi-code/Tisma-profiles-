@@ -498,6 +498,10 @@ def source_filament_gcode(src, found, values):
             keys[neutral] = key
     if not templates:
         return None
+    for old, new in upstream.LEGACY_RENAMES.get(src[0], {}).get('filament_start_gcode', []):
+        if 'filament_start' in templates and old in templates['filament_start']:
+            # As the program rewrites an old name when it loads the preset.
+            templates['filament_start'] = templates['filament_start'].replace(old, new)
     return {'dialect': src[0], 'origin': 'source_program',
             'source': {'repository': src[1], 'commit': src[2], 'preset': found[0]}, 'templates': templates,
             'keys': keys}
@@ -854,14 +858,20 @@ def main():
     ap.add_argument('--upstream', action='append', metavar='REPOSITORY=DIR',
                     help='a checkout of a program that Tisma Slicer converted bundles from, at the commit the bundles '
                          'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
-    ap.add_argument('--filament-gcode-from-source', action='store_true',
-                    help="the OrcaSlicer family's filament G-code from the source program, in its dialect, instead of "
-                         "Tisma Slicer's bundle (off until the engine reads every variable of it)")
+    ap.add_argument('--source-config', action='append', metavar='DIALECT=PrintConfig.cpp',
+                    help="a source program's PrintConfig.cpp, for the defaults of the options its G-code uses")
+    ap.add_argument('--filament-gcode-from-bundle', dest='filament_gcode_from_source', action='store_false',
+                    help="the OrcaSlicer family's filament G-code from Tisma Slicer's bundle, as before, instead of "
+                         "the source program")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
     args = ap.parse_args()
     if args.prusa_config:
         OPTION_TYPES.update(translation.option_types(args.prusa_config))
+    program_defaults = {}
+    for spec in args.source_config or []:
+        dialect, _, path = spec.partition('=')
+        program_defaults[dialect] = upstream.program_defaults(path)
     sources = Sources(args.upstream)
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
@@ -1017,6 +1027,7 @@ def main():
     # The variables that the printers' own G-code uses, by dialect: the filament values the source program has for
     # them go with each filament (source_values).
     template_variables = collections.defaultdict(set)
+    template_variables_filaments = collections.defaultdict(set)  # dialect -> variables of the filaments' own G-code
     for entry in printer_entries.values():
         g = entry.get('gcode') or {}
         for t in (g.get('templates') or {}).values():
@@ -1133,7 +1144,13 @@ def main():
                     # bundle renames only some of its variables).
                     fblock = own
                     entry['gcode'] = own
+                    template_variables_filaments[src[0]].update(template_names(own['templates']))
                     w.stats['filament G-code from the source program (%s)' % src[0]] += 1
+                elif source_values and args.filament_gcode_from_source and \
+                        any(k in source_values for k in ('filament_start_gcode', 'filament_end_gcode')):
+                    # The source program has no filament G-code for it (empty): none, not the bundle's text.
+                    fblock = None
+                    w.stats['filament without G-code in the source program (%s)' % src[0]] += 1
                 if not source_values:
                     # A PrusaSlicer-format filament: its own values for the variables of the machines' G-code and of
                     # its own.
@@ -1228,6 +1245,29 @@ def main():
             w.stats['default filament: ' + how_f] += 1
         w.stats['default print: ' + how_p] += 1
         entry['source_defaults'] = d
+
+    # The program's defaults (its PrintConfig.cpp) for the variables of its G-code that a preset does not set, as the
+    # program fills them: in the printer's values, named in program_defaults.
+    if program_defaults:
+        machine_keys = collections.defaultdict(set)  # dialect -> keys that some machine preset of it sets
+        for entry in printer_entries.values():
+            g = entry.get('gcode') or {}
+            if g.get('origin') == 'source_program':
+                machine_keys[g['dialect']].update(g.get('values') or {})
+        for rel, entry in printer_entries.items():
+            g = entry.get('gcode') or {}
+            d = g.get('dialect')
+            if g.get('origin') != 'source_program' or d not in program_defaults:
+                continue
+            names = template_names(g.get('templates') or {}) | template_variables_filaments.get(d, set())
+            values = g.setdefault('values', {})
+            # Only machine options: a filament's value comes with the filament.
+            added = sorted(n for n in names if n not in values and n in program_defaults[d] and n in machine_keys[d])
+            for n in added:
+                values[n] = program_defaults[d][n]
+            if added:
+                g['program_defaults'] = added
+                w.stats['printers with program defaults in values (%s)' % d] += 1
 
     refs = build_models(w, index, printer_entries)
 

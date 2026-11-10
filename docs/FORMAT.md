@@ -138,7 +138,11 @@ comparten:
 
   Sin `nozzle`, el perfil sirve para cualquier boquilla de sus impresoras.
 - **Filamentos:** `gcode`, si el perfil trae G-code de inicio o de fin de filamento: el mismo bloque que el de la
-  máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»).
+  máquina, con `filament_start` y `filament_end` (ver «G-code de la máquina»). En la familia OrcaSlicer sale del
+  programa de origen, en su dialecto (`origin` `source_program`), con los nombres viejos que el programa cambia al
+  cargarlo ya cambiados (Creality Print: `initial_layer_height` por `first_layer_height`). Si el programa de origen no
+  le da G-code (vacío), el filamento no trae `gcode`. Con la versión del 05-11-2026, 3741 filamentos de OrcaSlicer y
+  316 de Creality Print, y 90 sin G-code.
 - **`source_values`** (filamentos), con `dialect`, `preset` y `values`: los valores del filamento para las variables
   que usa el G-code de las máquinas de ese dialecto. En los paquetes de PrusaSlicer, los de la sección del paquete,
   con su tipo (como `values`), también para su propio G-code de filamento (por ejemplo `filament_abrasive`, `filament_notes`). En la
@@ -194,6 +198,7 @@ siendo la versión con variables simples (abajo).
 | `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer) |
 | `relative_extrusion` | Si el programa de origen extruye en relativo con este G-code (`null` si no lo dice). En `cura` es casi siempre `false`: su G-code de inicio pone `M82`. Al usar `templates`, el motor extruye como dice este campo |
 | `values` | Los valores de la máquina para las variables de sus macros. En `source_program` de la familia OrcaSlicer, todos los de la máquina en el programa de origen, con sus nombres (listas como listas). En `bundle` y `converted_bundle`, los de la sección del paquete que usan su G-code y el G-code de los filamentos, con el tipo que les da PrusaSlicer (su `PrintConfig.cpp`, el de Tisma Slicer en el commit de los paquetes): sí/no, números, textos y listas; como texto si el tipo no se conoce |
+| `program_defaults` | Solo en `source_program` de la familia OrcaSlicer: las claves de `values` que el perfil no dice y que salen del valor por defecto del programa (su `PrintConfig.cpp`, en el commit de origen), como hace el programa al laminar; solo opciones de la máquina que usa el G-code de la máquina o de los filamentos (por ejemplo `support_air_filtration`) |
 | `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto. No está en `templates` |
 
 **Nombres de `templates`** (otras claves de G-code del origen quedan con su nombre):
