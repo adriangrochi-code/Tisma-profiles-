@@ -53,6 +53,13 @@ def main():
     index['compatible'] = {'name': 'compatible.json', 'size': os.path.getsize(os.path.join(args.out, 'compatible.json')),
                            'sha256': sha256(os.path.join(args.out, 'compatible.json'))}
 
+    if os.path.isdir(os.path.join(args.pack, 'translation')):
+        # The translation tables of each dialect (docs/FORMAT.md, «Traducción de claves»).
+        path = os.path.join(args.out, 'translation.tar.xz')
+        tar_xz(path, args.pack, ['translation'])
+        index['translation_archive'] = {'name': 'translation.tar.xz', 'size': os.path.getsize(path),
+                                        'sha256': sha256(path)}
+
     community = [n for n in sorted(os.listdir(args.community)) if os.path.isdir(os.path.join(args.community, n))]
     path = os.path.join(args.out, 'community.tar.xz')
     tar_xz(path, os.path.dirname(os.path.abspath(args.community)),
@@ -66,6 +73,10 @@ def main():
 
     with open(os.path.join(args.out, 'index.json'), 'w', encoding='utf-8', newline='\n') as f:
         json.dump(index, f, ensure_ascii=False, separators=(',', ':'))
+    # The same index compressed, for a faster first download (docs/FORMAT.md, «Descarga»).
+    with open(os.path.join(args.out, 'index.json'), 'rb') as f, lzma.open(os.path.join(args.out, 'index.json.xz'),
+                                                                         'wb', preset=9) as out:
+        out.write(f.read())
     total = sum(os.path.getsize(os.path.join(args.out, n)) for n in os.listdir(args.out))
     print('%d files, %.1f MB' % (len(os.listdir(args.out)), total / 1e6))
 

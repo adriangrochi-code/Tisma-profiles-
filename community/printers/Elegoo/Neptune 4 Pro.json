@@ -1,0 +1,115 @@
+{
+ "vendor": "Elegoo",
+ "model": "Neptune 4 Pro",
+ "pack_model": {
+  "bundle": "Orca_Elegoo",
+  "id": "Elegoo Neptune 4 Pro"
+ },
+ "data": [
+  {
+   "key": "machine.bed",
+   "value": [
+    [
+     0,
+     0
+    ],
+    [
+     225,
+     0
+    ],
+    [
+     225,
+     225
+    ],
+    [
+     0,
+     225
+    ]
+   ],
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "Volumen de impresión 225 × 225 × 265 mm"
+  },
+  {
+   "key": "machine.max_height",
+   "value": 265,
+   "unit": "mm",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   }
+  },
+  {
+   "key": "machine.max_feed_x",
+   "value": 500,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "Velocidad máxima del cabezal"
+  },
+  {
+   "key": "machine.max_feed_y",
+   "value": 500,
+   "unit": "mm/s",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "Velocidad máxima del cabezal"
+  },
+  {
+   "key": "machine.acceleration",
+   "value": 20000,
+   "unit": "mm/s²",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   },
+   "conditions": "Aceleración máxima del cabezal"
+  },
+  {
+   "key": "machine.max_nozzle_temp",
+   "value": 300,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   }
+  },
+  {
+   "key": "machine.max_bed_temp",
+   "value": 110,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://www.elegoo.com/products/elegoo-neptune-4-pro-fdm-3d-printer",
+    "title": "ELEGOO Neptune 4 Pro FDM 3D Printer - Specifications",
+    "accessed": "2026-11-09"
+   }
+  }
+ ]
+}

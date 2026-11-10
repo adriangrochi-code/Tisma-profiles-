@@ -32,7 +32,9 @@ jobs:
           repository: ${{ steps.src.outputs.repo }}
           ref: ${{ steps.src.outputs.commit }}
           path: source
-          sparse-checkout: ${{ steps.src.outputs.dir }}
+          sparse-checkout: |
+            ${{ steps.src.outputs.dir }}
+            src/libslic3r
 
       - uses: actions/checkout@v4
         with:
@@ -50,8 +52,14 @@ jobs:
           python3 tools/check_community.py community
           python3 tools/check_knowledge.py knowledge
 
+      - name: Fetch the programs the bundles were converted from
+        run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
+
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}"
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
+
+      - name: Check the pack
+        run: python3 tools/check_pack.py pack --report pack/check.json
 
       - name: Package
         id: pkg
@@ -67,5 +75,5 @@ jobs:
         run: |
           gh release create "pack-${{ steps.pkg.outputs.version }}" dist/* \
             --title "Profile pack ${{ steps.pkg.outputs.version }}" \
-            --notes "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md." \
+            --notes "$( { cat docs/RELEASE_NOTES.md 2>/dev/null; echo; echo "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md."; } )" \
             --latest
