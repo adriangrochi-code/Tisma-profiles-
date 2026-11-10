@@ -37,7 +37,7 @@ changes.
 
 - `docs/RELEASE_NOTES.md` is the text of the next release (the CI puts it first in the release notes). The owner
   publishes by merging `profiles/next` into `main`.
-- With engine dev 70f9335: all 2261 FFF variants slice with their own G-code; GM13 0 changed lines. Re-run
+- With engine dev 3667e62: all 2267 FFF variants slice with their own G-code; GM13 0 changed lines. Re-run
   `validate.py --macros` after each engine commit and send the grouped list to the spec and engine sessions.
 - PR #2 (opened by the spec session at the owner's request) was merged on 2026-11-10 02:45 UTC; release
   `pack-2026.11.10-dcb4250` is published (243 files; downloads and hashes checked). `profiles/next` has `main`
