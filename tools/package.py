@@ -73,6 +73,10 @@ def main():
 
     with open(os.path.join(args.out, 'index.json'), 'w', encoding='utf-8', newline='\n') as f:
         json.dump(index, f, ensure_ascii=False, separators=(',', ':'))
+    # The same index compressed, for a faster first download (docs/FORMAT.md, «Descarga»).
+    with open(os.path.join(args.out, 'index.json'), 'rb') as f, lzma.open(os.path.join(args.out, 'index.json.xz'),
+                                                                         'wb', preset=9) as out:
+        out.write(f.read())
     total = sum(os.path.getsize(os.path.join(args.out, n)) for n in os.listdir(args.out))
     print('%d files, %.1f MB' % (len(os.listdir(args.out)), total / 1e6))
 

@@ -11,6 +11,7 @@ Cada versión es un release de este repositorio, con estos archivos:
 | Archivo | Qué es |
 |---|---|
 | `index.json` | El índice: fabricantes, modelos, perfiles y los archivos comprimidos, con su tamaño y su SHA-256 |
+| `index.json.xz` | El mismo índice, comprimido con xz (unos 0,12 MB en vez de 2,1 MB). Se puede bajar este y descomprimirlo en lugar de `index.json` |
 | `compatible.json` | Qué impresoras sirve cada filamento y cada perfil de impresión |
 | `<fabricante>.tar.xz` | Un archivo por fabricante: sus perfiles y sus imágenes (`vendors/<fabricante>/…`) |
 | `community.tar.xz` | Los datos de la comunidad (`docs/COMMUNITY.md`) |
@@ -21,7 +22,7 @@ Cada versión es un release de este repositorio, con estos archivos:
 `https://github.com/adriangrochi-code/Tisma-profiles-/releases/latest/download/<archivo>`.
 
 Para instalar:
-1. Bajar `index.json`, y guardarlo como está.
+1. Bajar `index.json` (o `index.json.xz` y descomprimirlo: el resultado es el mismo archivo), y guardarlo como está.
 2. Bajar `compatible.json` y los archivos de los fabricantes que se quieran (o todos).
 3. Comprobar el tamaño y el SHA-256 de cada uno contra el índice. Si no coinciden, descartarlo.
 4. Descomprimir cada `.tar.xz` en la carpeta del paquete. Adentro solo hay rutas relativas `vendors/<id>/…`,
@@ -32,7 +33,7 @@ Para instalar:
 **Tamaño de la versión del 05-11-2026:**
 - `index.json`: unos 2,1 MB;
 - cada fabricante: de unos KB a 2,7 MB;
-- todo junto: unos 33 MB, en 240 archivos.
+- todo junto: unos 33 MB, en 243 archivos (con `stats.json`).
 
 ## `index.json`
 
