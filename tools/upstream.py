@@ -238,6 +238,44 @@ def cura_machine_gcode(cura, def_id):
 # The variables of the OrcaSlicer family that Tisma Slicer renames to PrusaSlicer's when it converts a G-code template,
 # as its bundles show (the same template in the source program and in the bundle). Only used to convert the start and
 # end G-code for the engine's simple variables (profile.settings); the G-code block keeps the source's own names.
+_KEYS_MAP = re.compile(r's_keys_map_(\w+)\s*\{(.*?)\};', re.S)
+_KEY_VALUE = re.compile(r'\{\s*"([^"]+)"\s*,\s*(\w+)\s*\}')
+_ADD = re.compile(r'this->add(?:_nullable)?\(\s*"(\w+)"\s*,\s*coEnums?\s*\)')
+_ENUM_TYPE = re.compile(r'(?:ConfigOptionEnums?<|set_enum<)(\w+)>')
+
+
+def enum_values(print_config_cpp):
+    """{option: {value: the program's constant for it}} of the enum options of a PrintConfig.cpp (its
+    s_keys_map_<Type> tables and the type each this->add("option", coEnum) uses)."""
+    text = open(print_config_cpp, encoding='utf-8', errors='replace').read()
+    maps = {m.group(1): dict(_KEY_VALUE.findall(m.group(2))) for m in _KEYS_MAP.finditer(text)}
+    out = {}
+    adds = list(_ADD.finditer(text))
+    for i, m in enumerate(adds):
+        block = text[m.end():adds[i + 1].start() if i + 1 < len(adds) else len(text)]
+        block = block.split('this->add', 1)[0]
+        t = _ENUM_TYPE.search(block)
+        if t and t.group(1) in maps:
+            out[m.group(1)] = maps[t.group(1)]
+    return out
+
+
+def value_names(source_cpp, prusa_cpp):
+    """{option: {source value: PrusaSlicer value}} of the enum options both programs have whose values the source
+    program names otherwise: the same constant of the program (OrcaSlicer's seam "back" and PrusaSlicer's "rear" are
+    both spRear). A value whose constant PrusaSlicer does not have is left out."""
+    src, prusa = enum_values(source_cpp), enum_values(prusa_cpp)
+    out = {}
+    for option, values in src.items():
+        if option not in prusa:
+            continue
+        by_const = {const: v for v, const in prusa[option].items()}
+        names = {v: by_const.get(const) for v, const in values.items()}
+        if any(v != p for v, p in names.items()):
+            out[option] = names
+    return out
+
+
 def orca_machine_model(folder, name):
     """The machine_model preset (the printer model: family, default materials, pictures) of an OrcaSlicer-style
     vendor folder, by name, or None."""

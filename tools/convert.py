@@ -475,6 +475,7 @@ def template_names(templates):
     return names
 
 
+VALUE_NAMES = {}  # dialect -> {option: {source value: PrusaSlicer value}} (upstream.value_names)
 OPTION_TYPES = {}  # PrusaSlicer's type of each key (its PrintConfig.cpp), when given (--prusa-config)
 
 
@@ -571,9 +572,11 @@ def model_from_source(model, assets, base, mid, out, vdir):
     return filled
 
 
-def lost_values(kind, c, source):
+def lost_values(kind, c, source, dialect=None):
     """{PrusaSlicer key: bundle text} of the options of the translation table of a kind that the bundle lacks and the
-    source program's preset (its values, with the source names) gives."""
+    source program's preset (its values, with the source names) gives. A value that the source program names
+    otherwise gets PrusaSlicer's name (VALUE_NAMES); one PrusaSlicer does not have is left out."""
+    names_of = VALUE_NAMES.get(dialect, {})
     back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
     out = {}
     for e in translation.TABLE[kind]:
@@ -584,6 +587,10 @@ def lost_values(kind, c, source):
             if name not in source:
                 continue
             v = source[name]
+            if key in names_of and isinstance(v, str):
+                if names_of[key].get(v, v) is None:
+                    continue
+                v = names_of[key].get(v, v)
             out[key] = ','.join(str(x) for x in v) if isinstance(v, list) else \
                 ('1' if v is True else '0' if v is False else str(v))
     return out
@@ -982,6 +989,8 @@ def main():
     for spec in args.source_config or []:
         dialect, _, path = spec.partition('=')
         program_defaults[dialect] = upstream.program_defaults(path)
+        if args.prusa_config:
+            VALUE_NAMES[dialect] = upstream.value_names(path, args.prusa_config)
     sources = Sources(args.upstream)
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
@@ -1074,7 +1083,7 @@ def main():
                 # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
                 # most of the values of a few): translated from the source program's preset, as the bundle would
                 # have them.
-                lost = lost_values('printer', c, source)
+                lost = lost_values('printer', c, source, block['dialect'])
                 if lost:
                     full, _ = map_printer(dict(c, **lost), engine_texts(block, dict(c, **lost)))
                     full.pop('_notes', None)
@@ -1284,7 +1293,7 @@ def main():
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle
-            lost = lost_values(kind, c, source_values) if source_values and kind in ('filament', 'print') else None
+            lost = lost_values(kind, c, source_values, src[0]) if source_values and kind in ('filament', 'print') else None
             if lost:
                 # Values the bundle lost and the source program's preset gives: translated as the bundle would have
                 # them.

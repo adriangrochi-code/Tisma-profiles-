@@ -35,6 +35,28 @@ class LostValues(unittest.TestCase):
         self.assertIn('layers.first_height', filled)
         self.assertNotIn('layers.height', filled)
 
+    def test_value_named_otherwise_in_the_source_program(self):
+        # OrcaSlicer's PrintConfig.cpp: seam "back" is spRear, PrusaSlicer's "rear"; "aligned_back" has no
+        # PrusaSlicer value.
+        with tempfile.TemporaryDirectory() as tmp:
+            orca, prusa = os.path.join(tmp, 'orca.cpp'), os.path.join(tmp, 'prusa.cpp')
+            open(orca, 'w').write('static t_config_enum_values s_keys_map_SeamPosition {\n { "aligned", spAligned },\n'
+                                  ' { "aligned_back", spAlignedBack },\n { "back", spRear }\n};\n'
+                                  'def = this->add("seam_position", coEnum);\n'
+                                  'def->enum_keys_map = &ConfigOptionEnum<SeamPosition>::get_enum_values();\n')
+            open(prusa, 'w').write('static const t_config_enum_values s_keys_map_SeamPosition {\n'
+                                   ' { "aligned", spAligned },\n { "rear", spRear }\n};\n'
+                                   'def = this->add("seam_position", coEnum);\n def->set_enum<SeamPosition>({});\n')
+            names = convert.upstream.value_names(orca, prusa)
+        self.assertEqual(names, {'seam_position': {'aligned': 'aligned', 'aligned_back': None, 'back': 'rear'}})
+        convert.VALUE_NAMES['orcaslicer'] = names
+        try:
+            self.assertEqual(convert.lost_values('print', {}, {'seam_position': 'back'}, 'orcaslicer'),
+                             {'seam_position': 'rear'})
+            self.assertEqual(convert.lost_values('print', {}, {'seam_position': 'aligned_back'}, 'orcaslicer'), {})
+        finally:
+            convert.VALUE_NAMES.pop('orcaslicer')
+
     def test_filament_temperatures_go_to_the_variables(self):
         bundle = {'filament_diameter': '1.75'}
         source = {'nozzle_temperature': ['250'], 'nozzle_temperature_initial_layer': ['250'], 'filament_type': ['ABS']}

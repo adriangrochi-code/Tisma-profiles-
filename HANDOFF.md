@@ -53,8 +53,6 @@ changes.
 - Cura start G-codes set `M82` (absolute E): `gcode.relative_extrusion` is `false` there while
   `profile.settings.machine.relative_extrusion` (from Tisma Slicer's bundle, which forced `M83`) is `true`. Checked
   with engine 3667e62: with the macros it writes `M82` and absolute E, as the source; not a fault.
-- The fill of lost values (`lost_values`) does not rename enum values that the source program names otherwise
-  (OrcaSlicer seam `back`): such a value is not written. None of the filled profiles has one today.
 - 42 printers still take their G-code from Tisma Slicer's converted bundle (BlackBelt, VertexSlice, CR-30 PrintMill):
   their programs are not read, or the preset has another name there.
 - Tisma Slicer kept one copy of a model that two sources have (the maker's bundle), losing the other source's
