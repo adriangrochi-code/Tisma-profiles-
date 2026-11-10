@@ -351,6 +351,7 @@ paquete, da exactamente su `profile.settings`.
 | `number_strip_percent` | El número sin el `%` |
 | `number_or_percent` | `"N%"` queda como texto; si no, el número; `nonzero`: no se escribe si es 0 |
 | `absolute_only` | El número; un porcentaje no se escribe |
+| `width_of_layer` | Un ancho de línea: el número en mm, o `"N%"` de la altura de capa (`layer_height`), como lo calcula el programa de origen; 0 no se escribe |
 | `at_least` | El número si es al menos `min` |
 | `points` | `"XxY,XxY,…"` como lista de puntos, con 3 o más |
 | `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `fastest`, `gap_fill`, `limits_usage`, `correction`, `resin_notes`, `gcode_template` |

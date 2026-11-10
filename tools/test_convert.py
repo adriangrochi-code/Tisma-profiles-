@@ -233,6 +233,10 @@ class Widths(unittest.TestCase):
         self.assertEqual(settings['walls']['width'], 0.45)
         settings, _ = convert.map_print({'layer_height': '0.2', 'perimeter_extrusion_width': '0'}, 0.4)
         self.assertEqual(settings['walls']['width'], 0.45)  # automatic: 1.125 times the nozzle
+        settings, _ = convert.map_print({'layer_height': '0.12', 'external_perimeter_extrusion_width': '105%'}, 0.4)
+        self.assertAlmostEqual(settings['walls']['outer_width'], 0.126)
+        settings, _ = convert.map_print({'layer_height': '0.12', 'external_perimeter_extrusion_width': '0'}, 0.4)
+        self.assertNotIn('outer_width', settings['walls'])
 
 
 class SupportGap(unittest.TestCase):

@@ -5,7 +5,7 @@ claves») for the engine to open other programs' projects with the same translat
 TABLE has the PrusaSlicer names (the ones of Tisma Slicer's bundles). Each entry:
   from   the source key (or keys, the first one that gives a value)
   to     the engine key, "group.key" (None for a value the engine computes from others)
-  how    the conversion: number, numbers, flag, factor, map, percent_of, first_item, number_strip_percent,
+  how    the conversion: number, numbers, flag, factor, map, percent_of, first_item, number_strip_percent, width_of_layer,
          number_or_percent, absolute_only, at_least, points, or rule (a conversion with its own steps, named)
   group  translated (the same setting), similar (the closest the engine has; the note says what differs)
   note   what the conversion does, when it is not plain
@@ -207,8 +207,8 @@ TABLE = {
           note='"N%" of the solid infill speed; 0: the first layer speed, not written'),
         E('first_layer_extrusion_width', 'layers.first_line_width', 'number_or_percent',
           note='"N%" of the first layer height; 0: as the other layers'),
-        E('external_perimeter_extrusion_width', 'walls.outer_width', 'absolute_only', group='similar', used='written',
-          note='in mm; a percent is not written (its base differs between versions of the source); 0: automatic'),
+        E('external_perimeter_extrusion_width', 'walls.outer_width', 'width_of_layer', group='similar', used='written',
+          note='in mm; "N%" of the layer height, as the source computes it; 0: automatic'),
         E('bridge_flow_ratio', 'extrusion.bridge_flow_ratio'),
         E('external_perimeters_first', 'walls.outer_first', 'flag'),
         E('avoid_crossing_perimeters', 'travel.avoid_crossing_walls', 'flag'),
@@ -458,6 +458,10 @@ def value_of(e, c, s):
         if e.get('nonzero') and not num(v.rstrip('%')):
             return None
         return v if v.endswith('%') else num(v)
+    if how == 'width_of_layer':
+        # A line width: "N%" of the layer height (the source program's Flow.cpp); 0 or nothing is not written.
+        w = pct_or_abs(v, num(c.get('layer_height'))) if v else None
+        return w or None
     if how == 'absolute_only':
         return num(v) if v and not v.endswith('%') else None
     if how == 'at_least':
