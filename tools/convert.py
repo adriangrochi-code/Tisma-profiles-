@@ -854,6 +854,9 @@ def main():
     ap.add_argument('--upstream', action='append', metavar='REPOSITORY=DIR',
                     help='a checkout of a program that Tisma Slicer converted bundles from, at the commit the bundles '
                          'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
+    ap.add_argument('--filament-gcode-from-source', action='store_true',
+                    help="the OrcaSlicer family's filament G-code from the source program, in its dialect, instead of "
+                         "Tisma Slicer's bundle (off until the engine reads every variable of it)")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
     args = ap.parse_args()
@@ -1123,7 +1126,14 @@ def main():
                 entry['nozzle'] = nozzle
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
-                own = None
+                own = source_filament_gcode(src, from_source, source_values) \
+                    if source_values and args.filament_gcode_from_source else None
+                if own:
+                    # The filament's own G-code as the source program has it, in its dialect (Tisma Slicer's
+                    # bundle renames only some of its variables).
+                    fblock = own
+                    entry['gcode'] = own
+                    w.stats['filament G-code from the source program (%s)' % src[0]] += 1
                 if not source_values:
                     # A PrusaSlicer-format filament: its own values for the variables of the machines' G-code and of
                     # its own.
