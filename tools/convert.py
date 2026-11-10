@@ -538,11 +538,9 @@ MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a i
 _TISMA = {}
 
 
-def tisma_merge_key(path, kind, src, presets):
-    """converted(values, printers) for upstream.merged_compatible: the values as Tisma Slicer's converter (path) writes
-    them for a preset of the source program src, the nozzle being the first printer's, as it does. None without it."""
-    if not path:
-        return None
+def tisma_converter(path, profiles):
+    """Tisma Slicer's converter (path: its tools/profiles/convert_orca_profiles.py) for the source program whose
+    resources/profiles is profiles, with that program's option defaults."""
     if path not in _TISMA:
         import importlib.util
         spec = importlib.util.spec_from_file_location('tisma_convert_orca_profiles', path)
@@ -551,10 +549,17 @@ def tisma_merge_key(path, kind, src, presets):
         root = os.path.abspath(os.path.join(os.path.dirname(path), '..', '..'))
         _TISMA[path] = (module, module.tisma_option_types(root))
     module, types = _TISMA[path]
-    profiles = os.path.dirname(presets.folder)
     if (path, profiles) not in _TISMA:
         _TISMA[(path, profiles)] = module.Converter(types, module.orca_option_defaults(profiles))
-    conv = _TISMA[(path, profiles)]
+    return _TISMA[(path, profiles)]
+
+
+def tisma_merge_key(path, kind, src, presets):
+    """converted(values, printers) for upstream.merged_compatible: the values as Tisma Slicer's converter (path) writes
+    them for a preset of the source program src, the nozzle being the first printer's, as it does. None without it."""
+    if not path:
+        return None
+    conv = tisma_converter(path, os.path.dirname(presets.folder))
     machines = upstream.OrcaVendor(presets.folder, kind='machine')
     nozzles = {}
 
@@ -716,10 +721,20 @@ def model_from_source(model, assets, base, mid, out, vdir):
     return filled
 
 
-def lost_values(kind, c, source, dialect=None):
+def lost_values(kind, c, source, dialect=None, conv=None, nozzle=0.4):
     """{PrusaSlicer key: bundle text} of the options of the translation table of a kind that the bundle lacks and the
-    source program's preset (its values, with the source names) gives. A value that the source program names
-    otherwise gets PrusaSlicer's name (VALUE_NAMES); one PrusaSlicer does not have is left out."""
+    source program's preset (its values, with the source names) gives. With Tisma Slicer's converter (conv), as it
+    converts the whole preset (names, units, percent bases, brim_type, accelerations in %…); without it, by name: a
+    value that the source program names otherwise gets PrusaSlicer's name (VALUE_NAMES), one PrusaSlicer does not
+    have is left out."""
+    if conv is not None:
+        keys = {k for e in translation.TABLE[kind]
+                for k in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]) if k}
+        out = {k: v for k, v in sorted(conv.convert(kind, dict(source), nozzle).items()) if k in keys and k not in c}
+        # Options that converter does not know (it misses the per-axis machine limits, which PrusaSlicer defines in
+        # a loop over the axes, and drops them): by name, as below.
+        unknown = {k: v for k, v in lost_values(kind, c, source, dialect).items() if k not in conv.types}
+        return dict(unknown, **out)
     names_of = VALUE_NAMES.get(dialect, {})
     back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
     out = {}
@@ -1229,7 +1244,15 @@ def main():
                 # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
                 # most of the values of a few): translated from the source program's preset, as the bundle would
                 # have them.
-                lost = lost_values('printer', c, source, block['dialect'])
+                conv, whole = None, source
+                if args.tisma_converter and sources.bases.get(b.path):
+                    machines = upstream.OrcaVendor(sources.bases[b.path], kind='machine')
+                    key = machines.find(block['source']['preset'])
+                    if key:
+                        conv = tisma_converter(args.tisma_converter, os.path.dirname(sources.bases[b.path]))
+                        whole = machines.resolve(key)[0]
+                lost = lost_values('printer', c, whole, block['dialect'], conv,
+                                   num(c.get('nozzle_diameter', '').split(',')[0]) or 0.4)
                 if lost:
                     full, _ = map_printer(dict(c, **lost), engine_texts(block, dict(c, **lost)))
                     full.pop('_notes', None)
@@ -1458,7 +1481,10 @@ def main():
                 entry['from_source_program'] = ['*']
                 entry['source_preset'] = synthetic[(b.id, kind, name)]
                 w.stats['%s converted from the source program (not in the bundle)' % kind] += 1
-            lost = lost_values(kind, c, source_values, src[0]) if source_values and kind in ('filament', 'print') else None
+            conv = tisma_converter(args.tisma_converter, os.path.dirname(vendor_presets.folder)) \
+                if source_values and args.tisma_converter else None
+            lost = lost_values(kind, c, source_values, src[0], conv, (nozzle or 0.4) if kind == 'print' else 0.4) \
+                if source_values and kind in ('filament', 'print') else None
             if lost:
                 # Values the bundle lost and the source program's preset gives: translated as the bundle would have
                 # them.

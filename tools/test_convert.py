@@ -57,6 +57,23 @@ class LostValues(unittest.TestCase):
         finally:
             convert.VALUE_NAMES.pop('orcaslicer')
 
+    def test_with_tisma_slicers_converter(self):
+        # Tisma Slicer's converter turns the whole preset (brim_type "no_brim" is a 0 mm brim, printable_area the bed),
+        # and misses the per-axis machine limits (it does not know their type): those by name.
+        class Conv:
+            types = {'brim_width': 'coFloat', 'bed_shape': 'coPoints'}
+
+            def convert(self, kind, flat, nozzle):
+                out = {'bed_shape': '0x0,200x0,200x200,0x200'} if kind == 'printer' else {}
+                if flat.get('brim_type') == 'no_brim':
+                    out['brim_width'] = '0'
+                return out
+        self.assertEqual(convert.lost_values('print', {}, {'brim_type': 'no_brim', 'brim_width': '5'}, 'orcaslicer',
+                                             Conv()), {'brim_width': '0'})
+        lost = convert.lost_values('printer', {}, {'printable_area': ['0x0', '200x0', '200x200', '0x200'],
+                                                   'machine_max_acceleration_x': ['3000', '3000']}, 'orcaslicer', Conv())
+        self.assertEqual(lost, {'bed_shape': '0x0,200x0,200x200,0x200', 'machine_max_acceleration_x': '3000,3000'})
+
     def test_filament_temperatures_go_to_the_variables(self):
         bundle = {'filament_diameter': '1.75'}
         source = {'nozzle_temperature': ['250'], 'nozzle_temperature_initial_layer': ['250'], 'filament_type': ['ABS']}

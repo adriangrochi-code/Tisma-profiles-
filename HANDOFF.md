@@ -80,6 +80,13 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
 | 12 | Community data | 5 printers | web, with sources | open (needs research per printer) |
 | 13 | Resin "Prusament Resin Model Transparent Clear @0.1 SL1S" left out: it inherits `*legacy_slow*`, which the bundle lacks (stats `broken`) | 1 resin | no | none |
 
+## For the owner (Tisma Slicer, not this repo)
+
+- `tools/profiles/convert_orca_profiles.py` (`tisma_option_types`) does not see the options PrusaSlicer adds in a loop
+  over the axes (`machine_max_acceleration_` + axis, `machine_max_feedrate_`, `machine_max_jerk_`): with no type,
+  their values are dropped, so every OrcaSlicer-family printer of the bundles lost its per-axis limits. The pack fills
+  them from the source program; the converter in Tisma Slicer could be fixed too.
+
 ## Contacts
 
 - Spec/QA: session_01QadJfL7KViJEaJL92p8Swb (behaviour and format notes, how to try the pack).
