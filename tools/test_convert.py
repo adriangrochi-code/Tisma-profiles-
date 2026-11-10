@@ -279,6 +279,15 @@ class FirstLayerSpeed(unittest.TestCase):
         self.assertEqual(settings['speed']['first_layer'], 30)
 
 
+class ResinNotes(unittest.TestCase):
+    def test_delay_before_exposure(self):
+        # ElegooSLA "Generic Standard Resin @ELEGOO SATURN 4": "#Distances in mm, speeds in mm/s, waits in s."
+        notes = '"#Distances in mm, speeds in mm/s, waits in s.\\nLIFT_SPEED=1.1667\\nDELAY_BEFORE_EXPOSURE=0.5"'
+        settings, _ = convert.map_resin_material({'material_notes': notes})
+        self.assertEqual(settings['resin']['wait_before_exposure'], 0.5)
+        self.assertEqual(settings['resin']['lift_speed'], 1.1667)
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

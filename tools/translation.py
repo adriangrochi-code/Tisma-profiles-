@@ -35,7 +35,9 @@ FILAMENT_VARIABLES = ('temperature', 'first_layer_temperature', 'bed_temperature
 RESIN_NOTE_KEYS = {'LIFT_DISTANCE': 'lift_distance', 'LIFT_SPEED': 'lift_speed',
                    'BOTTOM_LIFT_DISTANCE': 'bottom_lift_distance', 'BOTTOM_LIFT_SPEED': 'bottom_lift_speed',
                    'RETRACT_SPEED': 'retract_speed', 'BOTTOM_RETRACT_SPEED': 'bottom_retract_speed',
-                   'WAIT_BEFORE_EXPOSURE': 'wait_before_exposure', 'BOTTOM_WAIT_BEFORE_EXPOSURE':
+                   'WAIT_BEFORE_EXPOSURE': 'wait_before_exposure',
+                   'DELAY_BEFORE_EXPOSURE': 'wait_before_exposure',  # the same wait, as the Elegoo bundle names it
+                   'BOTTOM_WAIT_BEFORE_EXPOSURE':
                    'bottom_wait_before_exposure', 'WAIT_AFTER_CURE': 'wait_after_cure',
                    'WAIT_AFTER_LIFT': 'wait_after_lift', 'LIGHT_PWM': 'light_pwm', 'BOTTOM_LIGHT_PWM':
                    'bottom_light_pwm', 'ANTIALIASING': 'antialiasing', 'DENSITY': 'density'}
