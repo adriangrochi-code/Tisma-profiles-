@@ -993,8 +993,11 @@ def main():
                                  'settings': settings},
                      'defaults': {'filament': split_list(c.get('default_filament_profile', ''))
                                   if c.get('default_filament_profile') else [],
-                                  'print': c.get('default_print_profile', '') or c.get('default_sla_print_profile', ''),
-                                  'resin': c.get('default_sla_material_profile', '')},
+                                  # Without the quotes some bundles write: "0.20mm NORMAL @Papapiu".
+                                  'print': translation.typed(c.get('default_print_profile', '') or
+                                                             c.get('default_sla_print_profile', ''), 'coString'),
+                                  'resin': translation.typed(c.get('default_sla_material_profile', ''),
+                                                             'coString')},
                      'license': lic, 'origin': origin, 'original': c}
             if filled:
                 entry['from_source_program'] = filled

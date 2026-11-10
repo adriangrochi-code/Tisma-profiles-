@@ -8,6 +8,8 @@ AGPL-3.0-or-later.
 
 - **Perfiles por defecto que sirven:** 385 impresoras traían por defecto un filamento y 161 un perfil de impresión que
   no eran compatibles con ellas. Ahora el de origen si sirve; si no, el primero compatible, del mismo material.
+  Además, 197 impresoras (172 de Creality, entre ellas la Ender-3) no recibían el perfil de impresión que nombra su
+  fuente, porque el paquete lo escribía entre comillas; ahora lo reciben.
 - **G-code de filamento original** en la familia OrcaSlicer (3741 filamentos de OrcaSlicer y 316 de Creality Print),
   del programa de origen y en su dialecto, como el de las máquinas. Los valores de la máquina que el perfil no dice
   salen del valor por defecto del programa (`program_defaults`).

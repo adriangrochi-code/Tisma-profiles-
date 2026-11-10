@@ -134,11 +134,14 @@ def check_defaults(pack, index, sets, problems, counts):
     place = {r: i for i, r in enumerate(index['printers'])}
     cache = {}
     fitting = {}  # (kind, printer number) -> some profile of that kind fits it
+    named = collections.defaultdict(list)  # (kind, profile name) -> [(file, compatible set)]
     groups = {'filament': 'filaments', 'print': 'prints', 'resin': 'resins', 'resin_print': 'resin_prints'}
     for kind, group in groups.items():
         for v in index['vendors']:
             for rel in v[group]:
-                c = load(pack, rel).get('compatible')
+                e = load(pack, rel)
+                c = e.get('compatible')
+                named[(kind, e['profile']['name'])].append((rel, c))
                 for i in (range(len(place)) if c is None else sets[c]):
                     fitting[(kind, i)] = True
     for ref, i in place.items():
@@ -149,6 +152,16 @@ def check_defaults(pack, index, sets, problems, counts):
         if var is None:
             problems['index printer that its model file does not have'].append(ref)
             continue
+        for path in quoted_texts(var.get('source_defaults') or {}):
+            problems['text written with the quotes of the bundle file: source_defaults.' + path].append(ref)
+        # The default print the source names, when the pack has it and it fits the printer, is the one chosen.
+        said = ((var.get('source_defaults') or {}).get('print') or '').strip('"')
+        kind = 'resin_print' if 'resin_print' in (var.get('defaults') or {}) else 'print'
+        said = said[:-len(' @Template')] if said.endswith(' @Template') else said
+        fits = [r for r, c in named.get((kind, said), []) if c is None or i in sets[c]]
+        if fits and not set(fits) & set((var.get('defaults') or {}).get(kind) or []):
+            problems['default %s other than the one the source names, which fits' % kind].append(
+                '%s: %s' % (ref, said))
         for kind, rels in (var.get('defaults') or {}).items():
             for rel in rels:
                 counts['printer defaults'] += 1
