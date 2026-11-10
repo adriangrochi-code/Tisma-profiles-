@@ -45,7 +45,8 @@ perfiles de impresión de resina. Unos 33 MB.
 
 ## Calidad
 
-Con el motor de `dev` (3667e62) y el G-code propio de cada máquina (`validate.py --macros`), las 2267 variantes FDM
-laminan, y en todas cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden (GM13). De 18 324
-combinaciones de impresora, filamento e impresión fallan 14 (0,08 %), por datos del programa de origen: 11 perfiles con
-capas más gruesas que la boquilla y 3 de Geeetech con un ancho de primera capa de 0,133 mm en boquilla de 0,6 mm.
+Con el motor de `dev` (5af1570) y el G-code propio de cada máquina (`validate.py --macros`), las 2267 variantes FDM
+laminan, y en las 2255 que leen su G-code propio cada línea fija del G-code de inicio y de fin sale igual y en el mismo
+orden (GM13). De 18 325 combinaciones de impresora, filamento e impresión fallan 26 (0,14 %), por datos del programa de
+origen: 11 perfiles con capas más gruesas que la boquilla y 15 de Geeetech con anchos de línea por debajo de un cuarto
+de la boquilla (el porcentaje es de la altura de capa, como en Tisma Slicer, que sí los lamina).

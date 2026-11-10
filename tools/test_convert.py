@@ -223,6 +223,18 @@ class CuraBeds(unittest.TestCase):
             self.assertEqual(cura_platform.bed_model(stl, [0, -10, 0], bed)[1], 0.0)  # plate 10 mm down: none
 
 
+class Widths(unittest.TestCase):
+    def test_percent_wall_width_is_of_the_layer_height(self):
+        # Tisma Slicer (PrusaSlicer) computes a width in % over the layer height (Flow.cpp), not over the nozzle.
+        settings, _ = convert.map_print({'layer_height': '0.12', 'perimeter_extrusion_width': '111%'}, 0.4)
+        self.assertAlmostEqual(settings['walls']['width'], 0.1332)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'perimeter_extrusion_width': '0',
+                                         'extrusion_width': '0.45'}, 0.4)
+        self.assertEqual(settings['walls']['width'], 0.45)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'perimeter_extrusion_width': '0'}, 0.4)
+        self.assertEqual(settings['walls']['width'], 0.45)  # automatic: 1.125 times the nozzle
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

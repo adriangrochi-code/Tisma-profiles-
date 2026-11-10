@@ -152,7 +152,8 @@ TABLE = {
         E('elefant_foot_compensation', 'slicing.first_layer_shrink'),
         E('perimeters', 'walls.count'),
         E(['perimeter_extrusion_width', 'extrusion_width'], 'walls.width', 'rule', rule='wall_width',
-          group='similar', note='the first one given, a percent of the nozzle; else 1.125 times the nozzle'),
+          group='similar', note='the first one given, a percent of the layer height (as the source computes it); '
+                                'else 1.125 times the nozzle'),
         E('seam_position', 'walls.seam', 'map', values=SEAMS),
         E('top_solid_layers', 'surfaces.top_layers'),
         E('bottom_solid_layers', 'surfaces.bottom_layers'),
@@ -339,9 +340,11 @@ def _rule(name, e, c, s, ctx):
         put(s, 'cooling.fan_max', num(c.get('max_fan_speed')))
         return True, ('min_fan_speed', 'max_fan_speed')
     if name == 'wall_width':
+        # A percent is of the layer height, as the source program computes it (Flow.cpp: "extrusion width wrt. layer
+        # height"); 0 is automatic.
         nozzle = ctx.get('nozzle')
         for key in e['from']:
-            w = pct_or_abs(c.get(key), nozzle)
+            w = pct_or_abs(c.get(key), num(c.get('layer_height')))
             if w:
                 put(s, 'walls.width', w)
                 return True, (key,)
