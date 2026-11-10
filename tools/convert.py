@@ -486,6 +486,23 @@ def bundle_values(templates, c, names=None):
             for k in sorted(names) if k in c and not k.endswith('_gcode')}
 
 
+def source_filament_gcode(src, found, values):
+    """The G-code block of a filament from the source program's preset (OrcaSlicer family), or None."""
+    templates, keys = {}, {}
+    for key, neutral in (('filament_start_gcode', 'filament_start'), ('filament_end_gcode', 'filament_end')):
+        v = values.get(key)
+        if isinstance(v, list):
+            v = v[0] if v else ''
+        if isinstance(v, str) and v.strip():
+            templates[neutral] = v
+            keys[neutral] = key
+    if not templates:
+        return None
+    return {'dialect': src[0], 'origin': 'source_program',
+            'source': {'repository': src[1], 'commit': src[2], 'preset': found[0]}, 'templates': templates,
+            'keys': keys}
+
+
 def filament_gcode(b, name, c, everything, sources, stats):
     templates, keys, origin = bundle_gcode(b, 'filament', name, c, everything, FILAMENT_KEYS)
     if not templates:
@@ -985,6 +1002,7 @@ def main():
         index['vendors'].append(vendor)
 
     by_kind = collections.defaultdict(list)  # kind -> [(bundle, entry path, compatible set number)]
+    material_of = {}  # filament entry path -> its material type (PLA, PETG…)
 
     def compat_id(compatible):
         if compatible is None:
@@ -1105,16 +1123,18 @@ def main():
                 entry['nozzle'] = nozzle
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
+                own = None
                 if not source_values:
                     # A PrusaSlicer-format filament: its own values for the variables of the machines' G-code and of
                     # its own.
                     names = template_variables.get('prusaslicer', set()) | \
-                        template_names((entry.get('gcode') or {}).get('templates') or {})
+                        template_names((fblock or {}).get('templates') or {})
                     given = bundle_values({}, c, names)
                     if given:
                         entry['source_values'] = {'dialect': 'prusaslicer', 'preset': name, 'values': given}
                         w.stats['filaments with source_values (prusaslicer)'] += 1
-                wanted = template_variables.get(src[0]) if src and source_values else None
+                wanted = (template_variables.get(src[0], set()) | template_names((own or {}).get('templates') or {})) \
+                    if src and source_values else None
                 if wanted:
                     given = {k: v for k, v in sorted(source_values.items()) if k in wanted}
                     if given:
@@ -1139,6 +1159,8 @@ def main():
             by_name.setdefault((kind, b.id, name), (rel, entry['compatible']))
             by_name.setdefault((kind, None, name), (rel, entry['compatible']))
             by_kind[kind].append((b.id, rel, entry['compatible']))
+            if kind == 'filament':
+                material_of[rel] = entry['material']['type']
 
     # Defaults of each printer, as pack entries: the ones its source names, or else the first compatible one of its
     # own bundle, or of any bundle.
@@ -1150,21 +1172,36 @@ def main():
 
     def pick(kind, names, rel):
         pid, bid = printer_ids[rel], bundle_of[rel]
-        out = []
+        out, unfit, unfit_hits = [], 0, []
         for n in names:
             n = n[:-len(' @Template')] if n.endswith(' @Template') else n
             hit = by_name.get((kind, bid, n)) or by_name.get((kind, None, n))
             if hit and hit[0] not in out:
-                out.append(hit[0])
+                # Only one that fits the printer: the source programs take the first compatible profile when the
+                # one a printer names does not fit it.
+                if fits(hit[1], pid):
+                    out.append(hit[0])
+                else:
+                    unfit += 1
+                    unfit_hits.append(hit[0])
+        if unfit:
+            w.stats['default %s named by the source but not compatible' % kind] += 1
         if out:
             return out, 'source'
-        # The first compatible one of the printer's own bundle, then of a bundle of the same maker, then of any.
+        # The first compatible one of the printer's own bundle, then of a bundle of the same maker, then of any; for
+        # a filament, of the same material as the one the source names (PLA for a PLA) before any other.
         brand = canonical_vendor(bid)
+        wanted = {material_of.get(r) for r in unfit_hits} - {None, ''} if kind == 'filament' else set()
         for rank in (0, 1, 2):
-            for b2, r2, compat in by_kind[kind]:
-                level = 0 if b2 == bid else 1 if canonical_vendor(b2) == brand else 2
-                if level == rank and compat is not None and fits(compat, pid):
-                    return [r2], 'compatible'
+            for same in ((True, False) if wanted else (False,)):
+                for b2, r2, compat in by_kind[kind]:
+                    level = 0 if b2 == bid else 1 if canonical_vendor(b2) == brand else 2
+                    if level == rank and compat is not None and fits(compat, pid) and \
+                            (not same or material_of.get(r2) in wanted):
+                        return [r2], 'compatible'
+        if unfit_hits:
+            # Nothing in the pack fits: the one the source names, as the source program would still have it.
+            return unfit_hits, 'source, nothing fits'
         return [], 'none'
 
     for rel, entry in printer_entries.items():

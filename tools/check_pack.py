@@ -8,6 +8,8 @@
   OrcaSlicer-style source (fdm_machine_common) because they have none of their own there are listed as notes;
 - a print profile without "nozzle" when its name or its condition gives one;
 - a printer G-code block without its dialect, or with a template that is not text;
+- a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
+  another one does;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
   that does not give, applied to a profile's "original", the profile's settings (the converter's translation).
 
@@ -89,6 +91,38 @@ def same_translation(kind, original, settings, where, problems, counts, nozzle=N
     counts['profiles translated again'] += 1
     if expected != got:
         problems['translation table does not give the profile\'s settings'].append(where)
+
+
+def check_defaults(pack, index, sets, problems, counts):
+    """Every printer's default profiles exist and fit it."""
+    place = {r: i for i, r in enumerate(index['printers'])}
+    cache = {}
+    fitting = {}  # (kind, printer number) -> some profile of that kind fits it
+    groups = {'filament': 'filaments', 'print': 'prints', 'resin': 'resins', 'resin_print': 'resin_prints'}
+    for kind, group in groups.items():
+        for v in index['vendors']:
+            for rel in v[group]:
+                c = load(pack, rel).get('compatible')
+                for i in (range(len(place)) if c is None else sets[c]):
+                    fitting[(kind, i)] = True
+    for ref, i in place.items():
+        path, vid = ref.split('#', 1)
+        if path not in cache:
+            cache[path] = load(pack, path)
+        var = next((v for v in cache[path]['variants'] if v['id'] == vid), None)
+        if var is None:
+            problems['index printer that its model file does not have'].append(ref)
+            continue
+        for kind, rels in (var.get('defaults') or {}).items():
+            for rel in rels:
+                counts['printer defaults'] += 1
+                if not os.path.exists(os.path.join(pack, rel)):
+                    problems['default profile that is not in the pack'].append('%s -> %s' % (ref, rel))
+                    continue
+                c = load(pack, rel).get('compatible')
+                if c is not None and i not in sets[c] and fitting.get((kind, i)):
+                    problems['default %s that does not fit its printer, while another one does' % kind].append(
+                        '%s -> %s' % (ref, rel))
 
 
 def check_tables(pack, index, problems, counts):
@@ -215,6 +249,7 @@ def main():
             # As the source program has it (these models have no start G-code of their own there): not an error.
             notes['start G-code of the vendor-wide base, as in the source program'].append(names)
 
+    check_defaults(args.pack, index, sets, problems, counts)
     check_tables(args.pack, index, problems, counts)
     report = {'counts': dict(counts), 'problems': dict(problems), 'notes': dict(notes)}
     if args.report:
