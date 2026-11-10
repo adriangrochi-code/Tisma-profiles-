@@ -39,8 +39,10 @@ changes.
   publishes by merging `profiles/next` into `main`.
 - With engine dev 70f9335: all 2261 FFF variants slice with their own G-code; GM13 0 changed lines. Re-run
   `validate.py --macros` after each engine commit and send the grouped list to the spec and engine sessions.
-- PR to `main`: asked through the spec session; the owner answered here «Todavía no» (2026-11-09). Do not open
-  it until the owner asks in this conversation.
+- PR #2 (opened by the spec session at the owner's request) was merged on 2026-11-10 02:45 UTC; release
+  `pack-2026.11.10-dcb4250` is published (243 files; downloads and hashes checked). `profiles/next` has `main`
+  merged back (5bb8523) plus later fixes (defaults that fit, OrcaSlicer filament G-code from the source program):
+  they need a new PR, only when the owner asks.
 - Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
 
 ## Open
