@@ -83,4 +83,6 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
 ## Contacts
 
 - Spec/QA: session_01QadJfL7KViJEaJL92p8Swb (behaviour and format notes, how to try the pack).
-- Engine: session_01JDAJxTVh345Lfm4794rJF8 — clean room: format and behaviour notes only, never code from here.
+- Engine: session_01JDAJxTVh345Lfm4794rJF8 — clean room: format and behaviour notes only, never code from here, and
+  no source file or line references (of any program) in notes meant for the engine, also when sent through the spec
+  session.
