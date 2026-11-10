@@ -60,6 +60,39 @@ changes.
 - 4 groups of models share the vendor-wide base start G-code of OrcaSlicer (DeltaMaker, LONGER LK10, E3NG/VIRTU,
   WonderMaker): that is how the source has them; reported as notes, not failures.
 
+## Coverage (owner's request of 2026-11-10 21:00)
+
+Every part of the pack, "revisado (fecha, qué se probó, hallazgos)" or "pendiente". Update it with each pass; the
+owner gets a summary every 3 hours.
+
+### By source program / vendor family
+
+| Source | State |
+|--------|-------|
+| PrusaSlicer-format bundles (Tisma Slicer's own and makers', ~6900 filaments) | revisado 2026-11-10: quoted texts (caf61e8, e63f527), defaults that fit, asset names in another case (53daf1c), line widths and support gap in % against Tisma's Flow/Support code (bf20b9f, ff47bf0, efbb79a), first layer speed % (8b2e71c), filaments limited to some prints (8cf1546), inheritance (`inherits = a; b`, later parent wins: as PrusaSlicer) |
+| OrcaSlicer (via Tisma's converted bundles) | revisado 2026-11-10: per-model G-code verbatim + GM13, compatible lists incl. merged presets (648b249), values the bundle lost via Tisma's converter (5adc7d7, 7d11e83; two converter bugs found, fixed on the slicer branch), enum value names (8d6cb92, 2014a63), print source_values for machine G-code (881642c), defaults |
+| Creality Print | revisado 2026-11-10: model pictures/materials (0289cb2), G-code from the source, compatible lists, filament G-code; pendiente: its own option names that differ from OrcaSlicer's |
+| Elegoo Slicer | revisado 2026-11-10: the one model (pictures, G-code) |
+| UltiMaker Cura | revisado 2026-11-10: machine G-code (dialect cura), bed meshes (21994df); pendiente: its print/filament values (from Tisma's bundles, 15 filaments), translation table (3 of 739 keys translated), relative/absolute E |
+| BlackBelt Cura, VertexSlice, converted bundles (42 printers) | pendiente |
+| UVtools (167 resin printers, 484 resins, 35 resin prints) | pendiente (only: one resin left out for a missing parent, row 13 of Missing) |
+
+### By option group
+
+| Group | State |
+|-------|-------|
+| printer (FFF machine) | revisado 2026-11-10: nozzle, height, bed, per-axis limits (0 limits not written), retraction of sparse presets, relative E with macros; pendiente: multi-extruder printers (per-extruder lists, offsets, toolchange values), machine_limits_usage per flavor |
+| print | revisado 2026-11-10: % bases of every percent option against Tisma's code, wall/outer/first-layer widths, support XY gap, first layer speed; pendiente: enum maps (fill patterns, ironing, seam beyond back), wipe tower and multi-material options, raft/brim/skirt semantics |
+| filament | revisado 2026-11-10: type/vendor quotes, temperatures and cooling filled, print limits, source_values; pendiente: multi-extruder lists (first item only), density/cost units, cooling semantics (fan_below_time etc.) against the source |
+| resin (SLA printer, resin, resin print) | pendiente |
+| G-code (macros, templates, dialects) | revisado 2026-11-10: verbatim, GM13 2255/2267, list-as-number rule (spec GM15), unfilled variables report; pendiente: rarely-set variables per dialect against each program's GCode.cpp |
+| assets | revisado 2026-11-10: thumbnails/beds/textures from bundles and source programs, Cura beds converted and checked |
+| compatibility | revisado 2026-11-10: conditions as the programs evaluate them, merged presets, print limits of filaments, every FFF variant has a print and a filament |
+| defaults | revisado 2026-11-10: source-named when it fits, same material, quotes, default filament fits the default print |
+| translation tables (translation/*.json) | revisado 2026-11-10: same-name value renames (seam, fuzzy skin), reproducible order; pendiente: Cura and Creality Print tables, conversions vs. each program's semantics |
+| community data | revisado 2026-11-10: pack_model links (5 printers); pendiente: re-check each value against its source page |
+| index / packaging / CI | revisado 2026-11-10: index vs model files, archives hold every asset, reproducible (two seeds), GCODE_VARIABLES.md in step, CI green |
+
 ## Missing or wrongly generated elements (owner's request of 2026-11-10)
 
 Measured on the pack of 5f546b2. "Source" says whether a program the converter reads has the data.
