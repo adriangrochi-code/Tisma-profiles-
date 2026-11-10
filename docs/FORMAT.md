@@ -149,9 +149,11 @@ comparten:
   familia OrcaSlicer, los del mismo perfil en el programa de origen, con sus nombres (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
   y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
   del 05-11-2026, 7199 filamentos de paquetes de PrusaSlicer, 4121 de OrcaSlicer y 316 de Creality Print.
-- **`from_source_program`:** las claves del perfil (`grupo.clave`) que no salen del paquete de Tisma Slicer sino del
-  programa de origen, porque el paquete las perdió: las temperaturas de la boquilla de 3 filamentos de la UltiMaker 2
-  extended+.
+- **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
+  que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
+  boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, y la altura de 9
+  impresoras (por ejemplo la Meltingplot MBL 480), del programa de origen; y la boquilla de la Anycubic i3 Mega y la
+  Mega S, de su variante en el paquete («0.4»).
 
 ## `compatible.json`
 

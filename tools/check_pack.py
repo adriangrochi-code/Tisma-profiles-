@@ -87,8 +87,6 @@ def same_translation(kind, original, settings, where, problems, counts, nozzle=N
         return True, ()
     expected, _ = translation.translate(kind, original, nozzle=nozzle, rules={'gcode_template': copy_gcode})
     got = json.loads(json.dumps(settings))
-    if kind == 'printer' and 'nozzle_diameter' not in original:
-        got.get('machine', {}).pop('nozzle_diameter', None)  # from the source program (docs/FORMAT.md)
     counts['profiles translated again'] += 1
     if expected != got:
         problems['translation table does not give the profile\'s settings'].append(where)
@@ -219,8 +217,16 @@ def main():
             for var in doc['variants']:
                 original = dict(doc.get('original_common', {}), **var.get('original', {}))
                 settings = merged_block(doc['common']['settings'], var['settings'])
+                settings = json.loads(json.dumps(settings))
+                for path in var.get('from_source_program', []):  # filled from the source, not translated
+                    group, _, key = path.partition('.')
+                    settings.get(group, {}).pop(key, None)
+                prune(settings)
                 same_translation('printer' if m['technology'] == 'fff' else 'printer_sla', original, settings,
                                  '%s#%s' % (m['file'], var['id']), problems, counts)
+                if m['technology'] == 'fff' and not (settings.get('machine') or {}).get('nozzle_diameter') and \
+                        not any(p == 'machine.nozzle_diameter' for p in var.get('from_source_program', [])):
+                    problems['FFF printer without a nozzle'].append('%s#%s' % (m['file'], var['id']))
             if m['technology'] != 'fff':
                 continue
             for var in doc['variants']:

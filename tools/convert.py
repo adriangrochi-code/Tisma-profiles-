@@ -811,7 +811,7 @@ def build_models(w, index, printer_entries):
                 own = diff_block(common_gcode, e['gcode'])
                 if own:
                     var['gcode'] = own
-            for k in ('not_converted',):
+            for k in ('not_converted', 'from_source_program'):
                 if k in e:
                     var[k] = e[k]
             var['original'] = {k: v for k, v in e['original'].items() if original_common.get(k, object()) != v}
@@ -937,13 +937,29 @@ def main():
             else:
                 settings, used = map_printer(c, engine_texts(block, c))
             match = c
-            given = (block or {}).get('values', {}).get('nozzle_diameter')
+            filled = []
+            source = (block or {}).get('values', {})
+            given = source.get('nozzle_diameter')
+            variant = num(c.get('printer_variant'))
             if not sla and 'nozzle_diameter' not in c and given:
                 # The bundle lost the nozzle; its source program gives it.
                 nozzle = num(given[0] if isinstance(given, list) else given)
                 put(settings, 'machine', 'nozzle_diameter', nozzle)
                 match = dict(c, nozzle_diameter=str(clean_num(nozzle)))
+                filled.append('machine.nozzle_diameter')
                 w.stats['printer nozzle from the source program'] += 1
+            elif not sla and 'nozzle_diameter' not in c and variant and 0.1 <= variant <= 3:
+                # No nozzle, but the bundle's variant of the printer is its nozzle ("0.4").
+                put(settings, 'machine', 'nozzle_diameter', variant)
+                match = dict(c, nozzle_diameter=str(clean_num(variant)))
+                filled.append('machine.nozzle_diameter')
+                w.stats['printer nozzle from its variant'] += 1
+            height = num(source.get('printable_height'))
+            if not sla and 'max_print_height' not in c and height:
+                # The bundle lost the height; its source program gives it.
+                put(settings, 'machine', 'max_height', height)
+                filled.append('machine.max_height')
+                w.stats['printer height from the source program'] += 1
             notes = settings.pop('_notes', {})
             rel = w.path(vdir, 'printers', slug(name) + '.json')
             entry = {'format': 'tisma-pack-entry', 'version': FORMAT_VERSION,
@@ -956,6 +972,8 @@ def main():
                                   'print': c.get('default_print_profile', '') or c.get('default_sla_print_profile', ''),
                                   'resin': c.get('default_sla_material_profile', '')},
                      'license': lic, 'origin': origin, 'original': c}
+            if filled:
+                entry['from_source_program'] = filled
             if block:
                 entry['gcode'] = block
             if notes:
