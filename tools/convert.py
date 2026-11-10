@@ -787,6 +787,23 @@ def build_models(w, index, printer_entries):
                 vid = e['profile']['name']
             seen.add(vid)
             variants.append((vid, nozzle, rel, e))
+        # A printer of the same model from another source whose nozzle the kept model does not have becomes one more
+        # variant (its profiles fit that nozzle, not the model's default one).
+        extra = set()
+        for v, m in items[1:]:
+            for rel in m['printers']:
+                e = printer_entries[rel]
+                n = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
+                hf = bool(re.match(r'(?i)hf', e.get('variant') or ''))
+                if n is None or any(n2 == n and bool(re.match(r'(?i)hf', vid)) == hf for vid, n2, _, _ in variants):
+                    continue
+                vid = str(n) if not hf else 'HF' + str(n)
+                if vid in seen:
+                    vid = e['profile']['name']
+                seen.add(vid)
+                variants.append((vid, n, rel, e))
+                extra.add(rel)
+                w.stats['variants added from a second source (nozzle the model lacks)'] += 1
         common = common_settings([e['profile']['settings'] for _, _, _, e in variants])
         blocks = [e.get('gcode') for _, _, _, e in variants]
         common_gcode = common_block([g for g in blocks if g]) if all(blocks) else {}
@@ -814,6 +831,9 @@ def build_models(w, index, printer_entries):
             for k in ('not_converted', 'from_source_program'):
                 if k in e:
                     var[k] = e[k]
+            if rel in extra:
+                # From the other source: its own license and origin.
+                var['license'], var['origin'] = e['license'], e['origin']
             var['original'] = {k: v for k, v in e['original'].items() if original_common.get(k, object()) != v}
             doc['variants'].append(var)
             refs[rel] = path + '#' + vid
@@ -822,6 +842,8 @@ def build_models(w, index, printer_entries):
         for v, m in items[1:]:
             # The same printer from another source: its printers point at the variant with the same nozzle.
             for rel in m['printers']:
+                if rel in extra:
+                    continue
                 e = printer_entries[rel]
                 n = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
                 hf = bool(re.match(r'(?i)hf', e.get('variant') or ''))
@@ -844,7 +866,9 @@ def build_models(w, index, printer_entries):
         for m in v['models']:
             m.pop('printers', None)
         v['models'] = [m for m in v['models'] if 'file' in m]
-        v['printers'] = sorted({refs[r] for r in v['printers'] if refs[r].startswith('vendors/%s/' % slug(v['id']))})
+        own = 'vendors/%s/' % slug(v['id'])
+        # Its variants, also those a printer of another source added to one of its models.
+        v['printers'] = sorted({ref for ref in refs.values() if ref.startswith(own)})
     return refs
 
 

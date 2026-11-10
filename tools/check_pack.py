@@ -9,6 +9,8 @@
 - a print profile without "nozzle" when its name or its condition gives one;
 - a printer G-code block without its dialect, or with a template that is not text;
 - a filament of the OrcaSlicer family whose G-code comes from the converted bundle instead of its source program;
+- a print profile for one nozzle that fits printers with another nozzle;
+- a printer variant of index.json that no vendor lists;
 - with --community, a community printer file that names no model of the pack;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
   another one does;
@@ -91,6 +93,28 @@ def same_translation(kind, original, settings, where, problems, counts, nozzle=N
     counts['profiles translated again'] += 1
     if expected != got:
         problems['translation table does not give the profile\'s settings'].append(where)
+
+
+def check_print_nozzles(pack, index, sets, problems, counts):
+    """A print profile made for one nozzle fits no printer with another one."""
+    nozzle, cache = {}, {}
+    for i, ref in enumerate(index['printers']):
+        path, vid = ref.split('#', 1)
+        if path not in cache:
+            cache[path] = load(pack, path)
+        doc = cache[path]
+        var = next((v for v in doc['variants'] if v['id'] == vid), None)
+        n = merged_block(doc['common']['settings'], (var or {}).get('settings')).get('machine', {}).get('nozzle_diameter')
+        nozzle[i] = n[0] if isinstance(n, list) else n
+    for v in index['vendors']:
+        for rel in v['prints']:
+            e = load(pack, rel)
+            if e.get('nozzle') is None or e.get('compatible') is None:
+                continue
+            other = sorted({nozzle[i] for i in sets[e['compatible']] if nozzle.get(i) not in (None, e['nozzle'])})
+            if other:
+                problems['print for one nozzle that fits printers with another'].append(
+                    '%s (%s; also %s)' % (rel, e['nozzle'], ', '.join(str(x) for x in other)))
 
 
 def check_defaults(pack, index, sets, problems, counts):
@@ -264,7 +288,12 @@ def main():
             # As the source program has it (these models have no start G-code of their own there): not an error.
             notes['start G-code of the vendor-wide base, as in the source program'].append(names)
 
+    listed = {r for v in index['vendors'] for r in v['printers']}
+    for ref in index['printers']:
+        if ref not in listed:
+            problems['printer variant that no vendor lists'].append(ref)
     check_defaults(args.pack, index, sets, problems, counts)
+    check_print_nozzles(args.pack, index, sets, problems, counts)
     if args.community:
         models = {(v['id'], m['id']) for v in index['vendors'] for m in v['models']}
         for root, _, files in os.walk(os.path.join(args.community, 'printers')):

@@ -99,7 +99,8 @@ comparten:
 - **`original_common` y `original` de cada variante:** los valores de origen, divididos igual.
 - **`also_in`:** el mismo modelo venía de otra fuente (por ejemplo, de OrcaSlicer y del paquete del fabricante). Se
   guarda una vez, de la fuente del fabricante; las impresoras de la otra fuente apuntan a la variante de la misma
-  boquilla.
+  boquilla. Si el modelo no tiene esa boquilla, la impresora de la otra fuente es una variante más, con su `license` y
+  su `origin` propios (6 con la versión del 05-11-2026, por ejemplo la AnkerMake M5 con 0,2 y 0,25 mm).
 - **`gcode`** (en `common` y en cada variante, FFF): el G-code propio de la máquina tal cual lo tiene su fuente, con
   sus macros (ver «G-code de la máquina»). Se arma igual que el perfil: `common.gcode` con el `gcode` de la variante
   encima, campo por campo y, en `templates`, `keys`, `from` y `values`, clave por clave.
@@ -345,10 +346,10 @@ Con la versión del 05-11-2026:
 
 `tools/validate.py` lamina un cubo de 20 mm con el motor con cada variante FDM y su filamento y perfil por defecto, y
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
-05-11-2026 y el motor de `dev` (b3f296b):
-- **variantes:** las 2261 laminan, también con el G-code propio de cada máquina (`--macros`), y en todas cada línea
+05-11-2026 y el motor de `dev` (3667e62):
+- **variantes:** las 2267 laminan, también con el G-code propio de cada máquina (`--macros`), y en todas cada línea
   fija de su G-code de inicio y de fin sale igual y en el mismo orden (GM13);
-- **todo:** 18 313 combinaciones, 14 fallan (0,08 %). 11 son perfiles de impresión que el programa de origen da con
+- **todo:** 18 324 combinaciones, 14 fallan (0,08 %). 11 son perfiles de impresión que el programa de origen da con
   capas más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron de 0,25 y 0,3 mm), y 3
   perfiles de Geeetech de 0,08 mm cuyo ancho de la primera capa (0,133 mm) es menos de lo que acepta el motor con una
   boquilla de 0,6 mm.
