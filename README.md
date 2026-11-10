@@ -14,10 +14,10 @@ Versión del 05-11-2026, convertida desde los perfiles de Tisma Slicer y las imp
 | Qué | Cantidad |
 |---|---|
 | Paquetes de origen (fabricantes) | 236 |
-| Modelos de impresora FDM | 902, con 2261 boquillas o variantes |
+| Modelos de impresora FDM | 902, con 2267 boquillas o variantes |
 | Modelos de impresora de resina | 156 |
-| Filamentos | 11 636 |
-| Perfiles de impresión | 4416 |
+| Filamentos | 11 638 |
+| Perfiles de impresión | 4419 |
 | Resinas | 484 |
 | Perfiles de impresión de resina | 35 |
 

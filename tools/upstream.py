@@ -105,6 +105,7 @@ class CuraDefinitions:
     """UltiMaker Cura machine definitions (resources/definitions) and their extruders (resources/extruders)."""
 
     def __init__(self, resources):
+        self.resources = resources
         self.defs = {}
         for kind in ('definitions', 'extruders'):
             for f in glob.glob(os.path.join(resources, kind, '*.def.json')):
@@ -160,6 +161,50 @@ def orca_compatible(vendor, name):
     if isinstance(printers, str):
         printers = [x.strip().strip('"') for x in printers.split(';') if x.strip()]
     return key, list(printers), str(values.get('compatible_printers_condition') or '')
+
+
+IDENTITY_KEYS = {'name', 'type', 'inherits', 'include', 'from', 'setting_id', 'instantiation', 'description',
+                 'renamed_from', 'compatible_printers', 'compatible_printers_condition', 'print_settings_id',
+                 'filament_settings_id', 'filament_id', 'version', 'is_custom_defined'}
+
+
+def merged_groups(vendor, converted=None):
+    """The instantiated presets of a vendor folder in the groups Tisma Slicer's converter merges into one: the same
+    base name (before " @") and the same values (OrcaSlicer repeats a process for every printer of a family). It
+    keeps one preset of a group, for the printers of all of them. converted(values, printers): the values as that
+    converter writes them, which it compares (two presets that differ only in values it drops are one); the source
+    values themselves when not given. [([names], [printers of all])], in name order."""
+    groups = {}
+    for name in sorted(vendor.presets):
+        path, d = vendor.presets[name]
+        if str(d.get('instantiation', '')).lower() != 'true' or path.split(os.sep)[0] != os.path.basename(
+                vendor.folder):
+            continue
+        try:
+            values = vendor.resolve(name)[0]
+        except KeyError:
+            continue
+        printers = values.get('compatible_printers') or []
+        if isinstance(printers, str):
+            printers = [x.strip().strip('"') for x in printers.split(';') if x.strip()]
+        if not printers:
+            continue
+        same = converted(values, printers) if converted else \
+            {k: v for k, v in values.items() if k not in IDENTITY_KEYS}
+        key = (name.split(' @')[0].strip(), json.dumps(same, sort_keys=True))
+        groups.setdefault(key, []).append((name, list(printers)))
+    out = []
+    for members in groups.values():
+        union = []
+        for _, printers in members:
+            union += [p for p in printers if p not in union]
+        out.append(([n for n, _ in members], union))
+    return out
+
+
+def merged_compatible(vendor, converted=None):
+    """{preset name: the printers of its whole merge group (merged_groups)}."""
+    return {n: union for names, union in merged_groups(vendor, converted) for n in names}
 
 
 def _gcode_keys(values, table):
@@ -238,6 +283,57 @@ def cura_machine_gcode(cura, def_id):
 # The variables of the OrcaSlicer family that Tisma Slicer renames to PrusaSlicer's when it converts a G-code template,
 # as its bundles show (the same template in the source program and in the bundle). Only used to convert the start and
 # end G-code for the engine's simple variables (profile.settings); the G-code block keeps the source's own names.
+_KEYS_MAP = re.compile(r's_keys_map_(\w+)\s*\{(.*?)\};', re.S)
+_KEY_VALUE = re.compile(r'\{\s*"([^"]+)"\s*,\s*(\w+)\s*\}')
+_ADD = re.compile(r'this->add(?:_nullable)?\(\s*"(\w+)"\s*,\s*coEnums?\s*\)')
+_ENUM_TYPE = re.compile(r'(?:ConfigOptionEnums?<|set_enum<)(\w+)>')
+
+
+def enum_values(print_config_cpp):
+    """{option: {value: the program's constant for it}} of the enum options of a PrintConfig.cpp (its
+    s_keys_map_<Type> tables and the type each this->add("option", coEnum) uses)."""
+    text = open(print_config_cpp, encoding='utf-8', errors='replace').read()
+    maps = {m.group(1): dict(_KEY_VALUE.findall(m.group(2))) for m in _KEYS_MAP.finditer(text)}
+    out = {}
+    adds = list(_ADD.finditer(text))
+    for i, m in enumerate(adds):
+        block = text[m.end():adds[i + 1].start() if i + 1 < len(adds) else len(text)]
+        block = block.split('this->add', 1)[0]
+        t = _ENUM_TYPE.search(block)
+        if t and t.group(1) in maps:
+            out[m.group(1)] = maps[t.group(1)]
+    return out
+
+
+def value_names(source_cpp, prusa_cpp):
+    """{option: {source value: PrusaSlicer value}} of the enum options both programs have whose values the source
+    program names otherwise: the same constant of the program (OrcaSlicer's seam "back" and PrusaSlicer's "rear" are
+    both spRear). A value whose constant PrusaSlicer does not have is left out."""
+    src, prusa = enum_values(source_cpp), enum_values(prusa_cpp)
+    out = {}
+    for option, values in src.items():
+        if option not in prusa:
+            continue
+        by_const = {const: v for v, const in prusa[option].items()}
+        names = {v: by_const.get(const) for v, const in values.items()}
+        if any(v != p for v, p in names.items()):
+            out[option] = names
+    return out
+
+
+def orca_machine_model(folder, name):
+    """The machine_model preset (the printer model: family, default materials, pictures) of an OrcaSlicer-style
+    vendor folder, by name, or None."""
+    for f in sorted(glob.glob(os.path.join(folder, 'machine', '*.json'))):
+        try:
+            d = json.load(open(f, encoding='utf-8'))
+        except (ValueError, UnicodeDecodeError):
+            continue
+        if isinstance(d, dict) and d.get('type') == 'machine_model' and d.get('name') == name:
+            return d
+    return None
+
+
 ORCA_TO_PRUSA = {'nozzle_temperature_initial_layer': 'first_layer_temperature', 'nozzle_temperature': 'temperature',
                  'bed_temperature_initial_layer_single': 'first_layer_bed_temperature',
                  'bed_temperature_initial_layer': 'first_layer_bed_temperature',
@@ -251,3 +347,57 @@ _WORD = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
 
 def to_prusa_names(text):
     return _SPAN.sub(lambda m: _WORD.sub(lambda w: ORCA_TO_PRUSA.get(w.group(0), w.group(0)), m.group(0)), text)
+
+
+# The default values of a program's options (its PrintConfig.cpp), for the variables a G-code uses that a preset does
+# not set: the program takes them from there.
+_DEFAULT = re.compile(r'set_default_value\(\s*new\s+ConfigOption(\w+?)(?:<[^>]*>)?\s*(\(|\{)(.*?)(\)|\})\s*\)\s*;',
+                      re.S)
+
+
+def _default_value(kind, body):
+    body = body.strip()
+    items = [x.strip() for x in re.split(r',(?![^{]*\})', body) if x.strip()] if body else []
+
+    def one(x, scalar):
+        x = x.strip().rstrip('f').strip()
+        if scalar == 'Bool':
+            return {'true': True, 'false': False, '1': True, '0': False}.get(x)
+        if scalar in ('Int', 'Float', 'Percent'):
+            try:
+                n = float(x.rstrip('.'))
+            except ValueError:
+                return None
+            return int(n) if scalar == 'Int' or n == int(n) else n
+        if scalar == 'String':
+            m = re.fullmatch(r'L?\(?"((?:\\.|[^"\\])*)"\)?', x)
+            return m.group(1) if m else None
+        return None
+    base = kind[:-1] if kind.endswith('s') and kind[:-1] in ('Bool', 'Int', 'Float', 'Percent', 'String') else None
+    if base:
+        values = [one(x, base) for x in items]
+        return values if all(v is not None for v in values) else None
+    if kind in ('Bool', 'Int', 'Float', 'Percent', 'String'):
+        return one(body, kind) if body else ('' if kind == 'String' else None)
+    return None
+
+
+def program_defaults(print_config_cpp):
+    """{key: default value} of the options of a PrintConfig.cpp whose default is a plain yes/no, number or text, or a
+    list of them."""
+    text = open(print_config_cpp, encoding='utf-8', errors='replace').read()
+    out = {}
+    for m in re.finditer(r'this->add(?:_nullable)?\("(\w+)",\s*co\w+\)', text):
+        rest = text[m.end():m.end() + 4000]
+        nxt = re.search(r'this->add', rest)
+        rest = rest[:nxt.start()] if nxt else rest
+        d = _DEFAULT.search(rest)
+        if d:
+            v = _default_value(d.group(1), d.group(3))
+            if v is not None:
+                out.setdefault(m.group(1), v)
+    return out
+
+
+# How the programs rewrite an old name when they load a preset (their PrintConfig.cpp, handle_legacy).
+LEGACY_RENAMES = {'crealityprint': {'filament_start_gcode': [('initial_layer_height', 'first_layer_height')]}}

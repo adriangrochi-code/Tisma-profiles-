@@ -1,43 +1,51 @@
 # Notas del paquete de perfiles
 
-Convertido desde Tisma Slicer a6b4f62 y UVtools de8580d. El G-code y las listas de impresoras salen de OrcaSlicer
-1d577ea, Creality Print 59ae8cb, Elegoo Slicer 2d507e3 y Cura 5bea2f8. AGPL-3.0-or-later.
+Convertido desde Tisma Slicer a6b4f62 y UVtools de8580d. El G-code, las listas de impresoras y los valores por defecto
+de los programas salen de OrcaSlicer 1d577ea, Creality Print 59ae8cb, Elegoo Slicer 2d507e3 y Cura 5bea2f8.
+AGPL-3.0-or-later.
 
-## Qué cambia
+## Qué cambia desde pack-2026.11.10-dcb4250
 
-- **El G-code propio de cada máquina, tal cual, con sus macros** (bloque `gcode` en cada modelo; `docs/FORMAT.md`,
-  «G-code de la máquina»): inicio, fin, cambio de capa, de herramienta, pausa, timelapse y, en Cura, los de cada
-  extrusor. Las Bambu Lab ya no comparten un G-code genérico: hay 25 distintos para sus 56 variantes, con nivelación,
-  Z offset, calibración de flujo y limpieza de la boquilla.
-- **Variables del G-code** por dialecto: `docs/GCODE_VARIABLES.md`.
-- **Compatibilidad:** ningún conjunto vacío (antes 392 perfiles apuntaban a uno). Las condiciones se evalúan como en
-  el programa de origen, y en la familia OrcaSlicer la lista de impresoras sale del origen: 2012 perfiles cambian
-  de impresoras, casi todos a menos (antes servían para todas las de la marca). 83 perfiles que no sirven para
-  ninguna impresora del paquete quedan fuera, listados en `stats.json`.
-- **Boquilla** en los perfiles de impresión cuando sus impresoras, su condición o su nombre la dicen.
-- **Revisión en la CI** (`tools/check_pack.py`) y `validate.py --macros`, que lamina con el G-code propio de cada máquina.
+- **Perfiles por defecto que sirven:** 385 impresoras traían por defecto un filamento y 161 un perfil de impresión que
+  no eran compatibles con ellas. Ahora el de origen si sirve; si no, el primero compatible, del mismo material.
+  Además, 197 impresoras (172 de Creality, entre ellas la Ender-3) no recibían el perfil de impresión que nombra su
+  fuente, porque el paquete lo escribía entre comillas; ahora lo reciben.
+- **G-code de filamento original** en la familia OrcaSlicer (3741 filamentos de OrcaSlicer y 316 de Creality Print),
+  del programa de origen y en su dialecto, como el de las máquinas. Los valores de la máquina que el perfil no dice
+  salen del valor por defecto del programa (`program_defaults`).
+- **Impresoras sin perfiles de impresión:** 75 variantes, entre ellas la Bambu Lab P1S, la X1 y la X1 Carbon con 0,4 mm,
+  no tenían ningún perfil de impresión: el paquete de Tisma Slicer guarda uno solo de los perfiles iguales que
+  OrcaSlicer repite para cada impresora, y la lista de impresoras ahora suma las de todos. Ahora todas tienen.
+- **Boquillas que faltaban:** 6 variantes nuevas (por ejemplo la AnkerMake M5 con 0,2 y 0,25 mm) de impresoras que
+  venían de dos fuentes; sus perfiles ya no quedan en la variante de 0,4.
+- **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, la altura de 9
+  impresoras (por ejemplo la Meltingplot MBL 480), y los límites de velocidad, aceleración y jerk por eje de 857
+  variantes de la familia OrcaSlicer (más la retracción de la Elegoo Neptune y la UltiMaker 2 extended+), y los
+  valores de 37 impresiones y 11 filamentos que el paquete dejó casi vacíos (por ejemplo la altura de la primera
+  capa de las impresiones de Elegoo y Artillery), del programa de origen.
+- **Datos de comunidad** enlazados a su modelo del paquete.
+- **Camas de UltiMaker Cura:** 151 modelos de Cura traen la malla de su cama, convertida de Cura (LGPL-3.0); el paquete
+  pesa unos 6 MB más.
+- **Imágenes y materiales de los modelos de Creality Print y Elegoo Slicer** (12 modelos, por ejemplo la Creality
+  Z2): miniatura, modelo de cama y materiales por defecto, del programa de origen.
+- **Tablas de traducción:** la de OrcaSlicer da ahora los valores que tienen otro nombre en una clave con el mismo
+  nombre (la costura `back` es `rear`; la piel rugosa `disabled_fuzzy` es `none`).
+- **Tipo de material sin comillas:** 4682 filamentos de la familia OrcaSlicer decían `"PLA"` (con las comillas del
+  archivo) en vez de `PLA`.
+- **Más revisiones en la CI** (`tools/check_pack.py`): perfiles por defecto, boquilla de los perfiles de impresión,
+  variantes sin fabricante, G-code de filamento de la familia OrcaSlicer, datos de comunidad, textos con comillas,
+  valores que el programa de origen da y el paquete perdió.
 
-El formato sigue en la versión 2: un lector anterior ignora el bloque nuevo.
+El formato sigue en la versión 2: un lector anterior ignora los campos nuevos.
 
 ## Cuentas
 
-902 modelos FDM con 2261 variantes y 156 de resina; 11 636 filamentos, 4416 perfiles de impresión, 484 resinas y 35
-perfiles de impresión de resina. 240 archivos, 32,7 MB.
+902 modelos FDM con 2267 variantes y 156 de resina; 11 638 filamentos, 4419 perfiles de impresión, 484 resinas y 35
+perfiles de impresión de resina. Unos 33 MB.
 
 ## Calidad
 
-Con el motor de `dev` (3cb778f): las 2261 variantes laminan. De 18 313 combinaciones fallan 11 (0,06 %): perfiles que
-el origen da con capas más gruesas que la boquilla.
-
-## Con el motor actual
-
-Con el motor de `dev` (b3f296b) y el G-code propio de cada máquina (`validate.py --macros`), las 2261 variantes FDM
-laminan con su G-code, y en todas cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden (GM13).
-
-## También
-
-- Los filamentos de la familia OrcaSlicer traen los valores del programa de origen que usa el G-code de las máquinas
-  (`source_values`).
-- Tablas de traducción de claves por programa (`translation.tar.xz`), para abrir proyectos de otros programas; los
-  perfiles ganan 86 ajustes del motor que antes no tenían (aceleraciones por tipo, límites de la máquina, planchado,
-  retracción, MMU…), con el mismo sentido que en el programa de origen.
+Con el motor de `dev` (3667e62) y el G-code propio de cada máquina (`validate.py --macros`), las 2267 variantes FDM
+laminan, y en todas cada línea fija del G-code de inicio y de fin sale igual y en el mismo orden (GM13). De 18 324
+combinaciones de impresora, filamento e impresión fallan 14 (0,08 %), por datos del programa de origen: 11 perfiles con
+capas más gruesas que la boquilla y 3 de Geeetech con un ancho de primera capa de 0,133 mm en boquilla de 0,6 mm.

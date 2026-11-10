@@ -22,9 +22,10 @@ import subprocess
 import sys
 
 import gcode_variables
+import cura_platform
 import translation
 import upstream
-from translation import FILAMENT_VARIABLES, clean_num, fix_point, flag, num, pct_or_abs
+from translation import FILAMENT_VARIABLES, clean_num, first_text, fix_point, flag, num, pct_or_abs
 
 FORMAT_VERSION = 2
 
@@ -475,6 +476,7 @@ def template_names(templates):
     return names
 
 
+VALUE_NAMES = {}  # dialect -> {option: {source value: PrusaSlicer value}} (upstream.value_names)
 OPTION_TYPES = {}  # PrusaSlicer's type of each key (its PrintConfig.cpp), when given (--prusa-config)
 
 
@@ -484,6 +486,27 @@ def bundle_values(templates, c, names=None):
     names = template_names(templates) if names is None else names
     return {k: translation.typed(c[k], OPTION_TYPES.get(k, ''))
             for k in sorted(names) if k in c and not k.endswith('_gcode')}
+
+
+def source_filament_gcode(src, found, values):
+    """The G-code block of a filament from the source program's preset (OrcaSlicer family), or None."""
+    templates, keys = {}, {}
+    for key, neutral in (('filament_start_gcode', 'filament_start'), ('filament_end_gcode', 'filament_end')):
+        v = values.get(key)
+        if isinstance(v, list):
+            v = v[0] if v else ''
+        if isinstance(v, str) and v.strip():
+            templates[neutral] = v
+            keys[neutral] = key
+    if not templates:
+        return None
+    for old, new in upstream.LEGACY_RENAMES.get(src[0], {}).get('filament_start_gcode', []):
+        if 'filament_start' in templates and old in templates['filament_start']:
+            # As the program rewrites an old name when it loads the preset.
+            templates['filament_start'] = templates['filament_start'].replace(old, new)
+    return {'dialect': src[0], 'origin': 'source_program',
+            'source': {'repository': src[1], 'commit': src[2], 'preset': found[0]}, 'templates': templates,
+            'keys': keys}
 
 
 def filament_gcode(b, name, c, everything, sources, stats):
@@ -507,6 +530,239 @@ def engine_texts(block, c):
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Mapping to engine keys (docs/CONFIG.md of the engine). Each function returns (settings, used source keys).
+
+# PrusaSlicer names of the machine options that the OrcaSlicer family names otherwise (besides ORCA_TO_PRUSA).
+MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
+
+
+_TISMA = {}
+
+
+def tisma_merge_key(path, kind, src, presets):
+    """converted(values, printers) for upstream.merged_compatible: the values as Tisma Slicer's converter (path) writes
+    them for a preset of the source program src, the nozzle being the first printer's, as it does. None without it."""
+    if not path:
+        return None
+    if path not in _TISMA:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('tisma_convert_orca_profiles', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        root = os.path.abspath(os.path.join(os.path.dirname(path), '..', '..'))
+        _TISMA[path] = (module, module.tisma_option_types(root))
+    module, types = _TISMA[path]
+    profiles = os.path.dirname(presets.folder)
+    if (path, profiles) not in _TISMA:
+        _TISMA[(path, profiles)] = module.Converter(types, module.orca_option_defaults(profiles))
+    conv = _TISMA[(path, profiles)]
+    machines = upstream.OrcaVendor(presets.folder, kind='machine')
+    nozzles = {}
+
+    def nozzle(printer):
+        if printer not in nozzles:
+            try:
+                v = machines.resolve(printer)[0].get('nozzle_diameter', ['0.4'])
+                nozzles[printer] = float((v[0] if isinstance(v, list) else v) or 0.4)
+            except (KeyError, ValueError):
+                nozzles[printer] = None
+        return nozzles[printer]
+
+    def converted(values, printers):
+        known = [nozzle(p) for p in printers if nozzle(p)]
+        return conv.convert(kind, dict(values), known[0] if known else 0.4)
+    return converted
+
+
+def add_source_prints(deferred, sources, everything, merged_lists, tisma_converter, stats):
+    """The print presets of an OrcaSlicer-family source program for printers of the pack that Tisma Slicer's bundle
+    lacks, neither kept nor merged into a preset it keeps (upstream.merged_groups): converted by Tisma Slicer's own
+    converter (tisma_converter) and added to the bundle as sections. A name the pack has is not added. Fills
+    merged_lists for the prints. {(bundle, 'print', name): provenance}."""
+    out = {}
+    if not tisma_converter:
+        return out
+    taken = {name for (kind, name) in everything if kind == 'print'}
+    for b, vendor, printers, vdir, lic, origin in deferred:
+        src = sources.of(b, stats)
+        if not src or src[0] not in ('orcaslicer', 'crealityprint', 'elegooslicer') or \
+                b.path not in sources.matched:
+            continue
+        presets = sources.presets(b, 'process')
+        if presets is None:
+            continue
+        converted = tisma_merge_key(tisma_converter, 'print', src, presets)
+        groups = upstream.merged_groups(presets, converted)
+        merged_lists[presets] = {n: union for names, union in groups for n in names}
+        in_bundle = set()
+        for (kind, name) in list(b.sections):
+            hit = upstream.orca_compatible(presets, name) if kind == 'print' and not name.startswith('*') else None
+            if hit:
+                in_bundle.add(hit[0])
+        for names, union in groups:
+            if any(n in in_bundle for n in names) or not any(sources.names.get((src[1], x)) for x in union):
+                continue
+            name = names[0]
+            if name in taken:
+                stats['print in the source program, its name already in the pack'] += 1
+                continue
+            values = presets.resolve(name)[0]
+            own = values.get('compatible_printers') or []
+            section = dict(converted(values, own if isinstance(own, list) else union))
+            section['compatible_printers'] = ';'.join('"%s"' % x for x in union)
+            section['compatible_printers_condition'] = ''
+            b.sections[('print', name)] = section
+            taken.add(name)
+            out[(b.id, 'print', name)] = {'program': src[0], 'repository': src[1], 'commit': src[2],
+                                          'file': presets.presets[name][0], 'merged': names}
+    return out
+
+
+def template_values(values, wanted, exclude=()):
+    """The values of a source program's preset for the variables its machines' G-code uses (wanted), by name; not
+    the ones in exclude."""
+    return {k: v for k, v in sorted(values.items()) if k in wanted and k not in exclude}
+
+
+def generated_time():
+    """The time of the conversion (UTC), or SOURCE_DATE_EPOCH's when it is set (reproducible builds: the same pack
+    from the same sources)."""
+    epoch = os.environ.get('SOURCE_DATE_EPOCH')
+    when = datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc) if epoch and epoch.isdigit() else \
+        datetime.datetime.now(datetime.timezone.utc)
+    return when.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+def asset_file(folder, name):
+    """The file of a bundle folder that a model names, also when the name differs in case only (Geeetech names
+    125X130.svg, the file is 125x130.svg; PrusaSlicer finds it on a case-insensitive disk)."""
+    if not name or os.path.isfile(os.path.join(folder, name)):
+        return name
+    try:
+        same = [f for f in os.listdir(folder) if f.lower() == name.lower()]
+    except OSError:
+        return name
+    return same[0] if len(same) == 1 else name
+
+
+PLATE_SHARE = 0.5  # a Cura platform enters when its plate (Z 0 +-3 mm) is under this share of the bed
+
+
+def cura_bed(model, assets, mid, printers, printer_entries, sources, b, out, vdir, stats):
+    """UltiMaker Cura's bed mesh of a model (its definition's platform and platform_offset), in the pack's bed frame
+    (cura_platform), as assets.bed_model: when it has its plate where the bed is. The filled fields."""
+    src = sources.of(b, stats)
+    defs = src[3] if src and src[0] == 'cura' else None
+    entry = next((printer_entries[r] for c, r, sla in printers
+                  if c.get('pack_model', c.get('printer_model')) == mid and r in printer_entries), None)
+    g = (entry or {}).get('gcode') or {}
+    preset = (g.get('source') or {}).get('preset')
+    if not defs or g.get('dialect') != 'cura' or preset not in defs.defs:
+        return []
+    meta = defs.resolve(preset)[2]
+    mesh = meta.get('platform')
+    bed = (entry['profile']['settings'].get('machine') or {}).get('bed')
+    if not mesh or not bed:
+        return []
+    offset = meta.get('platform_offset')
+    if isinstance(offset, str):
+        offset = [float(x) for x in offset.split(',')]
+    path = os.path.join(defs.resources, 'meshes', mesh)
+    try:
+        data, share = cura_platform.bed_model(path, offset, bed)
+    except (OSError, ValueError, KeyError, IndexError) as e:
+        stats['Cura bed mesh not read'] += 1
+        return []
+    if share < PLATE_SHARE:
+        stats['Cura bed mesh left out: no plate at Z 0 under the bed'] += 1
+        return []
+    rel = os.path.join(vdir, 'assets', os.path.splitext(os.path.basename(mesh))[0] + '_bed.stl')
+    full = os.path.join(out, rel)
+    os.makedirs(os.path.dirname(full), exist_ok=True)
+    if not os.path.exists(full):
+        with open(full, 'wb') as f:
+            f.write(data)
+    elif open(full, 'rb').read() != data:  # the same mesh with another offset or bed
+        rel = os.path.join(vdir, 'assets', os.path.splitext(os.path.basename(mesh))[0] + '_' + slug(mid) + '_bed.stl')
+        with open(os.path.join(out, rel), 'wb') as f:
+            f.write(data)
+    assets['bed_model'] = rel
+    stats['Cura bed meshes'] += 1
+    return ['assets.bed_model']
+
+
+def model_from_source(model, assets, base, mid, out, vdir):
+    """Fills what the bundle lost of a model and its source program has (the machine_model file of its
+    OrcaSlicer-style vendor folder `base`): family, default materials and pictures, copied into the pack. Tisma
+    Slicer's Creality Print and Elegoo Slicer bundles keep none of them. The filled fields."""
+    sm = upstream.orca_machine_model(base, mid)
+    if not sm:
+        return []
+    filled = []
+    if not model['family'] and sm.get('family'):
+        model['family'] = sm['family']
+        filled.append('family')
+    if not model['default_materials'] and sm.get('default_materials'):
+        model['default_materials'] = [x.strip() for x in sm['default_materials'].split(';') if x.strip()]
+        filled.append('default_materials')
+    for key, f in (('thumbnail', mid + '_cover.png'), ('bed_model', sm.get('bed_model', '')),
+                   ('bed_texture', sm.get('bed_texture', ''))):
+        src = os.path.join(base, f) if f else ''
+        if key not in assets and f and os.path.isfile(src):
+            rel = os.path.join(vdir, 'assets', f)
+            os.makedirs(os.path.dirname(os.path.join(out, rel)), exist_ok=True)
+            shutil.copyfile(src, os.path.join(out, rel))
+            assets[key] = rel
+            filled.append('assets.' + key)
+    return filled
+
+
+def lost_values(kind, c, source, dialect=None):
+    """{PrusaSlicer key: bundle text} of the options of the translation table of a kind that the bundle lacks and the
+    source program's preset (its values, with the source names) gives. A value that the source program names
+    otherwise gets PrusaSlicer's name (VALUE_NAMES); one PrusaSlicer does not have is left out."""
+    names_of = VALUE_NAMES.get(dialect, {})
+    back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
+    out = {}
+    for e in translation.TABLE[kind]:
+        for key in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]):
+            if not key or key in c or key in out:
+                continue
+            name = MACHINE_RENAMES.get(key, back.get(key, key))
+            if name not in source:
+                continue
+            v = source[name]
+            if key in names_of and isinstance(v, str):
+                if names_of[key].get(v, v) is None:
+                    continue
+                v = names_of[key].get(v, v)
+            out[key] = ','.join(str(x) for x in v) if isinstance(v, list) else \
+                ('1' if v is True else '0' if v is False else str(v))
+    return out
+
+
+def leaves(d, prefix=''):
+    """(group.key, value) of a profile's settings; the G-code variables one level deeper (machine.variables.x)."""
+    for k, v in d.items():
+        if isinstance(v, dict) and (not prefix or prefix == 'machine.' and k == 'variables'):
+            yield from leaves(v, prefix + k + '.')
+        else:
+            yield prefix + k, v
+
+
+def fill_lost(settings, full):
+    """Puts in settings the values of full (the translation with the lost values) that settings lacks; their paths."""
+    have = dict(leaves(settings))
+    filled = []
+    for path, value in leaves(full):
+        if path not in have and not path.startswith('_'):
+            node = settings
+            parts = path.split('.')
+            for part in parts[:-1]:
+                node = node.setdefault(part, {})
+            node[parts[-1]] = clean_num(value) if isinstance(value, float) else value
+            filled.append(path)
+    return filled
+
 
 def map_printer(c, texts=None):
     """texts: the start and end G-code to convert, when not the bundle's own (engine_texts)."""
@@ -766,6 +1022,23 @@ def build_models(w, index, printer_entries):
                 vid = e['profile']['name']
             seen.add(vid)
             variants.append((vid, nozzle, rel, e))
+        # A printer of the same model from another source whose nozzle the kept model does not have becomes one more
+        # variant (its profiles fit that nozzle, not the model's default one).
+        extra = set()
+        for v, m in items[1:]:
+            for rel in m['printers']:
+                e = printer_entries[rel]
+                n = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
+                hf = bool(re.match(r'(?i)hf', e.get('variant') or ''))
+                if n is None or any(n2 == n and bool(re.match(r'(?i)hf', vid)) == hf for vid, n2, _, _ in variants):
+                    continue
+                vid = str(n) if not hf else 'HF' + str(n)
+                if vid in seen:
+                    vid = e['profile']['name']
+                seen.add(vid)
+                variants.append((vid, n, rel, e))
+                extra.add(rel)
+                w.stats['variants added from a second source (nozzle the model lacks)'] += 1
         common = common_settings([e['profile']['settings'] for _, _, _, e in variants])
         blocks = [e.get('gcode') for _, _, _, e in variants]
         common_gcode = common_block([g for g in blocks if g]) if all(blocks) else {}
@@ -780,6 +1053,8 @@ def build_models(w, index, printer_entries):
                'assets': keep_m.get('assets', {}), 'license': first['license'], 'origin': first['origin'],
                'default_variant': default_variant,
                'common': {'settings': common}, 'variants': []}
+        if keep_m.get('from_source_program'):
+            doc['from_source_program'] = keep_m['from_source_program']
         if common_gcode:
             doc['common']['gcode'] = common_gcode
         for vid, nozzle, rel, e in variants:
@@ -790,9 +1065,12 @@ def build_models(w, index, printer_entries):
                 own = diff_block(common_gcode, e['gcode'])
                 if own:
                     var['gcode'] = own
-            for k in ('not_converted',):
+            for k in ('not_converted', 'from_source_program'):
                 if k in e:
                     var[k] = e[k]
+            if rel in extra:
+                # From the other source: its own license and origin.
+                var['license'], var['origin'] = e['license'], e['origin']
             var['original'] = {k: v for k, v in e['original'].items() if original_common.get(k, object()) != v}
             doc['variants'].append(var)
             refs[rel] = path + '#' + vid
@@ -801,6 +1079,8 @@ def build_models(w, index, printer_entries):
         for v, m in items[1:]:
             # The same printer from another source: its printers point at the variant with the same nozzle.
             for rel in m['printers']:
+                if rel in extra:
+                    continue
                 e = printer_entries[rel]
                 n = e['profile']['settings'].get('machine', {}).get('nozzle_diameter')
                 hf = bool(re.match(r'(?i)hf', e.get('variant') or ''))
@@ -823,7 +1103,9 @@ def build_models(w, index, printer_entries):
         for m in v['models']:
             m.pop('printers', None)
         v['models'] = [m for m in v['models'] if 'file' in m]
-        v['printers'] = sorted({refs[r] for r in v['printers'] if refs[r].startswith('vendors/%s/' % slug(v['id']))})
+        own = 'vendors/%s/' % slug(v['id'])
+        # Its variants, also those a printer of another source added to one of its models.
+        v['printers'] = sorted({ref for ref in refs.values() if ref.startswith(own)})
     return refs
 
 
@@ -837,11 +1119,24 @@ def main():
     ap.add_argument('--upstream', action='append', metavar='REPOSITORY=DIR',
                     help='a checkout of a program that Tisma Slicer converted bundles from, at the commit the bundles '
                          'name (e.g. https://github.com/SoftFever/OrcaSlicer=orca), for each printer\'s own G-code')
+    ap.add_argument('--source-config', action='append', metavar='DIALECT=PrintConfig.cpp',
+                    help="a source program's PrintConfig.cpp, for the defaults of the options its G-code uses")
+    ap.add_argument('--filament-gcode-from-bundle', dest='filament_gcode_from_source', action='store_false',
+                    help="the OrcaSlicer family's filament G-code from Tisma Slicer's bundle, as before, instead of "
+                         "the source program")
+    ap.add_argument('--tisma-converter', help="Tisma Slicer's tools/profiles/convert_orca_profiles.py (at the bundles' "
+                                              "commit, with its src/libslic3r): which presets it merged into one")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
     args = ap.parse_args()
     if args.prusa_config:
         OPTION_TYPES.update(translation.option_types(args.prusa_config))
+    program_defaults = {}
+    for spec in args.source_config or []:
+        dialect, _, path = spec.partition('=')
+        program_defaults[dialect] = upstream.program_defaults(path)
+        if args.prusa_config:
+            VALUE_NAMES[dialect] = upstream.value_names(path, args.prusa_config)
     sources = Sources(args.upstream)
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
@@ -866,7 +1161,7 @@ def main():
 
     w = Writer(args.out)
     index = {'format': 'tisma-profile-pack', 'version': FORMAT_VERSION,
-             'generated': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+             'generated': generated_time(),
              'source': {'program': 'Tisma Slicer', 'repository':
                         'https://github.com/adriangrochi-code/Nuevo-slicer-basado-en-prusa-',
                         'commit': args.source_commit, 'directory': 'resources/profiles'},
@@ -907,13 +1202,40 @@ def main():
             else:
                 settings, used = map_printer(c, engine_texts(block, c))
             match = c
-            given = (block or {}).get('values', {}).get('nozzle_diameter')
+            filled = []
+            source = (block or {}).get('values', {})
+            given = source.get('nozzle_diameter')
+            variant = num(c.get('printer_variant'))
             if not sla and 'nozzle_diameter' not in c and given:
                 # The bundle lost the nozzle; its source program gives it.
                 nozzle = num(given[0] if isinstance(given, list) else given)
                 put(settings, 'machine', 'nozzle_diameter', nozzle)
                 match = dict(c, nozzle_diameter=str(clean_num(nozzle)))
+                filled.append('machine.nozzle_diameter')
                 w.stats['printer nozzle from the source program'] += 1
+            elif not sla and 'nozzle_diameter' not in c and variant and 0.1 <= variant <= 3:
+                # No nozzle, but the bundle's variant of the printer is its nozzle ("0.4").
+                put(settings, 'machine', 'nozzle_diameter', variant)
+                match = dict(c, nozzle_diameter=str(clean_num(variant)))
+                filled.append('machine.nozzle_diameter')
+                w.stats['printer nozzle from its variant'] += 1
+            height = num(source.get('printable_height'))
+            if not sla and 'max_print_height' not in c and height:
+                # The bundle lost the height; its source program gives it.
+                put(settings, 'machine', 'max_height', height)
+                filled.append('machine.max_height')
+                w.stats['printer height from the source program'] += 1
+            if not sla and block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
+                # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
+                # most of the values of a few): translated from the source program's preset, as the bundle would
+                # have them.
+                lost = lost_values('printer', c, source, block['dialect'])
+                if lost:
+                    full, _ = map_printer(dict(c, **lost), engine_texts(block, dict(c, **lost)))
+                    full.pop('_notes', None)
+                    filled += fill_lost(settings, full)
+                    if any(p not in ('machine.nozzle_diameter', 'machine.max_height') for p in filled):
+                        w.stats['printer values from the source program'] += 1
             notes = settings.pop('_notes', {})
             rel = w.path(vdir, 'printers', slug(name) + '.json')
             entry = {'format': 'tisma-pack-entry', 'version': FORMAT_VERSION,
@@ -923,9 +1245,14 @@ def main():
                                  'settings': settings},
                      'defaults': {'filament': split_list(c.get('default_filament_profile', ''))
                                   if c.get('default_filament_profile') else [],
-                                  'print': c.get('default_print_profile', '') or c.get('default_sla_print_profile', ''),
-                                  'resin': c.get('default_sla_material_profile', '')},
+                                  # Without the quotes some bundles write: "0.20mm NORMAL @Papapiu".
+                                  'print': translation.typed(c.get('default_print_profile', '') or
+                                                             c.get('default_sla_print_profile', ''), 'coString'),
+                                  'resin': translation.typed(c.get('default_sla_material_profile', ''),
+                                                             'coString')},
                      'license': lic, 'origin': origin, 'original': c}
+            if filled:
+                entry['from_source_program'] = filled
             if block:
                 entry['gcode'] = block
             if notes:
@@ -962,6 +1289,7 @@ def main():
             (all_sla if sla else all_printers).append((match, rel))
             w.stats['sla printers' if sla else 'printers'] += 1
 
+        base = sources.bases.get(b.path) if sources.of(b, w.stats) else None
         for mid, m in b.models.items():
             model = {'id': mid, 'name': m.get('name', mid), 'technology': m.get('technology', 'FFF').lower(),
                      'family': m.get('family', ''), 'variants': [x.strip() for x in m.get('variants', '').split(';')
@@ -970,13 +1298,20 @@ def main():
                                            if x.strip()]}
             assets = {}
             for key in ('bed_model', 'bed_texture', 'thumbnail'):
-                f = m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else '')
+                f = asset_file(os.path.join(args.profiles, b.id),
+                               m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else ''))
                 src = os.path.join(args.profiles, b.id, f) if f else ''
                 if f and os.path.isfile(src):
                     rel = os.path.join(vdir, 'assets', f)
                     os.makedirs(os.path.dirname(os.path.join(args.out, rel)), exist_ok=True)
                     shutil.copyfile(src, os.path.join(args.out, rel))
                     assets[key] = rel
+            filled = model_from_source(model, assets, base, mid, args.out, vdir) if base else []
+            if 'bed_model' not in assets:
+                filled += cura_bed(model, assets, mid, printers, printer_entries, sources, b, args.out, vdir, w.stats)
+            if filled:
+                model['from_source_program'] = filled
+                w.stats['models with values from the source program'] += 1
             model['assets'] = assets
             model['printers'] = [rel for c, rel, sla in printers if c.get('pack_model', c.get('printer_model')) == mid]
             vendor['models'].append(model)
@@ -985,6 +1320,7 @@ def main():
         index['vendors'].append(vendor)
 
     by_kind = collections.defaultdict(list)  # kind -> [(bundle, entry path, compatible set number)]
+    material_of = {}  # filament entry path -> its material type (PLA, PETG…)
 
     def compat_id(compatible):
         if compatible is None:
@@ -996,6 +1332,7 @@ def main():
     # The variables that the printers' own G-code uses, by dialect: the filament values the source program has for
     # them go with each filament (source_values).
     template_variables = collections.defaultdict(set)
+    template_variables_filaments = collections.defaultdict(set)  # dialect -> variables of the filaments' own G-code
     for entry in printer_entries.values():
         g = entry.get('gcode') or {}
         for t in (g.get('templates') or {}).values():
@@ -1004,6 +1341,8 @@ def main():
                     template_variables[g.get('dialect')].update(n for n, local in gcode_variables.variables(text)
                                                                 if not local)
 
+    merged_lists = {}  # source vendor folder reader -> upstream.merged_compatible
+    synthetic = add_source_prints(deferred, sources, everything, merged_lists, args.tisma_converter, w.stats)
     for b, vendor, printers, vdir, lic, origin in deferred:
         generic = b.id in ('Templates',) or not printers
         targets = [(c, rel) for c, rel in all_printers] if generic else [(c, rel) for c, rel, sla in printers]
@@ -1027,15 +1366,24 @@ def main():
             from_source = upstream.orca_compatible(vendor_presets, name) if vendor_presets else None
             if from_source:
                 source_values = vendor_presets.resolve(from_source[0])[0]
-                renames.add(src[0], kind, source_values, c)
+                if (b.id, kind, name) not in synthetic:  # made from these values: no sample of the bundle's names
+                    renames.add(src[0], kind, source_values, c)
             else:
                 source_values = None
             if from_source and from_source[1]:
                 # The source program's list, inherited from the parents like any other value (Tisma Slicer's bundle
                 # writes it empty in a preset that only inherits it, or with printers the source does not name).
-                # The source program lets a profile fit printers of other vendors.
+                # The source program lets a profile fit printers of other vendors. With the printers of the presets
+                # Tisma Slicer merged into this one (the same base name and values: "0.20mm Standard @BBL X1C" is
+                # kept as "0.20mm Standard @BBL P1P").
+                if vendor_presets not in merged_lists:
+                    merged_lists[vendor_presets] = upstream.merged_compatible(
+                        vendor_presets, tisma_merge_key(args.tisma_converter, kind, src, vendor_presets))
+                listed_source = merged_lists[vendor_presets].get(from_source[0]) or from_source[1]
+                if len(listed_source) > len(from_source[1]):
+                    w.stats['%s compatible printers of merged presets' % kind] += 1
                 wanted = set()
-                for x in from_source[1]:
+                for x in listed_source:
                     hit = sources.names.get((src[1], x)) or printer_names.get((b.id, x))
                     if hit is None:
                         # Tisma Slicer keeps a model that two sources have once, from the maker's own bundle: the
@@ -1096,25 +1444,67 @@ def main():
                      'compatible': compat_id(compatible), 'generic': generic,
                      'license': lic, 'origin': origin, 'original': c}
             if kind == 'filament':
-                entry['material'] = {'type': c.get('filament_type', ''), 'vendor': c.get('filament_vendor', ''),
+                entry['material'] = {'type': first_text(c.get('filament_type')),
+                                     'vendor': first_text(c.get('filament_vendor')),
                                      'density': num(c.get('filament_density')),
                                      'cost_per_kg': num(c.get('filament_cost')),
-                                     'colour': c.get('filament_colour', ''),
+                                     'colour': first_text(c.get('filament_colour')),
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle
+            if (b.id, kind, name) in synthetic:
+                # Not in Tisma Slicer's bundle: converted here from the source program's preset, by Tisma Slicer's
+                # own converter.
+                entry['from_source_program'] = ['*']
+                entry['source_preset'] = synthetic[(b.id, kind, name)]
+                w.stats['%s converted from the source program (not in the bundle)' % kind] += 1
+            lost = lost_values(kind, c, source_values, src[0]) if source_values and kind in ('filament', 'print') else None
+            if lost:
+                # Values the bundle lost and the source program's preset gives: translated as the bundle would have
+                # them.
+                full, _ = map_filament(dict(c, **lost)) if kind == 'filament' else \
+                    map_print(dict(c, **lost), nozzle)
+                filled = fill_lost(settings, full)
+                if filled:
+                    entry.setdefault('from_source_program', []).extend(filled)
+                    w.stats['%s values from the source program' % kind] += 1
+                if kind == 'filament':
+                    for field, key in (('type', 'filament_type'), ('vendor', 'filament_vendor'),
+                                       ('colour', 'filament_colour')):
+                        if key in lost and not entry['material'][field]:
+                            entry['material'][field] = first_text(lost[key])
+                            entry.setdefault('from_source_program', []).append('material.' + field)
+                    for field, key in (('density', 'filament_density'), ('cost_per_kg', 'filament_cost')):
+                        if key in lost and entry['material'][field] is None:
+                            entry['material'][field] = num(lost[key])
+                            entry.setdefault('from_source_program', []).append('material.' + field)
             if kind == 'filament':
                 fblock = filament_gcode(b, name, c, everything, sources, w.stats)
+                own = source_filament_gcode(src, from_source, source_values) \
+                    if source_values and args.filament_gcode_from_source else None
+                if own:
+                    # The filament's own G-code as the source program has it, in its dialect (Tisma Slicer's
+                    # bundle renames only some of its variables).
+                    fblock = own
+                    entry['gcode'] = own
+                    template_variables_filaments[src[0]].update(template_names(own['templates']))
+                    w.stats['filament G-code from the source program (%s)' % src[0]] += 1
+                elif source_values and args.filament_gcode_from_source and \
+                        any(k in source_values for k in ('filament_start_gcode', 'filament_end_gcode')):
+                    # The source program has no filament G-code for it (empty): none, not the bundle's text.
+                    fblock = None
+                    w.stats['filament without G-code in the source program (%s)' % src[0]] += 1
                 if not source_values:
                     # A PrusaSlicer-format filament: its own values for the variables of the machines' G-code and of
                     # its own.
                     names = template_variables.get('prusaslicer', set()) | \
-                        template_names((entry.get('gcode') or {}).get('templates') or {})
+                        template_names((fblock or {}).get('templates') or {})
                     given = bundle_values({}, c, names)
                     if given:
                         entry['source_values'] = {'dialect': 'prusaslicer', 'preset': name, 'values': given}
                         w.stats['filaments with source_values (prusaslicer)'] += 1
-                wanted = template_variables.get(src[0]) if src and source_values else None
+                wanted = (template_variables.get(src[0], set()) | template_names((own or {}).get('templates') or {})) \
+                    if src and source_values else None
                 if wanted:
                     given = {k: v for k, v in sorted(source_values.items()) if k in wanted}
                     if given:
@@ -1122,23 +1512,26 @@ def main():
                         # (Tisma Slicer's bundle does not keep all of them).
                         entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
                         w.stats['filaments with source_values (%s)' % src[0]] += 1
-                # Nozzle temperatures that the bundle lost and the source program gives (its own names for them).
-                for prusa, own in (('temperature', 'nozzle_temperature'),
-                                   ('first_layer_temperature', 'nozzle_temperature_initial_layer')):
-                    v = source_values.get(own) if source_values else None
-                    if prusa not in c and v:
-                        value = str(v[0] if isinstance(v, list) else v).strip()
-                        entry['profile']['settings'].setdefault('machine', {}).setdefault('variables', {})[prusa] = value
-                        entry.setdefault('from_source_program', []).append('machine.variables.' + prusa)
-                        w.stats['filament %s from the source program' % prusa] += 1
                 if fblock:
                     entry['gcode'] = fblock
+            if kind == 'print' and src and source_values:
+                # The print's values in the source program for the variables of the machines' G-code (OrcaSlicer's
+                # outer_wall_acceleration, timelapse_type…): the bundle keeps them under PrusaSlicer names or not at
+                # all, and the machine G-code reads them by the source program's names.
+                # Only the ones PrusaSlicer does not have: those the engine fills from the print's translated settings
+                # (OrcaSlicer's per-extruder default_acceleration list would take the place of its number).
+                given = template_values(source_values, template_variables.get(src[0], set()), exclude=OPTION_TYPES)
+                if given:
+                    entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
+                    w.stats['prints with source_values (%s)' % src[0]] += 1
             w.write(rel, entry)
             vendor[group].append(rel)
             w.stats[kind] += 1
             by_name.setdefault((kind, b.id, name), (rel, entry['compatible']))
             by_name.setdefault((kind, None, name), (rel, entry['compatible']))
             by_kind[kind].append((b.id, rel, entry['compatible']))
+            if kind == 'filament':
+                material_of[rel] = entry['material']['type']
 
     # Defaults of each printer, as pack entries: the ones its source names, or else the first compatible one of its
     # own bundle, or of any bundle.
@@ -1150,21 +1543,36 @@ def main():
 
     def pick(kind, names, rel):
         pid, bid = printer_ids[rel], bundle_of[rel]
-        out = []
+        out, unfit, unfit_hits = [], 0, []
         for n in names:
             n = n[:-len(' @Template')] if n.endswith(' @Template') else n
             hit = by_name.get((kind, bid, n)) or by_name.get((kind, None, n))
             if hit and hit[0] not in out:
-                out.append(hit[0])
+                # Only one that fits the printer: the source programs take the first compatible profile when the
+                # one a printer names does not fit it.
+                if fits(hit[1], pid):
+                    out.append(hit[0])
+                else:
+                    unfit += 1
+                    unfit_hits.append(hit[0])
+        if unfit:
+            w.stats['default %s named by the source but not compatible' % kind] += 1
         if out:
             return out, 'source'
-        # The first compatible one of the printer's own bundle, then of a bundle of the same maker, then of any.
+        # The first compatible one of the printer's own bundle, then of a bundle of the same maker, then of any; for
+        # a filament, of the same material as the one the source names (PLA for a PLA) before any other.
         brand = canonical_vendor(bid)
+        wanted = {material_of.get(r) for r in unfit_hits} - {None, ''} if kind == 'filament' else set()
         for rank in (0, 1, 2):
-            for b2, r2, compat in by_kind[kind]:
-                level = 0 if b2 == bid else 1 if canonical_vendor(b2) == brand else 2
-                if level == rank and compat is not None and fits(compat, pid):
-                    return [r2], 'compatible'
+            for same in ((True, False) if wanted else (False,)):
+                for b2, r2, compat in by_kind[kind]:
+                    level = 0 if b2 == bid else 1 if canonical_vendor(b2) == brand else 2
+                    if level == rank and compat is not None and fits(compat, pid) and \
+                            (not same or material_of.get(r2) in wanted):
+                        return [r2], 'compatible'
+        if unfit_hits:
+            # Nothing in the pack fits: the one the source names, as the source program would still have it.
+            return unfit_hits, 'source, nothing fits'
         return [], 'none'
 
     for rel, entry in printer_entries.items():
@@ -1181,6 +1589,29 @@ def main():
             w.stats['default filament: ' + how_f] += 1
         w.stats['default print: ' + how_p] += 1
         entry['source_defaults'] = d
+
+    # The program's defaults (its PrintConfig.cpp) for the variables of its G-code that a preset does not set, as the
+    # program fills them: in the printer's values, named in program_defaults.
+    if program_defaults:
+        machine_keys = collections.defaultdict(set)  # dialect -> keys that some machine preset of it sets
+        for entry in printer_entries.values():
+            g = entry.get('gcode') or {}
+            if g.get('origin') == 'source_program':
+                machine_keys[g['dialect']].update(g.get('values') or {})
+        for rel, entry in printer_entries.items():
+            g = entry.get('gcode') or {}
+            d = g.get('dialect')
+            if g.get('origin') != 'source_program' or d not in program_defaults:
+                continue
+            names = template_names(g.get('templates') or {}) | template_variables_filaments.get(d, set())
+            values = g.setdefault('values', {})
+            # Only machine options: a filament's value comes with the filament.
+            added = sorted(n for n in names if n not in values and n in program_defaults[d] and n in machine_keys[d])
+            for n in added:
+                values[n] = program_defaults[d][n]
+            if added:
+                g['program_defaults'] = added
+                w.stats['printers with program defaults in values (%s)' % d] += 1
 
     refs = build_models(w, index, printer_entries)
 
@@ -1206,7 +1637,7 @@ def main():
     index['translation'] = {}
     tables = {'prusaslicer': translation.table_json('prusaslicer', keys_seen)}
     for dialect in ('orcaslicer', 'crealityprint', 'elegooslicer', 'cura'):
-        kinds = {k for d, k in renames.samples if d == dialect}
+        kinds = sorted({k for d, k in renames.samples if d == dialect})  # the same file each run
         if not kinds:
             continue
         seen = {k: set().union(*[set(x for x, v in sv.items() if not isinstance(v, dict))

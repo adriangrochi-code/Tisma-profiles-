@@ -9,7 +9,8 @@ fdmextruder.def.json and StartSliceJob.py of Cura). The PrusaSlicer name is the 
 or the one Tisma Slicer's converter renamed it to, as its bundles show (the bundle's text of the same G-code). What no
 source gives stays empty.
 
-Usage: gcode_variables.py <pack dir> <out.md> --defs DIALECT=PrintConfig.cpp ... [--cura DIR] [--sources TEXT]
+Usage: gcode_variables.py <pack dir> <out.md> --defs DIALECT=PrintConfig.cpp ... [--cura DIR]
+                          [--sources TEXT | --sources-json sources.json]
 """
 
 import argparse
@@ -152,7 +153,13 @@ def main():
     ap.add_argument('--defs', action='append', default=[], metavar='DIALECT=PrintConfig.cpp')
     ap.add_argument('--cura', help='a checkout of Cura (resources/definitions, plugins/CuraEngineBackend)')
     ap.add_argument('--sources', default='', help='a line that names the commits of the definitions')
+    ap.add_argument('--sources-json', help='sources.json: the line that names the commits, made from it')
     args = ap.parse_args()
+    if args.sources_json:
+        s = json.load(open(args.sources_json, encoding='utf-8'))
+        args.sources = 'Definiciones: Tisma Slicer %s (PrusaSlicer), %s.' % (
+            s['tisma_slicer']['commit'][:7],
+            ', '.join('%s %s' % (x['program'], x['commit'][:7]) for x in s['converted_from']))
 
     defs = {}
     for spec in args.defs:

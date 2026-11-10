@@ -14,25 +14,25 @@
    "program": "OrcaSlicer",
    "repository": "https://github.com/SoftFever/OrcaSlicer",
    "commit": "1d577ea4e219d3fcd56ed52648c5d0b1cb8dce8e",
-   "directory": "resources/profiles"
+   "directory": "resources/profiles src/libslic3r"
   },
   {
    "program": "Creality Print",
    "repository": "https://github.com/CrealityOfficial/CrealityPrint",
    "commit": "59ae8cbb0437dcc7236e27433ecd4aeb52be0244",
-   "directory": "resources/profiles"
+   "directory": "resources/profiles src/libslic3r"
   },
   {
    "program": "Elegoo Slicer",
    "repository": "https://github.com/ELEGOO-3D/ElegooSlicer",
    "commit": "2d507e39a96ab9562b35d06b23ef5df8fe613297",
-   "directory": "resources/profiles"
+   "directory": "resources/profiles src/libslic3r"
   },
   {
    "program": "UltiMaker Cura",
    "repository": "https://github.com/Ultimaker/Cura",
    "commit": "5bea2f86153faed3a1c2d9081b8d6b753684678a",
-   "directory": "resources/definitions resources/extruders"
+   "directory": "resources/definitions resources/extruders plugins/CuraEngineBackend resources/meshes"
   }
  ]
 }

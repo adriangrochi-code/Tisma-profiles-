@@ -1,6 +1,10 @@
 {
  "vendor": "Bambu Lab",
  "model": "A1 mini",
+ "pack_model": {
+  "bundle": "Orca_BBL",
+  "id": "Bambu Lab A1 mini"
+ },
  "data": [
   {
    "key": "machine.bed",

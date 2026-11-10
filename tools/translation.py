@@ -59,10 +59,10 @@ TABLE = {
         E('use_relative_e_distances', 'machine.relative_extrusion', 'flag'),
         E(['start_gcode', 'end_gcode'], 'machine.start_gcode, machine.end_gcode', 'rule', rule='gcode_template',
           note='only with simple variables; the whole G-code is in the "gcode" block (docs/FORMAT.md)'),
-        E('machine_max_feedrate_x', 'machine.max_feed_x'),
-        E('machine_max_feedrate_y', 'machine.max_feed_y'),
-        E('machine_max_feedrate_z', 'machine.max_feed_z'),
-        E('machine_max_feedrate_e', 'machine.max_feed_e'),
+        E('machine_max_feedrate_x', 'machine.max_feed_x', positive=True, note='not written when 0 (no limit)'),
+        E('machine_max_feedrate_y', 'machine.max_feed_y', positive=True, note='not written when 0 (no limit)'),
+        E('machine_max_feedrate_z', 'machine.max_feed_z', positive=True, note='not written when 0 (no limit)'),
+        E('machine_max_feedrate_e', 'machine.max_feed_e', positive=True, note='not written when 0 (no limit)'),
         E(['machine_max_acceleration_extruding', 'machine_max_acceleration_travel'],
           'machine.acceleration, machine.travel_acceleration', 'rule', rule='acceleration',
           note='only when extruding is not 0; travel falls back to extruding'),
@@ -90,10 +90,14 @@ TABLE = {
           values={'emit_to_gcode': 'emit', 'time_estimate_only': 'time_only', 'ignore': 'ignore'}),
         E('max_layer_height', 'machine.max_layer_height', note='caps the variable layer height and the support layers'),
         E('min_layer_height', 'machine.min_layer_height', note='caps the variable layer height and the support layers'),
-        E('machine_max_acceleration_x', 'machine.max_accel_x', note='the normal mode (the first value)'),
-        E('machine_max_acceleration_y', 'machine.max_accel_y', note='the normal mode (the first value)'),
-        E('machine_max_acceleration_z', 'machine.max_accel_z', note='the normal mode (the first value)'),
-        E('machine_max_acceleration_e', 'machine.max_accel_e', note='the normal mode (the first value)'),
+        E('machine_max_acceleration_x', 'machine.max_accel_x', positive=True,
+          note='the normal mode (the first value); not written when 0 (no limit)'),
+        E('machine_max_acceleration_y', 'machine.max_accel_y', positive=True,
+          note='the normal mode (the first value); not written when 0 (no limit)'),
+        E('machine_max_acceleration_z', 'machine.max_accel_z', positive=True,
+          note='the normal mode (the first value); not written when 0 (no limit)'),
+        E('machine_max_acceleration_e', 'machine.max_accel_e', positive=True,
+          note='the normal mode (the first value); not written when 0 (no limit)'),
         E('machine_max_acceleration_retracting', 'machine.retract_acceleration',
           note='the normal mode (the first value)'),
         E('machine_max_jerk_y', 'machine.jerk_y', note='the normal mode (the first value)'),
@@ -417,7 +421,7 @@ def value_of(e, c, s):
     if how == 'percent_of':
         return pct_or_abs(v, get(s, e['base']))
     if how == 'first_item':
-        return v.split(',')[0].strip() if key in c else None
+        return first_text(v) if key in c else None
     if how == 'number_strip_percent':
         return num(str(v if v is not None else '').rstrip('%'))
     if how == 'number_or_percent':
@@ -609,8 +613,37 @@ class Renames:
             if p != k and any(v[0] == p for v in out.values()):
                 continue
             out[k] = (p, hits, n)
+        for k, (p, hits, n) in list(out.items()):
+            if p == k:
+                values = self._own_value_names(pairs, k, agreement)
+                if values:
+                    out[k] = (p, hits, n, values)
         out.update(self._value_maps(pairs, set(out), {v[0] for v in out.values()}, min_presets, agreement))
         return out
+
+    @staticmethod
+    def _own_value_names(pairs, key, agreement, min_hits=2):
+        """For a key with the same name in the bundle: {source value: PrusaSlicer value} when some of its one-word
+        values have another name there (OrcaSlicer's seam "back" is PrusaSlicer's "rear"), each seen with the same
+        bundle value in at least `agreement` of its presets and `min_hits` of them; None when every value keeps its
+        name."""
+        table = {}
+        for src, dst in pairs:
+            if key not in src or key not in dst or isinstance(src[key], dict):
+                continue
+            sv, dv = _norm(src[key]), _norm(dst[key])
+            if len(sv) != 1 or len(dv) != 1 or not WORD_VALUE.match(sv[0]) or not WORD_VALUE.match(dv[0]):
+                continue
+            table.setdefault(sv[0], {}).setdefault(dv[0], 0)
+            table[sv[0]][dv[0]] += 1
+        mapping = {}
+        for sv, t in table.items():
+            dv = max(t, key=lambda x: (t[x], x == sv))
+            if t[dv] >= min_hits and t[dv] >= agreement * sum(t.values()):
+                mapping[sv] = dv
+        if all(a == b for a, b in mapping.items()):
+            return None
+        return dict(sorted(mapping.items()))
 
     @staticmethod
     def _value_maps(pairs, done_src, done_dst, min_presets, agreement, min_values=3, max_values=40):
@@ -664,6 +697,16 @@ def option_types(print_config_cpp):
         for axis in 'xyze':
             out.setdefault(m.group(1) + axis, m.group(2))
     return out
+
+
+def first_text(text):
+    """The first item of a PrusaSlicer list, as the program holds it: without the quotes the bundle may write
+    ("PLA";"PETG" is PLA)."""
+    text = (text or '').strip()
+    if text.startswith('"'):
+        items = _strings(text)
+        return items[0] if items else ''
+    return text.split(',')[0].strip()
 
 
 def _strings(text):

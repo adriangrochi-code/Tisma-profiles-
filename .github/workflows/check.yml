@@ -36,6 +36,7 @@ jobs:
           sparse-checkout: |
             ${{ steps.src.outputs.dir }}
             src/libslic3r
+            tools/profiles
 
       - uses: actions/checkout@v4
         with:
@@ -53,14 +54,28 @@ jobs:
           python3 tools/check_community.py community
           python3 tools/check_knowledge.py knowledge
 
+      - name: Converter tests
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+
       - name: Fetch the programs the bundles were converted from
         run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
 
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
+        run: SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) PYTHONHASHSEED=1 python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp --tisma-converter source/tools/profiles/convert_orca_profiles.py $(cat upstream.args)
+
+      - name: Convert again with other hash seeds (the pack must not depend on them)
+        run: |
+          SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) PYTHONHASHSEED=2 python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack2 --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp --tisma-converter source/tools/profiles/convert_orca_profiles.py $(cat upstream.args) > /dev/null
+          diff -rq pack pack2
+          rm -rf pack2
 
       - name: Check the pack
-        run: python3 tools/check_pack.py pack --report pack/check.json
+        run: python3 tools/check_pack.py pack --report pack/check.json --community community
+
+      - name: docs/GCODE_VARIABLES.md in step with the pack
+        run: |
+          python3 tools/gcode_variables.py pack gcode_variables.md --defs prusaslicer=source/src/libslic3r/PrintConfig.cpp --defs orcaslicer=upstream/OrcaSlicer/src/libslic3r/PrintConfig.cpp --defs crealityprint=upstream/CrealityPrint/src/libslic3r/PrintConfig.cpp --defs elegooslicer=upstream/ElegooSlicer/src/libslic3r/PrintConfig.cpp --cura upstream/Cura --sources-json sources.json
+          diff -u docs/GCODE_VARIABLES.md gcode_variables.md || { echo "Regenerate docs/GCODE_VARIABLES.md with tools/gcode_variables.py"; exit 1; }
 
       - name: Keep the reports
         if: always()

@@ -1,6 +1,10 @@
 {
  "vendor": "Creality",
  "model": "K1C",
+ "pack_model": {
+  "bundle": "Orca_Creality",
+  "id": "Creality K1C"
+ },
  "data": [
   {
    "key": "machine.max_feed_x",

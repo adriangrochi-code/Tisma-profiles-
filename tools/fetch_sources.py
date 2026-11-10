@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fetches the programs that Tisma Slicer converted its bundles from (sources.json, "converted_from"), each at its
-commit and only its profile folders, and prints the --upstream arguments of tools/convert.py for them.
+commit and only its profile folders (and, for the OrcaSlicer family, src/libslic3r for its option defaults), and
+prints the --upstream and --source-config arguments of tools/convert.py for them.
 
 Usage: fetch_sources.py <sources.json> <dir>
 """
@@ -9,6 +10,10 @@ import json
 import os
 import subprocess
 import sys
+
+DIALECTS = {'https://github.com/SoftFever/OrcaSlicer': 'orcaslicer',
+            'https://github.com/CrealityOfficial/CrealityPrint': 'crealityprint',
+            'https://github.com/ELEGOO-3D/ElegooSlicer': 'elegooslicer'}
 
 
 def git(*args, cwd=None):
@@ -28,6 +33,11 @@ def main():
         git('fetch', '-q', '--depth', '1', '--filter=blob:none', 'origin', s['commit'], cwd=folder)
         git('checkout', '-q', 'FETCH_HEAD', cwd=folder)
         out.append('--upstream=%s=%s' % (s['repository'], os.path.abspath(folder)))
+        config = os.path.join(folder, 'src', 'libslic3r', 'PrintConfig.cpp')
+        dialect = DIALECTS.get(s['repository'].rstrip('/'))
+        if dialect and os.path.exists(config):
+            # The program's option defaults, for the variables of its G-code that a preset does not set.
+            out.append('--source-config=%s=%s' % (dialect, os.path.abspath(config)))
         print('%s at %s' % (s['program'], s['commit']), file=sys.stderr)
     print(' '.join(out))
 
