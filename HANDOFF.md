@@ -51,7 +51,10 @@ changes.
   PrusaSlicer names. `gcode.values` gives the machine values with the source names. The engine's macro spec
   (spec session) must say how it maps the rest.
 - Cura start G-codes set `M82` (absolute E): `gcode.relative_extrusion` is `false` there while
-  `profile.settings.machine.relative_extrusion` (from Tisma Slicer's bundle, which forced `M83`) is `true`.
+  `profile.settings.machine.relative_extrusion` (from Tisma Slicer's bundle, which forced `M83`) is `true`. Checked
+  with engine 3667e62: with the macros it writes `M82` and absolute E, as the source; not a fault.
+- The fill of lost values (`lost_values`) does not rename enum values that the source program names otherwise
+  (OrcaSlicer seam `back`): such a value is not written. None of the filled profiles has one today.
 - 42 printers still take their G-code from Tisma Slicer's converted bundle (BlackBelt, VertexSlice, CR-30 PrintMill):
   their programs are not read, or the preset has another name there.
 - Tisma Slicer kept one copy of a model that two sources have (the maker's bundle), losing the other source's
@@ -77,6 +80,7 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
 | 10 | Vendor logos | all vendors | no field and no source read | none |
 | 11 | Empty model family / default materials (PrusaSlicer bundles), empty filament vendor | 25 / 20 / 29 | no | none |
 | 12 | Community data | 5 printers | web, with sources | open (needs research per printer) |
+| 13 | Resin "Prusament Resin Model Transparent Clear @0.1 SL1S" left out: it inherits `*legacy_slow*`, which the bundle lacks (stats `broken`) | 1 resin | no | none |
 
 ## Contacts
 
