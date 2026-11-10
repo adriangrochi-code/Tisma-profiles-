@@ -258,6 +258,10 @@ class PrintOptions(unittest.TestCase):
     """Print options the engine reads (its docs/CONFIG.md) and the bundles set: written, not left to the engine's
     defaults."""
 
+    def test_honeycomb_3d(self):
+        settings, _ = convert.map_print({'layer_height': '0.2', 'fill_pattern': '3dhoneycomb'}, 0.4)
+        self.assertEqual(settings['infill']['pattern'], 'honeycomb_3d')
+
     def test_surface_patterns(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'top_fill_pattern': 'monotoniclines',
                                          'bottom_fill_pattern': 'concentric'}, 0.4)
@@ -389,6 +393,23 @@ class ResinLayers(unittest.TestCase):
         settings, _ = convert.map_resin_material({'initial_layer_height': '0.05', 'exposure_time': '2'})
         self.assertEqual(settings['resin']['first_layer_height'], 0.05)
         self.assertNotIn('layer_height', settings['resin'])
+
+
+class Extruders(unittest.TestCase):
+    def test_count_nozzles_and_offsets(self):
+        # UltiMaker S5: two 0.4 mm nozzles, the second 22 mm behind in Y.
+        settings, _ = convert.map_printer({'nozzle_diameter': '0.4,0.4', 'extruder_offset': '0x0,0x22'}, {})
+        m = settings['machine']
+        self.assertEqual((m['extruders'], m['nozzle_diameter'], m['extruder_offset']), (2, 0.4, [[0, 0], [0, 22]]))
+        # Snapmaker U1 "0.4+0.6": four extruders, two nozzles of each.
+        settings, _ = convert.map_printer({'nozzle_diameter': '0.4,0.4,0.6,0.6'}, {})
+        self.assertEqual(settings['machine']['nozzle_diameter'], [0.4, 0.4, 0.6, 0.6])
+        # An MMU (one nozzle) has no offsets; one extruder writes none of these.
+        settings, _ = convert.map_printer({'nozzle_diameter': '0.4,0.4', 'extruder_offset': '0x0,5x0',
+                                           'single_extruder_multi_material': '1'}, {})
+        self.assertNotIn('extruder_offset', settings['machine'])
+        settings, _ = convert.map_printer({'nozzle_diameter': '0.4'}, {})
+        self.assertNotIn('extruders', settings['machine'])
 
 
 class Quotes(unittest.TestCase):

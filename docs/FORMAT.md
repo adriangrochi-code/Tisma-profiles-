@@ -361,7 +361,7 @@ paquete, da exactamente su `profile.settings`.
 | `width_of_layer` | Un ancho de línea: el número en mm, o `"N%"` de la altura de capa (`layer_height`), como lo calcula el programa de origen; 0 no se escribe |
 | `at_least` | El número si es al menos `min` |
 | `points` | `"XxY,XxY,…"` como lista de puntos, con 3 o más |
-| `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `role_width` (el ancho de un tipo de línea en mm: el suyo, si es 0 `extrusion_width`, y si los dos son 0 el automático del programa de origen solo donde el 0 del motor es otro, `auto` veces la boquilla), `xy_gap`, `junction_deviation` (solo con `marlin2`), `fastest`, `gap_fill`, `limits_usage`, `correction`, `resin_notes`, `gcode_template` |
+| `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `role_width` (el ancho de un tipo de línea en mm: el suyo, si es 0 `extrusion_width`, y si los dos son 0 el automático del programa de origen solo donde el 0 del motor es otro, `auto` veces la boquilla), `xy_gap`, `extruders` (con dos boquillas o más: `machine.extruders`, la lista de boquillas si difieren y `machine.extruder_offset` si alguna no es 0, salvo con una MMU de una boquilla), `junction_deviation` (solo con `marlin2`), `fastest`, `gap_fill`, `limits_usage`, `correction`, `resin_notes`, `gcode_template` |
 
 - **`with`:** las otras claves que usa la misma regla (nombres de PrusaSlicer).
 - **Los otros dialectos** pasan cada clave a su nombre de PrusaSlicer (`prusaslicer`) y usan su traducción. El nombre

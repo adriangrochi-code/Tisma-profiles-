@@ -28,7 +28,8 @@ PATTERNS = {'rectilinear': 'rectilinear', 'monotonic': 'monotonic', 'grid': 'gri
             'triangles': 'triangles', 'stars': 'stars', 'cubic': 'cubic', 'adaptivecubic': 'adaptive_cubic',
             'supportcubic': 'support_cubic', 'lightning': 'lightning', 'alignedrectilinear': 'aligned_rectilinear',
             'zigzag': 'zigzag', 'line': 'line', 'honeycomb': 'honeycomb', 'concentric': 'concentric',
-            'hilbertcurve': 'hilbert', 'archimedeanchords': 'archimedean', 'octagramspiral': 'octagram'}
+            'hilbertcurve': 'hilbert', 'archimedeanchords': 'archimedean', 'octagramspiral': 'octagram',
+            '3dhoneycomb': 'honeycomb_3d'}
 
 SEAMS = {'aligned': 'aligned', 'nearest': 'nearest', 'random': 'random', 'rear': 'rear'}
 
@@ -110,6 +111,10 @@ TABLE = {
         E('z_offset', 'machine.z_offset'),
         E('silent_mode', 'machine.silent_mode', 'flag'),
         E('single_extruder_multi_material', 'machine.single_extruder_mmu', 'flag'),
+        E(['extruder_offset'], 'machine.extruders, machine.nozzle_diameter, machine.extruder_offset', 'rule',
+          rule='extruders', group='translated', used='written',
+          note='as many extruders as nozzle_diameter has values (PrusaSlicer counts them so); the nozzles as a list '
+               'when they differ; the offsets when one is not 0'),
         E('machine_limits_usage', 'machine.limits_usage', 'map',
           values={'emit_to_gcode': 'emit', 'time_estimate_only': 'time_only', 'ignore': 'ignore'}),
         E('max_layer_height', 'machine.max_layer_height', note='caps the variable layer height and the support layers'),
@@ -597,6 +602,21 @@ def _rule(name, e, c, s, ctx):
         gap = pct_or_abs(v, width or 1.125 * nozzle)
         put(s, 'support.xy_gap', gap)
         return gap is not None, ('support_material_xy_spacing',)
+    if name == 'extruders':
+        nozzles = [num(x) for x in (c.get('nozzle_diameter') or '').split(',') if x.strip()]
+        if len(nozzles) < 2 or any(x is None for x in nozzles):
+            return False, ()
+        put(s, 'machine.extruders', len(nozzles))
+        if len(set(nozzles)) > 1:
+            put(s, 'machine.nozzle_diameter', [clean_num(x) for x in nozzles])
+        offsets = []
+        for p in (c.get('extruder_offset') or '').split(','):
+            m = re.match(r'\s*(-?[\d.]+)\s*x\s*(-?[\d.]+)', p)  # as PrusaSlicer reads a point (the rest ignored)
+            if m:
+                offsets.append([clean_num(float(m.group(1))), clean_num(float(m.group(2)))])
+        if any(x or y for x, y in offsets) and not flag(c.get('single_extruder_multi_material', '0')):
+            put(s, 'machine.extruder_offset', offsets)
+        return True, ('extruder_offset',)
     if name == 'fastest':
         fastest = max([x for x in (get(s, 'speed.walls'), get(s, 'speed.infill'), get(s, 'speed.solid_infill'),
                                    num(c.get('support_material_speed'))) if x] or [0])
