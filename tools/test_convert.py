@@ -61,7 +61,7 @@ class LostValues(unittest.TestCase):
         # Tisma Slicer's converter turns the whole preset (brim_type "no_brim" is a 0 mm brim, printable_area the bed),
         # and misses the per-axis machine limits (it does not know their type): those by name.
         class Conv:
-            types = {'brim_width': 'coFloat', 'bed_shape': 'coPoints'}
+            types = {'brim_width': 'coFloat', 'brim_type': 'coEnum', 'bed_shape': 'coPoints'}
 
             def convert(self, kind, flat, nozzle):
                 out = {'bed_shape': '0x0,200x0,200x200,0x200'} if kind == 'printer' else {}
@@ -252,6 +252,79 @@ class SupportGap(unittest.TestCase):
         self.assertEqual(settings['support']['xy_gap'], '60%')  # for any nozzle: of the automatic walls.width
         settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_xy_spacing': '0.3'}, 0.4)
         self.assertEqual(settings['support']['xy_gap'], 0.3)
+
+
+class PrintOptions(unittest.TestCase):
+    """Print options the engine reads (its docs/CONFIG.md) and the bundles set: written, not left to the engine's
+    defaults."""
+
+    def test_surface_patterns(self):
+        settings, _ = convert.map_print({'layer_height': '0.2', 'top_fill_pattern': 'monotoniclines',
+                                         'bottom_fill_pattern': 'concentric'}, 0.4)
+        self.assertEqual(settings['surfaces']['top_pattern'], 'monotonic_lines')
+        self.assertEqual(settings['surfaces']['bottom_pattern'], 'concentric')
+
+    def test_role_widths(self):
+        # A role's 0 is extrusion_width; both 0 is the source's automatic width (the support's is the nozzle).
+        settings, _ = convert.map_print({'layer_height': '0.2', 'infill_extrusion_width': '0',
+                                         'extrusion_width': '0.5', 'top_infill_extrusion_width': '200%',
+                                         'support_material_extrusion_width': '0'}, 0.4)
+        self.assertEqual(settings['infill']['width'], 0.5)
+        self.assertEqual(settings['surfaces']['top_width'], 0.4)
+        self.assertEqual(settings['support']['width'], 0.5)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'infill_extrusion_width': '0',
+                                         'extrusion_width': '0', 'support_material_extrusion_width': '0'}, 0.6)
+        self.assertNotIn('width', settings.get('infill', {}))
+        self.assertEqual(settings['support']['width'], 0.6)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_extrusion_width': '0'}, None)
+        self.assertNotIn('width', settings.get('support', {}))
+
+    def test_support_brim_labels(self):
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_style': 'organic',
+                                         'support_material_pattern': 'rectilinear-grid',
+                                         'support_material_interface_pattern': 'auto', 'brim_type': 'no_brim',
+                                         'draft_shield': '0', 'gcode_label_objects': '1', 'arc_fitting': 'disabled',
+                                         'support_tree_top_rate': '30%', 'infill_overlap': '30',
+                                         'perimeter_generator': 'classic'}, 0.4)
+        self.assertEqual(settings['support'], dict(settings['support'], style='organic', pattern='grid',
+                                                   interface_pattern='automatic', tree_top_rate=30))
+        self.assertEqual(settings['adhesion']['brim_type'], 'none')
+        self.assertEqual(settings['adhesion']['draft_shield'], 'disabled')
+        self.assertEqual(settings['gcode'], {'object_labels': 'octoprint', 'arcs': False})
+        self.assertNotIn('wall_overlap', settings.get('infill', {}))  # mm: not the engine's percent
+        self.assertEqual(settings['walls']['generator'], 'fixed')
+        settings, _ = convert.map_print({'layer_height': '0.2', 'dont_support_bridges': '0'}, 0.4)
+        self.assertIs(settings['support']['under_bridges'], True)
+        # OrcaSlicer's min_bead_width "100" is 100 % (a percent option); the bundle has it without "%".
+        settings, _ = convert.map_print({'layer_height': '0.2', 'min_bead_width': '100', 'min_feature_size': '0.1'},
+                                        0.4)
+        self.assertEqual((settings['walls']['min_line_width'], settings['walls']['min_detail']), ('100%', 0.1))
+
+
+class FilamentAndPrinterOptions(unittest.TestCase):
+    def test_filament_overrides_and_ramming(self):
+        settings, _ = convert.translation.translate('filament', {
+            'filament_retract_length': '0.8', 'filament_retract_lift': 'nil', 'filament_wipe': '1',
+            'filament_travel_slope': '3', 'filament_ramming_parameters': '"120 100 6.6 6.8 7.2| 0.05 6.6"',
+            'cooling': '0', 'filament_shrinkage_compensation_xy': '0.22%'})
+        self.assertEqual(settings['extrusion']['retraction'], {'length': 0.8, 'wipe': True})
+        self.assertEqual(settings['extrusion']['travel'], {'slope': 3})
+        self.assertEqual(settings['extrusion']['ramming'], [6.6, 6.8, 7.2])
+        self.assertEqual(settings['extrusion']['shrinkage_xy'], 0.22)
+        odd, _ = convert.translation.translate('filament', {'filament_shrinkage_compensation_z': '99.78%',
+                                                             'filament_shrinkage_compensation_xy': '-1%'})
+        self.assertNotIn('extrusion', odd)
+        self.assertIs(settings['cooling']['enabled'], False)
+
+    def test_printer_thumbnails_and_ramp(self):
+        settings, _ = convert.map_printer({
+            'thumbnails': '64x64,400x300', 'thumbnails_format': 'JPG', 'travel_ramping_lift': '1,1',
+            'travel_max_lift': '1.5,1.5', 'extruder_clearance_radius': '45'})
+        self.assertEqual(settings['gcode']['thumbnails'], '64x64/JPG, 400x300/JPG')
+        self.assertEqual(settings['travel'], {'ramping_lift': True, 'max_lift': 1.5})
+        self.assertEqual(settings['sequential']['clearance_radius'], 45)
+        settings, _ = convert.map_printer({'autoemit_temperature_commands': '0'})
+        self.assertIs(settings['gcode']['auto_temperatures'], False)
 
 
 class PrintLimits(unittest.TestCase):

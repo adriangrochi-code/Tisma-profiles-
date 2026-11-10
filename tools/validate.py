@@ -178,6 +178,9 @@ def main():
                     for k, key in (('filament_start', 'start_gcode'), ('filament_end', 'end_gcode')):
                         if fg['templates'].get(k):
                             cfg.setdefault('extrusion', {})[key] = fg['templates'][k]
+        if (cfg.get('gcode') or {}).get('binary'):
+            # The checks read the G-code as text: the printer's binary format (.bgcode) is turned off here only.
+            cfg['gcode']['binary'] = False
         macros = macros_of(e.get('gcode')) if args.macros else None
         if macros:
             cfg.setdefault('machine', {})['macros'] = macros

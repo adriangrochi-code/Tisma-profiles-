@@ -5,8 +5,9 @@ claves») for the engine to open other programs' projects with the same translat
 TABLE has the PrusaSlicer names (the ones of Tisma Slicer's bundles). Each entry:
   from   the source key (or keys, the first one that gives a value)
   to     the engine key, "group.key" (None for a value the engine computes from others)
-  how    the conversion: number, numbers, flag, factor, map, percent_of, first_item, number_strip_percent, width_of_layer,
-         number_or_percent, absolute_only, at_least, points, or rule (a conversion with its own steps, named)
+  how    the conversion: number, numbers, flag, factor, map, percent_of, first_item, number_strip_percent,
+         width_of_layer, number_or_percent, percent_only, absolute_only, at_least, points, or rule (a conversion
+         with its own steps, named)
   group  translated (the same setting), similar (the closest the engine has; the note says what differs)
   note   what the conversion does, when it is not plain
 Every other key of the source has no equivalent (group none): tools/convert.py lists them in stats.json.
@@ -29,8 +30,28 @@ PATTERNS = {'rectilinear': 'rectilinear', 'monotonic': 'monotonic', 'grid': 'gri
 
 SEAMS = {'aligned': 'aligned', 'nearest': 'nearest', 'random': 'random', 'rear': 'rear'}
 
+# The top and bottom surface patterns the engine draws (surfaces.top_pattern / bottom_pattern).
+SURFACE_PATTERNS = {'monotonic': 'monotonic', 'rectilinear': 'rectilinear', 'monotoniclines': 'monotonic_lines',
+                    'alignedrectilinear': 'aligned_rectilinear', 'concentric': 'concentric',
+                    'hilbertcurve': 'hilbert', 'archimedeanchords': 'archimedean', 'octagramspiral': 'octagram'}
+
 FILAMENT_VARIABLES = ('temperature', 'first_layer_temperature', 'bed_temperature', 'first_layer_bed_temperature',
                       'chamber_temperature', 'chamber_minimal_temperature', 'idle_temperature')
+
+# The printer's retraction and travel values a filament can set (filament_<key> in the source; "nil" leaves the
+# printer's), with the engine's names (extrusion.retraction / extrusion.travel).
+FILAMENT_OVERRIDES = {'retract_length': 'retraction.length', 'retract_speed': 'retraction.speed',
+                      'deretract_speed': 'retraction.unretract_speed',
+                      'retract_restart_extra': 'retraction.restart_extra', 'retract_lift': 'retraction.lift',
+                      'retract_lift_above': 'retraction.lift_above', 'retract_lift_below': 'retraction.lift_below',
+                      'retract_before_travel': 'retraction.min_travel',
+                      'retract_layer_change': 'retraction.on_layer_change', 'wipe': 'retraction.wipe',
+                      'retract_before_wipe': 'retraction.before_wipe', 'travel_ramping_lift': 'travel.ramping_lift',
+                      'travel_slope': 'travel.slope', 'travel_max_lift': 'travel.max_lift'}
+BARE_PERCENT = ('"N%" of the nozzle; a bare number over 10 is a percent (an OrcaSlicer percent option that Tisma '
+                'Slicer\'s converter writes without "%")')
+SHRINKAGE = 'percent; outside 0 to 20 not written (the engine\'s range; source data such as a Z size of 0.22 %)'
+FLAG_OVERRIDES = ('retract_layer_change', 'wipe', 'travel_ramping_lift')
 
 RESIN_NOTE_KEYS = {'LIFT_DISTANCE': 'lift_distance', 'LIFT_SPEED': 'lift_speed',
                    'BOTTOM_LIFT_DISTANCE': 'bottom_lift_distance', 'BOTTOM_LIFT_SPEED': 'bottom_lift_speed',
@@ -107,6 +128,24 @@ TABLE = {
         E('machine_max_jerk_e', 'machine.jerk_e', note='the normal mode (the first value)'),
         E('machine_min_extruding_rate', 'machine.min_extrude_feed', note='the normal mode (the first value)'),
         E('machine_min_travel_rate', 'machine.min_travel_feed', note='the normal mode (the first value)'),
+        E('machine_max_junction_deviation', 'machine.junction_deviation', note='the normal mode (the first value)'),
+        E('travel_ramping_lift', 'travel.ramping_lift', 'flag'),
+        E('travel_slope', 'travel.slope', note='the first extruder\'s'),
+        E('travel_max_lift', 'travel.max_lift', note='the first extruder\'s; 0: the lift'),
+        E('travel_lift_before_obstacle', 'travel.lift_before_obstacle', 'flag'),
+        E(['thumbnails', 'thumbnails_format'], 'gcode.thumbnails', 'rule', rule='thumbnails',
+          note='"WxH/FORMAT" list; a size without a format takes thumbnails_format'),
+        E('binary_gcode', 'gcode.binary', 'flag'),
+        E('remaining_times', 'gcode.progress', 'flag'),
+        E('autoemit_temperature_commands', 'gcode.auto_temperatures', 'flag'),
+        E('use_volumetric_e', 'gcode.volumetric_e', 'flag'),
+        E('cooling_tube_length', 'mmu.cooling_tube_length'),
+        E('cooling_tube_retraction', 'mmu.cooling_tube_position'),
+        E('parking_pos_retraction', 'mmu.parking_position'),
+        E('extra_loading_move', 'mmu.extra_loading_move'),
+        E('high_current_on_filament_swap', 'mmu.high_current_on_swap', 'flag'),
+        E('extruder_clearance_height', 'sequential.clearance_height'),
+        E('extruder_clearance_radius', 'sequential.clearance_radius'),
     ],
     'filament': [
         E('filament_diameter', 'machine.filament_diameter'),
@@ -145,6 +184,24 @@ TABLE = {
         E('filament_toolchange_delay', 'extrusion.toolchange_delay'),
         E('filament_load_time', 'extrusion.load_time'),
         E('filament_unload_time', 'extrusion.unload_time'),
+        E('cooling', 'cooling.enabled', 'flag', note='the automatic cooling (slowdown and fan by layer time)'),
+        E('fan_always_on', 'cooling.fan_always', 'flag'),
+        E('enable_dynamic_fan_speeds', 'cooling.dynamic_overhang_fan', 'flag'),
+        E('overhang_fan_speed_0', 'cooling.overhang_fan_0'),
+        E('overhang_fan_speed_1', 'cooling.overhang_fan_1'),
+        E('overhang_fan_speed_2', 'cooling.overhang_fan_2'),
+        E('overhang_fan_speed_3', 'cooling.overhang_fan_3'),
+        E('filament_shrinkage_compensation_xy', 'extrusion.shrinkage_xy', 'number_strip_percent', nonnegative=True,
+          max=20, note=SHRINKAGE),
+        E('filament_shrinkage_compensation_z', 'extrusion.shrinkage_z', 'number_strip_percent', nonnegative=True,
+          max=20, note=SHRINKAGE),
+        E('chamber_minimal_temperature', 'extrusion.chamber_min_temperature'),
+        E('filament_purge_multiplier', 'extrusion.purge_multiplier', 'number_strip_percent', note='percent'),
+        E('filament_ramming_parameters', 'extrusion.ramming', 'rule', rule='ramming', group='similar',
+          note='the flows of each quarter second (mm3/s); the source\'s line width and step multipliers (the first '
+               'two numbers) and its multi-tool part (after "|") are not used'),
+        E(['filament_' + k for k in FILAMENT_OVERRIDES], 'extrusion.retraction, extrusion.travel', 'rule',
+          rule='filament_overrides', note='the filament\'s own retraction and travel values; "nil": the printer\'s'),
     ],
     'print': [
         E('layer_height', 'layers.height'),
@@ -161,8 +218,8 @@ TABLE = {
         E('bottom_solid_layers', 'surfaces.bottom_layers'),
         E('top_solid_min_thickness', 'surfaces.top_min_thickness'),
         E('bottom_solid_min_thickness', 'surfaces.bottom_min_thickness'),
-        E('top_fill_pattern', 'surfaces.top_pattern', 'map', values=PATTERNS, only=['monotonic', 'rectilinear'],
-          used='written', note='only monotonic and rectilinear'),
+        E('top_fill_pattern', 'surfaces.top_pattern', 'map', values=SURFACE_PATTERNS),
+        E('bottom_fill_pattern', 'surfaces.bottom_pattern', 'map', values=SURFACE_PATTERNS),
         E('fill_density', 'infill.density', 'number_strip_percent'),
         E('fill_angle', 'infill.angle'),
         E('fill_pattern', 'infill.pattern', 'map', values=PATTERNS, exclude=['monotonic'], used='written'),
@@ -237,6 +294,112 @@ TABLE = {
         E('ironing_flowrate', 'ironing.flow', 'number_strip_percent', note='percent of a normal layer'),
         E('ironing_spacing', 'ironing.spacing'),
         E('ironing_speed', 'ironing.speed'),
+        # Line widths of a role: 0 takes extrusion_width, and both 0 the source's automatic width (Flow.cpp); "N%" is of
+        # the layer height. Written in mm; the automatic width only where the engine's own 0 differs from it.
+        E(['infill_extrusion_width', 'extrusion_width'], 'infill.width', 'rule', rule='role_width', auto=None,
+          note='in mm ("N%" of the layer height); 0: extrusion_width; both 0: the engine\'s 1.125 times the nozzle, '
+               'as the source'),
+        E(['solid_infill_extrusion_width', 'extrusion_width'], 'surfaces.solid_width', 'rule', rule='role_width',
+          auto=None, note='as infill.width'),
+        E(['top_infill_extrusion_width', 'extrusion_width'], 'surfaces.top_width', 'rule', rule='role_width',
+          auto=None, note='as infill.width; both 0: the nozzle, the engine\'s and the source\'s'),
+        E(['support_material_extrusion_width', 'extrusion_width'], 'support.width', 'rule', rule='role_width',
+          auto=1.0, note='as infill.width; both 0: the nozzle (the source\'s automatic support width; the engine\'s '
+                         '0 is walls.width), not written for a print of any nozzle'),
+        E('bridge_angle', 'surfaces.bridge_angle', note='0: each bridge\'s own'),
+        E('interface_shells', 'surfaces.interface_shells', 'flag'),
+        E('infill_first', 'infill.before_walls', 'flag'),
+        E('infill_anchor_max', 'infill.max_link', 'absolute_only', group='similar',
+          note='mm only; the source\'s 0 (no anchors) and "N%" are not written; the engine has no minimum anchor'),
+        E('infill_overlap', 'infill.wall_overlap', 'percent_only', group='similar',
+          note='"N%" only; the engine uses it for the solid lines that are not joined'),
+        E('perimeter_generator', 'walls.generator', 'map', values={'arachne': 'variable', 'classic': 'fixed'}),
+        E('overhangs', 'walls.detect_overhangs', 'flag'),
+        E('extra_perimeters', 'walls.extra_if_needed', 'flag'),
+        E('extra_perimeters_on_overhangs', 'walls.extra_on_overhangs', 'flag'),
+        E('wall_transition_angle', 'walls.transition_angle'),
+        E('wall_transition_length', 'walls.transition_length', 'number_or_percent',
+          bare_percent_over=10, note=BARE_PERCENT),
+        E('wall_transition_filter_deviation', 'walls.transition_margin', 'number_or_percent',
+          bare_percent_over=10, note=BARE_PERCENT),
+        E('wall_distribution_count', 'walls.spread_count'),
+        E('min_bead_width', 'walls.min_line_width', 'number_or_percent',
+          bare_percent_over=10, note=BARE_PERCENT),
+        E('min_feature_size', 'walls.min_detail', 'number_or_percent',
+          bare_percent_over=10, note=BARE_PERCENT),
+        E('seam_gap', 'walls.seam_gap', 'number_or_percent', note='"N%" of the nozzle'),
+        E('staggered_inner_seams', 'walls.staggered_inner_seams', 'flag'),
+        E('avoid_crossing_curled_overhangs', 'walls.avoid_curled_overhangs', 'flag'),
+        E('top_one_perimeter_type', 'walls.top_one_wall', 'map',
+          values={'none': 'none', 'top': 'top', 'topmost': 'topmost'}),
+        E('only_one_perimeter_first_layer', 'walls.first_layer_one_wall', 'flag'),
+        E('scarf_seam_start_height', 'walls.scarf_start_height', 'percent_only', note='percent of the layer'),
+        E('support_material_style', 'support.style', 'map',
+          values={'grid': 'grid', 'snug': 'snug', 'organic': 'organic'}),
+        E('support_material_pattern', 'support.pattern', 'map',
+          values={'rectilinear': 'lines', 'rectilinear-grid': 'grid', 'honeycomb': 'honeycomb'}),
+        E('support_material_interface_pattern', 'support.interface_pattern', 'map',
+          values={'rectilinear': 'lines', 'concentric': 'concentric', 'auto': 'automatic'}),
+        E('support_material_bottom_contact_distance', 'support.bottom_z_gap', note='0: as support.z_gap'),
+        E('support_material_closing_radius', 'support.closing_radius'),
+        E('support_material_enforce_layers', 'support.enforce_layers'),
+        E('support_material_with_sheath', 'support.sheath', 'flag'),
+        E('support_material_synchronize_layers', 'support.synchronize_layers', 'flag'),
+        E('support_material_angle', 'support.line_angle'),
+        E('support_material_interface_contact_loops', 'support.interface_contact_loops', 'flag'),
+        E('support_tree_angle', 'support.tree_angle'),
+        E('support_tree_angle_slow', 'support.tree_angle_preferred'),
+        E('support_tree_branch_diameter', 'support.tree_branch_diameter'),
+        E('support_tree_branch_diameter_angle', 'support.tree_branch_diameter_angle'),
+        E('support_tree_branch_diameter_double_wall', 'support.tree_double_wall_diameter'),
+        E('support_tree_branch_distance', 'support.tree_branch_distance'),
+        E('support_tree_tip_diameter', 'support.tree_tip_diameter'),
+        E('support_tree_top_rate', 'support.tree_top_rate', 'number_strip_percent'),
+        E('brim_type', 'adhesion.brim_type', 'map',
+          values={'outer_only': 'outer', 'inner_only': 'inner', 'outer_and_inner': 'outer_and_inner',
+                  'no_brim': 'none'}),
+        E('draft_shield', 'adhesion.draft_shield', 'map',
+          values={'disabled': 'disabled', 'limited': 'limited', 'enabled': 'enabled', '0': 'disabled',
+                  '1': 'enabled'}, note='"0" and "1": the older on/off form, as the source reads it'),
+        E('raft_expansion', 'adhesion.raft_expansion'),
+        E('raft_first_layer_density', 'adhesion.raft_first_layer_density', 'number_strip_percent'),
+        E('raft_first_layer_expansion', 'adhesion.raft_first_layer_expansion'),
+        E('raft_contact_distance', 'adhesion.raft_gap'),
+        E('min_skirt_length', 'adhesion.skirt_min_filament'),
+        E('fuzzy_skin', 'fuzzy.mode', 'map', values={'none': 'none', 'external': 'external', 'all': 'all'}),
+        E('fuzzy_skin_thickness', 'fuzzy.thickness'),
+        E('fuzzy_skin_point_dist', 'fuzzy.point_distance'),
+        E('wipe_tower_x', 'wipe_tower.x'),
+        E('wipe_tower_y', 'wipe_tower.y'),
+        E('wipe_tower_rotation_angle', 'wipe_tower.rotation'),
+        E('wipe_tower_brim_width', 'wipe_tower.brim_width'),
+        E('wipe_tower_bridging', 'wipe_tower.bridging'),
+        E('wipe_tower_no_sparse_layers', 'wipe_tower.no_sparse_layers', 'flag'),
+        E('wipe_tower_extra_spacing', 'wipe_tower.extra_spacing', 'number_strip_percent', note='percent'),
+        E('wipe_tower_extra_flow', 'wipe_tower.extra_flow', 'number_strip_percent', note='percent'),
+        E('wipe_tower_cone_angle', 'wipe_tower.cone_angle'),
+        E('travel_speed_z', 'speed.travel_z', nonzero=True, note='0: the travel speed, not written'),
+        E('max_volumetric_speed', 'speed.max_flow', note='0: no limit'),
+        E('enable_dynamic_overhang_speeds', 'speed.dynamic_overhangs', 'flag'),
+        E('overhang_speed_0', 'speed.overhang_0', 'number_or_percent', nonzero=True,
+          note='"N%" of the outer wall speed; 0 not written'),
+        E('overhang_speed_1', 'speed.overhang_1', 'number_or_percent', nonzero=True, note='as overhang_0'),
+        E('overhang_speed_2', 'speed.overhang_2', 'number_or_percent', nonzero=True, note='as overhang_0'),
+        E('overhang_speed_3', 'speed.overhang_3', 'number_or_percent', nonzero=True, note='as overhang_0'),
+        E('first_layer_speed_over_raft', 'speed.first_layer_over_raft', 'number_or_percent', nonzero=True,
+          note='"N%" of each speed; 0 not written'),
+        E('first_layer_acceleration_over_raft', 'acceleration.first_layer_over_raft', note='0: as each type'),
+        E('gcode_label_objects', 'gcode.object_labels', 'map',
+          values={'firmware': 'firmware', 'octoprint': 'octoprint', 'disabled': 'none', '1': 'octoprint',
+                  '0': 'none'}, note='"1" and "0": the older on/off form, as the source reads it'),
+        E('gcode_resolution', 'gcode.resolution'),
+        E('gcode_comments', 'gcode.verbose_comments', 'flag'),
+        E('dont_support_bridges', 'support.under_bridges', 'flag', invert=True, note='the opposite'),
+        E('slicing_mode', 'slicing.fill_mode', 'map',
+          values={'regular': 'union', 'even_odd': 'even_odd', 'close_holes': 'fill_holes'}),
+        E('max_volumetric_extrusion_rate_slope_positive', 'speed.flow_slope_up', note='0: off'),
+        E('max_volumetric_extrusion_rate_slope_negative', 'speed.flow_slope_down', note='0: off'),
+        E('arc_fitting', 'gcode.arcs', 'map', values={'emit_center': True, 'disabled': False}),
     ],
     'printer_sla': [
         E('display_pixels_x', 'machine.display_pixels_x'),
@@ -357,6 +520,50 @@ def _rule(name, e, c, s, ctx):
         if nozzle:
             put(s, 'walls.width', nozzle * 1.125)
         return True, ()
+    if name == 'role_width':
+        layer = num(c.get('layer_height'))
+        for key in e['from']:
+            w = pct_or_abs(c.get(key), layer)
+            if w:
+                put(s, e['to'], w)
+                return True, (key,)
+        nozzle = ctx.get('nozzle')
+        if e.get('auto') and nozzle:
+            put(s, e['to'], nozzle * e['auto'])
+            return True, tuple(k for k in e['from'] if k in c)
+        return bool(e['auto'] is None), tuple(k for k in e['from'] if k in c)
+    if name == 'thumbnails':
+        v = (c.get('thumbnails') or '').strip().strip('"')
+        if not v:
+            return False, ()
+        fmt = (c.get('thumbnails_format') or '').strip()
+        items = [x.strip() for x in v.split(',') if x.strip()]
+        if fmt:
+            items = [x if '/' in x else x + '/' + fmt for x in items]
+        put(s, 'gcode.thumbnails', ', '.join(items))
+        return True, ('thumbnails',) + (('thumbnails_format',) if 'thumbnails_format' in c else ())
+    if name == 'ramming':
+        v = (c.get('filament_ramming_parameters') or '').strip().strip('"').split('|')[0].split()
+        flows = [num(x) for x in v[2:]]
+        if not flows or any(x is None for x in flows):
+            return False, ()
+        put(s, 'extrusion.ramming', [clean_num(x) for x in flows])
+        return True, ('filament_ramming_parameters',)
+    if name == 'filament_overrides':
+        used = []
+        for key, to in FILAMENT_OVERRIDES.items():
+            v = (c.get('filament_' + key) or '').split(',')[0].strip()
+            if not v or v == 'nil':
+                continue
+            if key in FLAG_OVERRIDES:
+                value = flag(v)
+            else:
+                value = num(v.rstrip('%'))
+                if value is None:
+                    continue
+            put(s, 'extrusion.' + to, value)
+            used.append('filament_' + key)
+        return bool(used), tuple(used)
     if name == 'xy_gap':
         v = (c.get('support_material_xy_spacing') or '').strip()
         if not v:
@@ -439,7 +646,9 @@ def value_of(e, c, s):
             return None
         return n
     if how == 'flag':
-        return flag(str(v).split(',')[0]) if key in c else None  # the first extruder's
+        if key not in c:
+            return None
+        return flag(str(v).split(',')[0]) != bool(e.get('invert'))  # the first extruder's
     if how == 'numbers':
         items = [num(x) for x in str(v).split(',')] if v not in (None, '') else []
         if not items or any(x is None for x in items) or (e.get('nonnegative') and any(x < 0 for x in items)):
@@ -458,17 +667,24 @@ def value_of(e, c, s):
     if how == 'first_item':
         return first_text(v) if key in c else None
     if how == 'number_strip_percent':
-        return num(str(v if v is not None else '').rstrip('%'))
+        n = num(str(v if v is not None else '').rstrip('%'))
+        if n is not None and ((e.get('nonnegative') and n < 0) or (e.get('max') is not None and n > e['max'])):
+            return None
+        return n
     if how == 'number_or_percent':
         if not v:
             return None
         if e.get('nonzero') and not num(v.rstrip('%')):
             return None
+        if not v.endswith('%') and e.get('bare_percent_over') is not None and (num(v) or 0) > e['bare_percent_over']:
+            return v.strip() + '%'
         return v if v.endswith('%') else num(v)
     if how == 'width_of_layer':
         # A line width: "N%" of the layer height (the source program's Flow.cpp); 0 or nothing is not written.
         w = pct_or_abs(v, num(c.get('layer_height'))) if v else None
         return w or None
+    if how == 'percent_only':
+        return num(v.strip()[:-1]) if v and v.strip().endswith('%') else None
     if how == 'absolute_only':
         return num(v) if v and not v.endswith('%') else None
     if how == 'at_least':
