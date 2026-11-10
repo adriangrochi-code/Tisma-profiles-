@@ -154,6 +154,12 @@ comparten:
   cargarlo ya cambiados (Creality Print: `initial_layer_height` por `first_layer_height`). Si el programa de origen no
   le da G-code (vacío), el filamento no trae `gcode`. Con la versión del 05-11-2026, 3741 filamentos de OrcaSlicer y
   316 de Creality Print, y 90 sin G-code.
+- **`compatible_prints`** (filamentos): solo en un filamento que su fuente limita a algunos perfiles de impresión
+  (`compatible_prints`, una lista de nombres, o si no `compatible_prints_condition` sobre los valores de la impresión,
+  como `infill_speed >= 150` o `notes=~/.*SOLUBLE_SUPPORT.*/`): las rutas de los perfiles de impresión del paquete con
+  los que sirve. Como en PrusaSlicer, con otra impresión el filamento no se ofrece. Con esta versión, 17 filamentos
+  (Artillery X3/X4, Geeetech Thunder, HartSmart). `check_pack` falla si el filamento por defecto de una impresora no
+  sirve con su impresión por defecto.
 - **`source_values`** (filamentos), con `dialect`, `preset` y `values`: los valores del filamento para las variables
   que usa el G-code de las máquinas de ese dialecto. En los paquetes de PrusaSlicer, los de la sección del paquete,
   con su tipo (como `values`), también para su propio G-code de filamento (por ejemplo `filament_abrasive`, `filament_notes`). En la

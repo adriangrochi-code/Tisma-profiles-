@@ -188,6 +188,12 @@ def check_defaults(pack, index, sets, problems, counts, notes=None):
             for kind in ('filament', 'print'):
                 if not fitting.get((kind, i)):
                     problems['FFF variant with no compatible %s at all' % kind].append(ref)
+        prints_of = set((var.get('defaults') or {}).get('print') or [])
+        for rel in (var.get('defaults') or {}).get('filament') or []:
+            limited = load(pack, rel).get('compatible_prints') if os.path.exists(os.path.join(pack, rel)) else None
+            if limited is not None and prints_of and not prints_of & set(limited):
+                problems['default filament for some prints only, not for the default print'].append(
+                    '%s -> %s' % (ref, rel))
         for kind, rels in (var.get('defaults') or {}).items():
             for rel in rels:
                 counts['printer defaults'] += 1

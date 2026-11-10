@@ -254,6 +254,22 @@ class SupportGap(unittest.TestCase):
         self.assertEqual(settings['support']['xy_gap'], 0.3)
 
 
+class PrintLimits(unittest.TestCase):
+    def test_filament_for_some_prints(self):
+        prints = {('G', 'p/fast.json'): ('0.20 mm NORMAL @High-speed', {'infill_speed': '250', 'notes': ''}),
+                  ('G', 'p/slow.json'): ('0.20 mm NORMAL', {'infill_speed': '60', 'notes': 'SOLUBLE_SUPPORT'})}
+        # Geeetech "Thunder HS-PLA": compatible_prints_condition = infill_speed >= 150
+        self.assertEqual(convert.prints_for({'compatible_prints_condition': 'infill_speed >= 150'}, prints),
+                         ['p/fast.json'])
+        self.assertEqual(convert.prints_for({'compatible_prints_condition': 'notes=~/.*SOLUBLE_SUPPORT.*/'}, prints),
+                         ['p/slow.json'])
+        # A list of names wins over the condition, as in PrusaSlicer.
+        self.assertEqual(convert.prints_for({'compatible_prints': '"0.20 mm NORMAL"',
+                                             'compatible_prints_condition': 'infill_speed >= 150'}, prints),
+                         ['p/slow.json'])
+        self.assertIsNone(convert.prints_for({}, prints))
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

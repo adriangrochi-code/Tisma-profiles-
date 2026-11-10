@@ -210,6 +210,22 @@ def text_of(v):
     return str(v)
 
 
+def prints_for(c, print_configs):
+    """The print entries a filament fits when its source limits it to some prints (compatible_prints, a list of
+    names, or else compatible_prints_condition on the print's values), as PrusaSlicer decides it; None when it is not
+    limited or the condition is not understood. print_configs: {(bundle, print entry path): (name, values)}."""
+    listed = [x for x in split_list(c.get('compatible_prints', '')) if x] \
+        if c.get('compatible_prints', '').strip() else []
+    text = c.get('compatible_prints_condition', '').strip()
+    if not listed and not text:
+        return None
+    cond = None if listed else compile_condition(text)
+    if not listed and cond is None:
+        return None
+    return sorted({rel for (bid, rel), (name, pc) in print_configs.items()
+                   if (name in listed if listed else cond(pc))})
+
+
 def compile_condition(text):
     """A function of a config dict, or None if the expression is not understood."""
     text = text.strip()
@@ -1345,6 +1361,8 @@ def main():
         index['vendors'].append(vendor)
 
     by_kind = collections.defaultdict(list)  # kind -> [(bundle, entry path, compatible set number)]
+    print_configs = {}  # (bundle, print entry path) -> (name, its values), for the filaments for some prints only
+    print_limited = []  # (bundle, filament entry path, entry, its values) of the filaments for some prints only
     material_of = {}  # filament entry path -> its material type (PLA, PETG…)
 
     def compat_id(compatible):
@@ -1552,6 +1570,11 @@ def main():
                 if given:
                     entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
                     w.stats['prints with source_values (%s)' % src[0]] += 1
+            if kind == 'print':
+                print_configs[(b.id, rel)] = (name, c)
+            if kind == 'filament' and (c.get('compatible_prints', '').strip() or
+                                       c.get('compatible_prints_condition', '').strip()):
+                print_limited.append((b, rel, entry, c))
             w.write(rel, entry)
             vendor[group].append(rel)
             w.stats[kind] += 1
@@ -1560,6 +1583,15 @@ def main():
             by_kind[kind].append((b.id, rel, entry['compatible']))
             if kind == 'filament':
                 material_of[rel] = entry['material']['type']
+
+    # Filaments for some prints only (compatible_prints / compatible_prints_condition): the prints of the pack they fit,
+    # as the source program decides it (a print named in the list, or else one whose values meet the condition).
+    for b, rel, entry, c in print_limited:
+        fits = prints_for(c, print_configs)
+        if fits is not None:
+            entry['compatible_prints'] = fits
+            w.write(rel, entry)
+            w.stats['filaments for some prints only'] += 1
 
     # Defaults of each printer, as pack entries: the ones its source names, or else the first compatible one of its
     # own bundle, or of any bundle.
