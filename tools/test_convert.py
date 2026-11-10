@@ -128,6 +128,19 @@ class Assets(unittest.TestCase):
             self.assertEqual(convert.asset_file(os.path.join(tmp, 'none'), 'a.svg'), 'a.svg')
 
 
+class Reproducible(unittest.TestCase):
+    def test_generated_time_from_source_date_epoch(self):
+        old = os.environ.get('SOURCE_DATE_EPOCH')
+        os.environ['SOURCE_DATE_EPOCH'] = '1762732800'
+        try:
+            self.assertEqual(convert.generated_time(), '2025-11-10T00:00:00Z')
+        finally:
+            if old is None:
+                del os.environ['SOURCE_DATE_EPOCH']
+            else:
+                os.environ['SOURCE_DATE_EPOCH'] = old
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

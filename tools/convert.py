@@ -534,6 +534,15 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
+def generated_time():
+    """The time of the conversion (UTC), or SOURCE_DATE_EPOCH's when it is set (reproducible builds: the same pack
+    from the same sources)."""
+    epoch = os.environ.get('SOURCE_DATE_EPOCH')
+    when = datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc) if epoch and epoch.isdigit() else \
+        datetime.datetime.now(datetime.timezone.utc)
+    return when.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
 def asset_file(folder, name):
     """The file of a bundle folder that a model names, also when the name differs in case only (Geeetech names
     125X130.svg, the file is 125x130.svg; PrusaSlicer finds it on a case-insensitive disk)."""
@@ -1015,7 +1024,7 @@ def main():
 
     w = Writer(args.out)
     index = {'format': 'tisma-profile-pack', 'version': FORMAT_VERSION,
-             'generated': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+             'generated': generated_time(),
              'source': {'program': 'Tisma Slicer', 'repository':
                         'https://github.com/adriangrochi-code/Nuevo-slicer-basado-en-prusa-',
                         'commit': args.source_commit, 'directory': 'resources/profiles'},

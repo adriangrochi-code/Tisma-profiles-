@@ -41,7 +41,7 @@ Para instalar:
 |---|---|
 | `format`, `version` | `"tisma-profile-pack"` y `2`. Una versión mayor que la conocida no se carga |
 | `pack_version` | La versión de este paquete (`AAAA.MM.DD-commit`) |
-| `generated` | Fecha y hora de la conversión (UTC) |
+| `generated` | Fecha y hora de la conversión (UTC), o la de `SOURCE_DATE_EPOCH` si está definida (la CI usa la del commit) |
 | `source`, `other_sources` | De dónde salieron los perfiles: repositorio, commit y carpeta de Tisma Slicer y de UVtools |
 | `license` | `AGPL-3.0-or-later` (ver «Licencias») |
 | `vendors` | Los fabricantes (abajo) |
