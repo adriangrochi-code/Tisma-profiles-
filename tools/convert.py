@@ -731,9 +731,11 @@ def lost_values(kind, c, source, dialect=None, conv=None, nozzle=0.4):
         keys = {k for e in translation.TABLE[kind]
                 for k in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]) if k}
         out = {k: v for k, v in sorted(conv.convert(kind, dict(source), nozzle).items()) if k in keys and k not in c}
-        # Options that converter does not know (it misses the per-axis machine limits, which PrusaSlicer defines in
-        # a loop over the axes, and drops them): by name, as below.
-        unknown = {k: v for k, v in lost_values(kind, c, source, dialect).items() if k not in conv.types}
+        # Options that converter does not know (before Tisma Slicer e54d3a2 it missed the per-axis machine limits,
+        # which PrusaSlicer defines in a loop over the axes) or whose OrcaSlicer name it does not rename
+        # (machine_max_speed_* is machine_max_feedrate_*): by name, as below.
+        unknown = {k: v for k, v in lost_values(kind, c, source, dialect).items()
+                   if k not in conv.types or k in MACHINE_RENAMES}
         return dict(unknown, **out)
     names_of = VALUE_NAMES.get(dialect, {})
     back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}

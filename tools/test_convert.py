@@ -71,8 +71,14 @@ class LostValues(unittest.TestCase):
         self.assertEqual(convert.lost_values('print', {}, {'brim_type': 'no_brim', 'brim_width': '5'}, 'orcaslicer',
                                              Conv()), {'brim_width': '0'})
         lost = convert.lost_values('printer', {}, {'printable_area': ['0x0', '200x0', '200x200', '0x200'],
-                                                   'machine_max_acceleration_x': ['3000', '3000']}, 'orcaslicer', Conv())
-        self.assertEqual(lost, {'bed_shape': '0x0,200x0,200x200,0x200', 'machine_max_acceleration_x': '3000,3000'})
+                                                   'machine_max_acceleration_x': ['3000', '3000'],
+                                                   'machine_max_speed_x': ['300', '300']}, 'orcaslicer', Conv())
+        self.assertEqual(lost, {'bed_shape': '0x0,200x0,200x200,0x200', 'machine_max_acceleration_x': '3000,3000',
+                                'machine_max_feedrate_x': '300,300'})
+        # A converter that knows the per-axis types (Tisma Slicer e54d3a2) but not OrcaSlicer's speed name.
+        Conv.types = dict(Conv.types, machine_max_acceleration_x='coFloats', machine_max_feedrate_x='coFloats')
+        lost = convert.lost_values('printer', {}, {'machine_max_speed_x': ['300', '300']}, 'orcaslicer', Conv())
+        self.assertEqual(lost, {'bed_shape': '0x0,200x0,200x200,0x200', 'machine_max_feedrate_x': '300,300'})
 
     def test_filament_temperatures_go_to_the_variables(self):
         bundle = {'filament_diameter': '1.75'}

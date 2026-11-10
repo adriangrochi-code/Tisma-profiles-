@@ -85,7 +85,10 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
 - `tools/profiles/convert_orca_profiles.py` (`tisma_option_types`) does not see the options PrusaSlicer adds in a loop
   over the axes (`machine_max_acceleration_` + axis, `machine_max_feedrate_`, `machine_max_jerk_`): with no type,
   their values are dropped, so every OrcaSlicer-family printer of the bundles lost its per-axis limits. The pack fills
-  them from the source program; the converter in Tisma Slicer could be fixed too.
+  them from the source program; the converter in Tisma Slicer could be fixed too. Fixed on the slicer branch
+  ccr-7e2013d9-qwmclz (e54d3a2); with it the pack is the same.
+- The same converter does not rename OrcaSlicer's `machine_max_speed_x/y/z/e` to `machine_max_feedrate_*`: with the
+  types fixed, the maximum speeds per axis are still dropped. The pack fills them by name either way.
 
 ## Contacts
 
