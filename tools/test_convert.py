@@ -154,6 +154,27 @@ class SourceValues(unittest.TestCase):
                          {'outer_wall_acceleration': ['5000']})
 
 
+class MergedPresets(unittest.TestCase):
+    def test_groups_of_the_same_base_name_and_values(self):
+        # OrcaSlicer repeats "0.20mm Standard" for the X1C and the P1P; Tisma Slicer keeps one, for both printers.
+        with tempfile.TemporaryDirectory() as tmp:
+            base = os.path.join(tmp, 'BBL')
+            os.makedirs(os.path.join(base, 'process'))
+            for name, printers, speed in (('0.20mm Standard @BBL X1C', ['X1C 0.4', 'P1S 0.4'], '200'),
+                                          ('0.20mm Standard @BBL P1P', ['P1P 0.4'], '200'),
+                                          ('0.20mm Standard @BBL A1', ['A1 0.4'], '180')):
+                with open(os.path.join(base, 'process', name + '.json'), 'w') as f:
+                    json.dump({'type': 'process', 'name': name, 'instantiation': 'true', 'setting_id': name,
+                               'compatible_printers': printers, 'outer_wall_speed': speed}, f)
+            vendor = convert.upstream.OrcaVendor(base, kind='process')
+            groups = convert.upstream.merged_groups(vendor)
+        self.assertEqual(sorted(groups), [(['0.20mm Standard @BBL A1'], ['A1 0.4']),
+                                          (['0.20mm Standard @BBL P1P', '0.20mm Standard @BBL X1C'],
+                                           ['P1P 0.4', 'X1C 0.4', 'P1S 0.4'])])
+        converted = lambda values, printers: {'outer_wall': 1}  # a converter that drops the speed: one group
+        self.assertEqual(len(convert.upstream.merged_groups(vendor, converted)), 1)
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

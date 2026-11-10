@@ -534,6 +534,88 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
+_TISMA = {}
+
+
+def tisma_merge_key(path, kind, src, presets):
+    """converted(values, printers) for upstream.merged_compatible: the values as Tisma Slicer's converter (path) writes
+    them for a preset of the source program src, the nozzle being the first printer's, as it does. None without it."""
+    if not path:
+        return None
+    if path not in _TISMA:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('tisma_convert_orca_profiles', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        root = os.path.abspath(os.path.join(os.path.dirname(path), '..', '..'))
+        _TISMA[path] = (module, module.tisma_option_types(root))
+    module, types = _TISMA[path]
+    profiles = os.path.dirname(presets.folder)
+    if (path, profiles) not in _TISMA:
+        _TISMA[(path, profiles)] = module.Converter(types, module.orca_option_defaults(profiles))
+    conv = _TISMA[(path, profiles)]
+    machines = upstream.OrcaVendor(presets.folder, kind='machine')
+    nozzles = {}
+
+    def nozzle(printer):
+        if printer not in nozzles:
+            try:
+                v = machines.resolve(printer)[0].get('nozzle_diameter', ['0.4'])
+                nozzles[printer] = float((v[0] if isinstance(v, list) else v) or 0.4)
+            except (KeyError, ValueError):
+                nozzles[printer] = None
+        return nozzles[printer]
+
+    def converted(values, printers):
+        known = [nozzle(p) for p in printers if nozzle(p)]
+        return conv.convert(kind, dict(values), known[0] if known else 0.4)
+    return converted
+
+
+def add_source_prints(deferred, sources, everything, merged_lists, tisma_converter, stats):
+    """The print presets of an OrcaSlicer-family source program for printers of the pack that Tisma Slicer's bundle
+    lacks, neither kept nor merged into a preset it keeps (upstream.merged_groups): converted by Tisma Slicer's own
+    converter (tisma_converter) and added to the bundle as sections. A name the pack has is not added. Fills
+    merged_lists for the prints. {(bundle, 'print', name): provenance}."""
+    out = {}
+    if not tisma_converter:
+        return out
+    taken = {name for (kind, name) in everything if kind == 'print'}
+    for b, vendor, printers, vdir, lic, origin in deferred:
+        src = sources.of(b, stats)
+        if not src or src[0] not in ('orcaslicer', 'crealityprint', 'elegooslicer') or \
+                b.path not in sources.matched:
+            continue
+        presets = sources.presets(b, 'process')
+        if presets is None:
+            continue
+        converted = tisma_merge_key(tisma_converter, 'print', src, presets)
+        groups = upstream.merged_groups(presets, converted)
+        merged_lists[presets] = {n: union for names, union in groups for n in names}
+        in_bundle = set()
+        for (kind, name) in list(b.sections):
+            hit = upstream.orca_compatible(presets, name) if kind == 'print' and not name.startswith('*') else None
+            if hit:
+                in_bundle.add(hit[0])
+        for names, union in groups:
+            if any(n in in_bundle for n in names) or not any(sources.names.get((src[1], x)) for x in union):
+                continue
+            name = names[0]
+            if name in taken:
+                stats['print in the source program, its name already in the pack'] += 1
+                continue
+            values = presets.resolve(name)[0]
+            own = values.get('compatible_printers') or []
+            section = dict(converted(values, own if isinstance(own, list) else union))
+            section['compatible_printers'] = ';'.join('"%s"' % x for x in union)
+            section['compatible_printers_condition'] = ''
+            b.sections[('print', name)] = section
+            taken.add(name)
+            out[(b.id, 'print', name)] = {'program': src[0], 'repository': src[1], 'commit': src[2],
+                                          'file': presets.presets[name][0], 'merged': names}
+    return out
+
+
 def template_values(values, wanted, exclude=()):
     """The values of a source program's preset for the variables its machines' G-code uses (wanted), by name; not
     the ones in exclude."""
@@ -995,6 +1077,8 @@ def main():
     ap.add_argument('--filament-gcode-from-bundle', dest='filament_gcode_from_source', action='store_false',
                     help="the OrcaSlicer family's filament G-code from Tisma Slicer's bundle, as before, instead of "
                          "the source program")
+    ap.add_argument('--tisma-converter', help="Tisma Slicer's tools/profiles/convert_orca_profiles.py (at the bundles' "
+                                              "commit, with its src/libslic3r): which presets it merged into one")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
     args = ap.parse_args()
@@ -1208,6 +1292,8 @@ def main():
                     template_variables[g.get('dialect')].update(n for n, local in gcode_variables.variables(text)
                                                                 if not local)
 
+    merged_lists = {}  # source vendor folder reader -> upstream.merged_compatible
+    synthetic = add_source_prints(deferred, sources, everything, merged_lists, args.tisma_converter, w.stats)
     for b, vendor, printers, vdir, lic, origin in deferred:
         generic = b.id in ('Templates',) or not printers
         targets = [(c, rel) for c, rel in all_printers] if generic else [(c, rel) for c, rel, sla in printers]
@@ -1231,15 +1317,24 @@ def main():
             from_source = upstream.orca_compatible(vendor_presets, name) if vendor_presets else None
             if from_source:
                 source_values = vendor_presets.resolve(from_source[0])[0]
-                renames.add(src[0], kind, source_values, c)
+                if (b.id, kind, name) not in synthetic:  # made from these values: no sample of the bundle's names
+                    renames.add(src[0], kind, source_values, c)
             else:
                 source_values = None
             if from_source and from_source[1]:
                 # The source program's list, inherited from the parents like any other value (Tisma Slicer's bundle
                 # writes it empty in a preset that only inherits it, or with printers the source does not name).
-                # The source program lets a profile fit printers of other vendors.
+                # The source program lets a profile fit printers of other vendors. With the printers of the presets
+                # Tisma Slicer merged into this one (the same base name and values: "0.20mm Standard @BBL X1C" is
+                # kept as "0.20mm Standard @BBL P1P").
+                if vendor_presets not in merged_lists:
+                    merged_lists[vendor_presets] = upstream.merged_compatible(
+                        vendor_presets, tisma_merge_key(args.tisma_converter, kind, src, vendor_presets))
+                listed_source = merged_lists[vendor_presets].get(from_source[0]) or from_source[1]
+                if len(listed_source) > len(from_source[1]):
+                    w.stats['%s compatible printers of merged presets' % kind] += 1
                 wanted = set()
-                for x in from_source[1]:
+                for x in listed_source:
                     hit = sources.names.get((src[1], x)) or printer_names.get((b.id, x))
                     if hit is None:
                         # Tisma Slicer keeps a model that two sources have once, from the maker's own bundle: the
@@ -1308,6 +1403,12 @@ def main():
                                      'soluble': flag(c.get('filament_soluble', '0'))}
             if kind == 'print' and nozzle:
                 entry['nozzle'] = nozzle
+            if (b.id, kind, name) in synthetic:
+                # Not in Tisma Slicer's bundle: converted here from the source program's preset, by Tisma Slicer's
+                # own converter.
+                entry['from_source_program'] = ['*']
+                entry['source_preset'] = synthetic[(b.id, kind, name)]
+                w.stats['%s converted from the source program (not in the bundle)' % kind] += 1
             lost = lost_values(kind, c, source_values, src[0]) if source_values and kind in ('filament', 'print') else None
             if lost:
                 # Values the bundle lost and the source program's preset gives: translated as the bundle would have
@@ -1316,7 +1417,7 @@ def main():
                     map_print(dict(c, **lost), nozzle)
                 filled = fill_lost(settings, full)
                 if filled:
-                    entry['from_source_program'] = filled
+                    entry.setdefault('from_source_program', []).extend(filled)
                     w.stats['%s values from the source program' % kind] += 1
                 if kind == 'filament':
                     for field, key in (('type', 'filament_type'), ('vendor', 'filament_vendor'),

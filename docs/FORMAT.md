@@ -193,6 +193,16 @@ sirve para las impresoras 5 y 9. Muchos perfiles comparten conjunto: hay unos 17
   sumaba impresoras que el origen no nombra. Una impresora que Tisma Slicer guardó del paquete del fabricante (el
   mismo modelo de dos fuentes) se busca por modelo y boquilla. Con la versión del 05-11-2026, 6551 perfiles toman la
   lista del origen, y 2012 cambian de impresoras (1906 a menos).
+- **Perfiles fusionados:** OrcaSlicer repite un perfil para cada impresora de una familia, y el conversor de Tisma
+  Slicer guarda uno solo de los que tienen el mismo nombre base (antes de « @») y los mismos valores convertidos, para
+  las impresoras de todos («0.20mm Standard @BBL X1C» queda como «0.20mm Standard @BBL P1P», también para la P1S, la
+  X1 y la X1C). La lista suma las impresoras de todo el grupo, que se forma con ese mismo conversor
+  (`tools/profiles/convert_orca_profiles.py` de Tisma Slicer, en el commit de los paquetes). 252 perfiles de
+  impresión y 1452 filamentos suman impresoras así.
+- **Perfiles que el paquete no trae:** un perfil de impresión del programa de origen para impresoras del paquete que
+  no está en el paquete de Tisma Slicer, ni fusionado en uno que esté, se convierte con ese mismo conversor y entra
+  con `from_source_program: ["*"]` y `source_preset` (`program`, `repository`, `commit`, `file` y `merged`, los
+  presets de su grupo). Con esta versión es uno: «0.15mm Standard @UltiMaker 2 extended+ 0.6 nozzle».
 - **Las condiciones** se evalúan como en el programa de origen: `num_extruders` es la cantidad de boquillas, un número
   escrito como texto (`"0.2"`) se compara como número, los textos tienen sus saltos de línea, y `=~` pide que la
   expresión regular cubra todo el valor, con `.` que también toma saltos de línea.
@@ -380,6 +390,7 @@ después con cada filamento y cada perfil de impresión en la primera impresora 
   fabricante porque así están en el programa de origen quedan como notas;
 - un perfil de impresión sin `nozzle` cuando su nombre o su condición dicen una boquilla;
 - un bloque `gcode` sin dialecto conocido o con plantillas que no son texto.
+- una variante FFF sin ningún perfil de impresión o filamento compatible.
 
 ## Licencias
 

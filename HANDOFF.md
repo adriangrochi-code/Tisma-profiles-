@@ -69,7 +69,7 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
 | 1 | Creality Print / Elegoo Slicer models without thumbnail, bed model, default materials | 12 models | yes (machine_model) | fixed 0289cb2 |
 | 2 | Bed textures named in another case than the file (Geeetech) | 2 models | yes (bundle) | fixed 53daf1c |
 | 3 | Pack not the same twice (translation tables' order by hash seed) | 4 tables | — | fixed 5f546b2 |
-| 4 | FFF variants with no compatible print at all (Bambu Lab P1S/X1/X1C 0.4, SeeMeCNC 23, Qidi 7…) | 75 variants | yes: the bundle lacks presets the source program has (OrcaSlicer ~758 prints, ~3030 filaments, ~169 printers; Creality Print 218 / 1169 / 76; part are intended de-duplications) | open: needs presets converted straight from the source program (large; owner to decide) |
+| 4 | FFF variants with no compatible print at all (Bambu Lab P1S/X1/X1C 0.4, SeeMeCNC 23, Qidi 7…) | 75 variants | yes: Tisma Slicer's converter merged identical presets; the compatible lists were the kept preset's only | fixed: union of the merge group (Tisma Slicer's converter, run from its checkout), 1 unmerged print converted; check_pack fails on a variant with none |
 | 5 | UltiMaker Cura models without pictures | 296 models | maybe (Cura resources/meshes and images, not fetched; licenses to check) | open |
 | 6 | Essential fields the preset leaves to the program default (Anycubic filaments without type: PrusaSlicer default PLA; one Kingroon print without layer height: OrcaSlicer default 0.2) | 14 + 1 | program defaults (PrintConfig.cpp) | open: owner to decide whether program defaults fill profiles |
 | 7 | OrcaSlicer models without bed model / texture / thumbnail | 46 / 56 / 12 | no (not in the source either) | none |

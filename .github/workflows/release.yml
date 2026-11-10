@@ -35,6 +35,7 @@ jobs:
           sparse-checkout: |
             ${{ steps.src.outputs.dir }}
             src/libslic3r
+            tools/profiles
 
       - uses: actions/checkout@v4
         with:
@@ -59,7 +60,7 @@ jobs:
         run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
 
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
+        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp --tisma-converter source/tools/profiles/convert_orca_profiles.py $(cat upstream.args)
 
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json --community community

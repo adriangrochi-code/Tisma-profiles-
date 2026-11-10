@@ -13,6 +13,9 @@ AGPL-3.0-or-later.
 - **G-code de filamento original** en la familia OrcaSlicer (3741 filamentos de OrcaSlicer y 316 de Creality Print),
   del programa de origen y en su dialecto, como el de las máquinas. Los valores de la máquina que el perfil no dice
   salen del valor por defecto del programa (`program_defaults`).
+- **Impresoras sin perfiles de impresión:** 75 variantes, entre ellas la Bambu Lab P1S, la X1 y la X1 Carbon con 0,4 mm,
+  no tenían ningún perfil de impresión: el paquete de Tisma Slicer guarda uno solo de los perfiles iguales que
+  OrcaSlicer repite para cada impresora, y la lista de impresoras ahora suma las de todos. Ahora todas tienen.
 - **Boquillas que faltaban:** 6 variantes nuevas (por ejemplo la AnkerMake M5 con 0,2 y 0,25 mm) de impresoras que
   venían de dos fuentes; sus perfiles ya no quedan en la variante de 0,4.
 - **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, la altura de 9

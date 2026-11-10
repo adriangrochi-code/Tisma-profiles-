@@ -13,7 +13,7 @@
 - a printer variant of index.json that no vendor lists;
 - with --community, a community printer file that names no model of the pack;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
-  another one does (and, as a note, an FFF variant that no filament or print fits);
+  another one does, and an FFF variant that no filament or print fits;
 - a printer of the OrcaSlicer family without a translated value that its source program's preset gives (its
   gcode.values) and its bundle lost;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
@@ -185,8 +185,7 @@ def check_defaults(pack, index, sets, problems, counts, notes=None):
         if cache[path].get('technology') == 'fff':
             for kind in ('filament', 'print'):
                 if not fitting.get((kind, i)):
-                    # Open (HANDOFF.md, missing elements #4): the bundle lacks presets its source program has.
-                    notes['FFF variant with no compatible %s at all' % kind].append(ref)
+                    problems['FFF variant with no compatible %s at all' % kind].append(ref)
         for kind, rels in (var.get('defaults') or {}).items():
             for rel in rels:
                 counts['printer defaults'] += 1

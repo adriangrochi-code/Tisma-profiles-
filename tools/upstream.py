@@ -162,6 +162,50 @@ def orca_compatible(vendor, name):
     return key, list(printers), str(values.get('compatible_printers_condition') or '')
 
 
+IDENTITY_KEYS = {'name', 'type', 'inherits', 'include', 'from', 'setting_id', 'instantiation', 'description',
+                 'renamed_from', 'compatible_printers', 'compatible_printers_condition', 'print_settings_id',
+                 'filament_settings_id', 'filament_id', 'version', 'is_custom_defined'}
+
+
+def merged_groups(vendor, converted=None):
+    """The instantiated presets of a vendor folder in the groups Tisma Slicer's converter merges into one: the same
+    base name (before " @") and the same values (OrcaSlicer repeats a process for every printer of a family). It
+    keeps one preset of a group, for the printers of all of them. converted(values, printers): the values as that
+    converter writes them, which it compares (two presets that differ only in values it drops are one); the source
+    values themselves when not given. [([names], [printers of all])], in name order."""
+    groups = {}
+    for name in sorted(vendor.presets):
+        path, d = vendor.presets[name]
+        if str(d.get('instantiation', '')).lower() != 'true' or path.split(os.sep)[0] != os.path.basename(
+                vendor.folder):
+            continue
+        try:
+            values = vendor.resolve(name)[0]
+        except KeyError:
+            continue
+        printers = values.get('compatible_printers') or []
+        if isinstance(printers, str):
+            printers = [x.strip().strip('"') for x in printers.split(';') if x.strip()]
+        if not printers:
+            continue
+        same = converted(values, printers) if converted else \
+            {k: v for k, v in values.items() if k not in IDENTITY_KEYS}
+        key = (name.split(' @')[0].strip(), json.dumps(same, sort_keys=True))
+        groups.setdefault(key, []).append((name, list(printers)))
+    out = []
+    for members in groups.values():
+        union = []
+        for _, printers in members:
+            union += [p for p in printers if p not in union]
+        out.append(([n for n, _ in members], union))
+    return out
+
+
+def merged_compatible(vendor, converted=None):
+    """{preset name: the printers of its whole merge group (merged_groups)}."""
+    return {n: union for names, union in merged_groups(vendor, converted) for n in names}
+
+
 def _gcode_keys(values, table):
     out = {}
     for k, v in values.items():
