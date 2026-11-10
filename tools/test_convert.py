@@ -258,6 +258,11 @@ class PrintOptions(unittest.TestCase):
     """Print options the engine reads (its docs/CONFIG.md) and the bundles set: written, not left to the engine's
     defaults."""
 
+    def test_ooze_prevention(self):
+        settings, _ = convert.map_print({'layer_height': '0.2', 'ooze_prevention': '1',
+                                         'standby_temperature_delta': '-150'}, 0.4)
+        self.assertEqual(settings['extruders'], {'ooze_prevention': True, 'standby_delta': -150})
+
     def test_honeycomb_3d(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'fill_pattern': '3dhoneycomb'}, 0.4)
         self.assertEqual(settings['infill']['pattern'], 'honeycomb_3d')

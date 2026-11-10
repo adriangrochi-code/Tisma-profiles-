@@ -401,6 +401,8 @@ TABLE = {
           values={'firmware': 'firmware', 'octoprint': 'octoprint', 'disabled': 'none', '1': 'octoprint',
                   '0': 'none'}, note='"1" and "0": the older on/off form, as the source reads it'),
         E('gcode_resolution', 'gcode.resolution'),
+        E('ooze_prevention', 'extruders.ooze_prevention', 'flag'),
+        E('standby_temperature_delta', 'extruders.standby_delta'),
         E('gcode_comments', 'gcode.verbose_comments', 'flag'),
         E('dont_support_bridges', 'support.under_bridges', 'flag', invert=True, note='the opposite'),
         E('slicing_mode', 'slicing.fill_mode', 'map',
