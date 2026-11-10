@@ -60,7 +60,13 @@ jobs:
         run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
 
       - name: Convert
-        run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
+        run: PYTHONHASHSEED=1 python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
+
+      - name: Convert again with other hash seeds (the pack must not depend on them)
+        run: |
+          PYTHONHASHSEED=2 python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack2 --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args) > /dev/null
+          diff -rq pack pack2
+          rm -rf pack2
 
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json --community community

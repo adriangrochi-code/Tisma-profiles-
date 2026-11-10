@@ -1453,7 +1453,7 @@ def main():
     index['translation'] = {}
     tables = {'prusaslicer': translation.table_json('prusaslicer', keys_seen)}
     for dialect in ('orcaslicer', 'crealityprint', 'elegooslicer', 'cura'):
-        kinds = {k for d, k in renames.samples if d == dialect}
+        kinds = sorted({k for d, k in renames.samples if d == dialect})  # the same file each run
         if not kinds:
             continue
         seen = {k: set().union(*[set(x for x, v in sv.items() if not isinstance(v, dict))
