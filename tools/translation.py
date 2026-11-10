@@ -185,7 +185,10 @@ TABLE = {
         E('support_material', 'support.enabled', 'flag'),
         E('support_material_threshold', 'support.threshold_angle'),
         E('support_material_contact_distance', 'support.z_gap'),
-        E('support_material_xy_spacing', 'support.xy_gap', 'percent_of', base='walls.width'),
+        E('support_material_xy_spacing', 'support.xy_gap', 'rule', rule='xy_gap',
+          note='in mm; "N%" of the outer wall width as the source computes it (external_perimeter_extrusion_width, '
+               'else extrusion_width, a percent of the layer height; else 1.125 times the nozzle); for any nozzle and '
+               'no width, "N%" of the automatic walls.width'),
         E('support_material_spacing', 'support.spacing'),
         E('support_material_interface_layers', 'support.interface_layers'),
         E('support_material_bottom_interface_layers', 'support.bottom_interface_layers',
@@ -351,6 +354,28 @@ def _rule(name, e, c, s, ctx):
         if nozzle:
             put(s, 'walls.width', nozzle * 1.125)
         return True, ()
+    if name == 'xy_gap':
+        v = (c.get('support_material_xy_spacing') or '').strip()
+        if not v:
+            return False, ()
+        if not v.endswith('%'):
+            put(s, 'support.xy_gap', num(v))
+            return num(v) is not None, ('support_material_xy_spacing',)
+        # The source program takes the percent of the outer wall's flow width (SupportParameters.cpp).
+        width = None
+        for key in ('external_perimeter_extrusion_width', 'extrusion_width'):
+            width = pct_or_abs(c.get(key), num(c.get('layer_height')))
+            if width:
+                break
+        nozzle = ctx.get('nozzle')
+        if not width and not nozzle:
+            # No width given and a profile for any nozzle: the automatic outer wall (1.125 times the nozzle) is the
+            # engine's automatic walls.width, which a percent of support.xy_gap is of.
+            put(s, 'support.xy_gap', v)
+            return True, ('support_material_xy_spacing',)
+        gap = pct_or_abs(v, width or 1.125 * nozzle)
+        put(s, 'support.xy_gap', gap)
+        return gap is not None, ('support_material_xy_spacing',)
     if name == 'fastest':
         fastest = max([x for x in (get(s, 'speed.walls'), get(s, 'speed.infill'), get(s, 'speed.solid_infill'),
                                    num(c.get('support_material_speed'))) if x] or [0])

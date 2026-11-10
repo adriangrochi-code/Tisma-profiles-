@@ -235,6 +235,21 @@ class Widths(unittest.TestCase):
         self.assertEqual(settings['walls']['width'], 0.45)  # automatic: 1.125 times the nozzle
 
 
+class SupportGap(unittest.TestCase):
+    def test_percent_of_the_outer_wall_width(self):
+        # Comgrow T500 "0.20mm Standard": 60% of the 0.42 mm outer wall (not of the 0.45 mm walls) is 0.252 mm.
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_xy_spacing': '60%',
+                                         'external_perimeter_extrusion_width': '0.42',
+                                         'perimeter_extrusion_width': '0.45'}, 0.4)
+        self.assertAlmostEqual(settings['support']['xy_gap'], 0.252)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_xy_spacing': '50%'}, 0.4)
+        self.assertAlmostEqual(settings['support']['xy_gap'], 0.225)  # of the automatic 1.125 x nozzle
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_xy_spacing': '60%'}, None)
+        self.assertEqual(settings['support']['xy_gap'], '60%')  # for any nozzle: of the automatic walls.width
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_xy_spacing': '0.3'}, 0.4)
+        self.assertEqual(settings['support']['xy_gap'], 0.3)
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')
