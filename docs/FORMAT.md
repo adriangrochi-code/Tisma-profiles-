@@ -399,6 +399,10 @@ Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabr
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
+- **mallas e imágenes de las camas de UltiMaker Cura** (`resources/meshes`, `resources/images`, en el commit de
+  `sources.json`): LGPL-3.0, la licencia del repositorio; no tienen aviso propio, y `licenses_thirdparty` solo nombra
+  a Qt. Se pueden redistribuir con esa licencia. El paquete todavía no las trae: Cura las coloca en su propio sistema
+  de coordenadas, con un desplazamiento (`platform_offset`), y la mitad no son STL; hace falta un campo propio.
 
 El paquete entero se distribuye bajo la AGPL-3.0 o posterior (`LICENSE`). Un programa que lo descarga y lo lee como
 datos no se vuelve parte del paquete.
