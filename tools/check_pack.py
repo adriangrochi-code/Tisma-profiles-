@@ -9,12 +9,13 @@
 - a print profile without "nozzle" when its name or its condition gives one;
 - a printer G-code block without its dialect, or with a template that is not text;
 - a filament of the OrcaSlicer family whose G-code comes from the converted bundle instead of its source program;
+- with --community, a community printer file that names no model of the pack;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
   another one does;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
   that does not give, applied to a profile's "original", the profile's settings (the converter's translation).
 
-Usage: check_pack.py <pack dir> [--report FILE]
+Usage: check_pack.py <pack dir> [--report FILE] [--community DIR]
 Exits with 1 and lists the problems when there are any.
 """
 
@@ -161,6 +162,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pack')
     ap.add_argument('--report')
+    ap.add_argument('--community', help='the community data folder: each printer file must name a pack model')
     args = ap.parse_args()
 
     index = load(args.pack, 'index.json')
@@ -263,6 +265,17 @@ def main():
             notes['start G-code of the vendor-wide base, as in the source program'].append(names)
 
     check_defaults(args.pack, index, sets, problems, counts)
+    if args.community:
+        models = {(v['id'], m['id']) for v in index['vendors'] for m in v['models']}
+        for root, _, files in os.walk(os.path.join(args.community, 'printers')):
+            for f in sorted(files):
+                if not f.endswith('.json'):
+                    continue
+                path = os.path.join(root, f)
+                pm = (json.load(open(path, encoding='utf-8')).get('pack_model') or {})
+                counts['community printers'] += 1
+                if (pm.get('bundle'), pm.get('id')) not in models:
+                    problems['community printer without a pack model of the pack'].append(path)
     check_tables(args.pack, index, problems, counts)
     report = {'counts': dict(counts), 'problems': dict(problems), 'notes': dict(notes)}
     if args.report:

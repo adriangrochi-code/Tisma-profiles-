@@ -59,7 +59,7 @@ jobs:
         run: python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp $(cat upstream.args)
 
       - name: Check the pack
-        run: python3 tools/check_pack.py pack --report pack/check.json
+        run: python3 tools/check_pack.py pack --report pack/check.json --community community
 
       - name: Package
         id: pkg
