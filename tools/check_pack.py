@@ -14,6 +14,8 @@
 - with --community, a community printer file that names no model of the pack;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
   another one does;
+- a printer of the OrcaSlicer family without a translated value that its source program's preset gives (its
+  gcode.values) and its bundle lost;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
   that does not give, applied to a profile's "original", the profile's settings (the converter's translation).
 
@@ -29,6 +31,7 @@ import re
 import sys
 
 import translation
+import upstream
 
 NOZZLE_CONDITION = re.compile(r'(?:^|\band\b|&&|\()\s*nozzle_diameter\[0\]\s*==\s*"?(\d+(?:\.\d+)?)"?\s*'
                               r'(?=\)|\band\b|&&|$)')
@@ -93,6 +96,22 @@ def same_translation(kind, original, settings, where, problems, counts, nozzle=N
     counts['profiles translated again'] += 1
     if expected != got:
         problems['translation table does not give the profile\'s settings'].append(where)
+
+
+def source_text(v):
+    return ','.join(str(x) for x in v) if isinstance(v, list) else '1' if v is True else '0' if v is False else str(v)
+
+
+def lost_values(original, values):
+    """The translated printer options that the bundle lacks and the source program's preset gives, as bundle text."""
+    names = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
+    names.update({'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'})
+    out = {}
+    for e in translation.TABLE['printer']:
+        for key in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]):
+            if key and key not in original and names.get(key, key) in values:
+                out[key] = source_text(values[names.get(key, key)])
+    return out
 
 
 def quoted_texts(d, path=''):
@@ -289,6 +308,20 @@ def main():
                 counts['fff variants'] += 1
                 g = merged_block(doc['common'].get('gcode'), var.get('gcode'))
                 where = '%s#%s' % (m['file'], var['id'])
+                if g and g.get('origin') == 'source_program' and g.get('dialect') != 'cura':
+                    original = dict(doc.get('original_common', {}), **var.get('original', {}))
+                    preset = {k: v for k, v in (g.get('values') or {}).items()
+                              if k not in (g.get('program_defaults') or ())}  # not the program's own defaults
+                    lost = lost_values(original, preset)
+                    if lost:
+                        full, _ = translation.translate('printer', dict(original, **lost),
+                                                        rules={'gcode_template': lambda e, c, s: (True, ())})
+                        have = merged_block(doc['common']['settings'], var['settings'])
+                        for group, items in full.items():
+                            for key, value in (items.items() if isinstance(items, dict) else ()):
+                                if key not in (have.get(group) or {}):
+                                    problems['printer without a value that its source program gives: %s.%s'
+                                             % (group, key)].append(where)
                 if not g:
                     problems['printer without a G-code block'].append(where)
                     continue

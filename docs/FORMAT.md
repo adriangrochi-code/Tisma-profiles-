@@ -152,9 +152,12 @@ comparten:
   del 05-11-2026, 7199 filamentos de paquetes de PrusaSlicer, 4121 de OrcaSlicer y 316 de Creality Print.
 - **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
   que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
-  boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, y la altura de 9
-  impresoras (por ejemplo la Meltingplot MBL 480), del programa de origen; y la boquilla de la Anycubic i3 Mega y la
-  Mega S, de su variante en el paquete («0.4»).
+  boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, la altura de 9
+  impresoras (por ejemplo la Meltingplot MBL 480), y los límites por eje (`max_feed_*`, `max_accel_*`, `jerk_*`,
+  `corner_speed`) de 857 variantes de la familia OrcaSlicer, más la retracción y otros valores de las 6 que el paquete
+  dejó casi vacías (Elegoo Neptune, UltiMaker 2 extended+), del programa de origen, traducidos como los del paquete
+  (`machine_max_speed_*` es `machine_max_feedrate_*`); y la boquilla de la Anycubic i3 Mega y la Mega S, de su
+  variante en el paquete («0.4»). Un límite de velocidad o de aceleración por eje que vale 0 no se escribe.
 
 ## `compatible.json`
 

@@ -529,6 +529,36 @@ def engine_texts(block, c):
 # ---------------------------------------------------------------------------------------------------------------------
 # Mapping to engine keys (docs/CONFIG.md of the engine). Each function returns (settings, used source keys).
 
+# PrusaSlicer names of the machine options that the OrcaSlicer family names otherwise (besides ORCA_TO_PRUSA).
+MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
+
+
+def lost_machine_values(c, source):
+    """{PrusaSlicer key: bundle text} of the translated printer options that the bundle lacks and the source
+    program's preset (its values, with the source names) gives."""
+    back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}
+    out = {}
+    for e in translation.TABLE['printer']:
+        for key in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]):
+            if not key or key in c or key in out:
+                continue
+            name = MACHINE_RENAMES.get(key, back.get(key, key))
+            if name not in source:
+                continue
+            v = source[name]
+            out[key] = ','.join(str(x) for x in v) if isinstance(v, list) else \
+                ('1' if v is True else '0' if v is False else str(v))
+    return out
+
+
+def leaves(d, prefix=''):
+    for k, v in d.items():
+        if isinstance(v, dict) and not prefix:
+            yield from leaves(v, k + '.')
+        else:
+            yield prefix + k, v
+
+
 def map_printer(c, texts=None):
     """texts: the start and end G-code to convert, when not the bundle's own (engine_texts)."""
     if texts is None:
@@ -984,6 +1014,21 @@ def main():
                 put(settings, 'machine', 'max_height', height)
                 filled.append('machine.max_height')
                 w.stats['printer height from the source program'] += 1
+            if not sla and block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
+                # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
+                # most of the values of a few): translated from the source program's preset, as the bundle would
+                # have them.
+                lost = lost_machine_values(c, source)
+                if lost:
+                    full, _ = map_printer(dict(c, **lost), engine_texts(block, dict(c, **lost)))
+                    full.pop('_notes', None)
+                    for path, value in leaves(full):
+                        if path not in dict(leaves(settings)):
+                            group, key = path.split('.', 1)
+                            put(settings, group, key, value)
+                            filled.append(path)
+                    if any(p not in ('machine.nozzle_diameter', 'machine.max_height') for p in filled):
+                        w.stats['printer values from the source program'] += 1
             notes = settings.pop('_notes', {})
             rel = w.path(vdir, 'printers', slug(name) + '.json')
             entry = {'format': 'tisma-pack-entry', 'version': FORMAT_VERSION,

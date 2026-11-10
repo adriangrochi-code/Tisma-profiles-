@@ -15,13 +15,16 @@ AGPL-3.0-or-later.
   salen del valor por defecto del programa (`program_defaults`).
 - **Boquillas que faltaban:** 6 variantes nuevas (por ejemplo la AnkerMake M5 con 0,2 y 0,25 mm) de impresoras que
   venían de dos fuentes; sus perfiles ya no quedan en la variante de 0,4.
-- **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, y la altura de 9
-  impresoras (por ejemplo la Meltingplot MBL 480).
+- **Datos que el paquete de Tisma Slicer perdió:** la boquilla de la Anycubic i3 Mega y la Mega S, la altura de 9
+  impresoras (por ejemplo la Meltingplot MBL 480), y los límites de velocidad, aceleración y jerk por eje de 857
+  variantes de la familia OrcaSlicer (más la retracción de la Elegoo Neptune y la UltiMaker 2 extended+), del
+  programa de origen.
 - **Datos de comunidad** enlazados a su modelo del paquete.
 - **Tipo de material sin comillas:** 4682 filamentos de la familia OrcaSlicer decían `"PLA"` (con las comillas del
   archivo) en vez de `PLA`.
 - **Más revisiones en la CI** (`tools/check_pack.py`): perfiles por defecto, boquilla de los perfiles de impresión,
-  variantes sin fabricante, G-code de filamento de la familia OrcaSlicer, datos de comunidad, textos con comillas.
+  variantes sin fabricante, G-code de filamento de la familia OrcaSlicer, datos de comunidad, textos con comillas,
+  valores que el programa de origen da y el paquete perdió.
 
 El formato sigue en la versión 2: un lector anterior ignora los campos nuevos.
 
