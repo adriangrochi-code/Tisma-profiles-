@@ -59,6 +59,25 @@ changes.
 - 4 groups of models share the vendor-wide base start G-code of OrcaSlicer (DeltaMaker, LONGER LK10, E3NG/VIRTU,
   WonderMaker): that is how the source has them; reported as notes, not failures.
 
+## Missing or wrongly generated elements (owner's request of 2026-11-10)
+
+Measured on the pack of 5f546b2. "Source" says whether a program the converter reads has the data.
+
+| # | What | How many | Source | State |
+|---|------|----------|--------|-------|
+| 1 | Creality Print / Elegoo Slicer models without thumbnail, bed model, default materials | 12 models | yes (machine_model) | fixed 0289cb2 |
+| 2 | Bed textures named in another case than the file (Geeetech) | 2 models | yes (bundle) | fixed 53daf1c |
+| 3 | Pack not the same twice (translation tables' order by hash seed) | 4 tables | — | fixed 5f546b2 |
+| 4 | FFF variants with no compatible print at all (Bambu Lab P1S/X1/X1C 0.4, SeeMeCNC 23, Qidi 7…) | 75 variants | yes: the bundle lacks presets the source program has (OrcaSlicer ~758 prints, ~3030 filaments, ~169 printers; Creality Print 218 / 1169 / 76; part are intended de-duplications) | open: needs presets converted straight from the source program (large; owner to decide) |
+| 5 | UltiMaker Cura models without pictures | 296 models | maybe (Cura resources/meshes and images, not fetched; licenses to check) | open |
+| 6 | Essential fields the preset leaves to the program default (Anycubic filaments without type: PrusaSlicer default PLA; one Kingroon print without layer height: OrcaSlicer default 0.2) | 14 + 1 | program defaults (PrintConfig.cpp) | open: owner to decide whether program defaults fill profiles |
+| 7 | OrcaSlicer models without bed model / texture / thumbnail | 46 / 56 / 12 | no (not in the source either) | none |
+| 8 | Bed files named by the bundle but not in it (E2D i310/i311, TriLAB, Trimaker) | 6 models, 13 files | no | none |
+| 9 | Resin printers without thumbnail / bed / default materials | 150 / 154 / 143 | no (UVtools has none) | none |
+| 10 | Vendor logos | all vendors | no field and no source read | none |
+| 11 | Empty model family / default materials (PrusaSlicer bundles), empty filament vendor | 25 / 20 / 29 | no | none |
+| 12 | Community data | 5 printers | web, with sources | open (needs research per printer) |
+
 ## Contacts
 
 - Spec/QA: session_01QadJfL7KViJEaJL92p8Swb (behaviour and format notes, how to try the pack).

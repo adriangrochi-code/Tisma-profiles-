@@ -13,7 +13,7 @@
 - a printer variant of index.json that no vendor lists;
 - with --community, a community printer file that names no model of the pack;
 - a printer's default filament, print or resin that is not in the pack, or that does not fit the printer while
-  another one does;
+  another one does (and, as a note, an FFF variant that no filament or print fits);
 - a printer of the OrcaSlicer family without a translated value that its source program's preset gives (its
   gcode.values) and its bundle lost;
 - a translation table (translation/<dialect>.json) that is malformed, that disagrees with the PrusaSlicer one, or
@@ -148,8 +148,9 @@ def check_print_nozzles(pack, index, sets, problems, counts):
                     '%s (%s; also %s)' % (rel, e['nozzle'], ', '.join(str(x) for x in other)))
 
 
-def check_defaults(pack, index, sets, problems, counts):
+def check_defaults(pack, index, sets, problems, counts, notes=None):
     """Every printer's default profiles exist and fit it."""
+    notes = notes if notes is not None else collections.defaultdict(list)
     place = {r: i for i, r in enumerate(index['printers'])}
     cache = {}
     fitting = {}  # (kind, printer number) -> some profile of that kind fits it
@@ -181,6 +182,11 @@ def check_defaults(pack, index, sets, problems, counts):
         if fits and not set(fits) & set((var.get('defaults') or {}).get(kind) or []):
             problems['default %s other than the one the source names, which fits' % kind].append(
                 '%s: %s' % (ref, said))
+        if cache[path].get('technology') == 'fff':
+            for kind in ('filament', 'print'):
+                if not fitting.get((kind, i)):
+                    # Open (HANDOFF.md, missing elements #4): the bundle lacks presets its source program has.
+                    notes['FFF variant with no compatible %s at all' % kind].append(ref)
         for kind, rels in (var.get('defaults') or {}).items():
             for rel in rels:
                 counts['printer defaults'] += 1
@@ -360,7 +366,7 @@ def main():
     for ref in index['printers']:
         if ref not in listed:
             problems['printer variant that no vendor lists'].append(ref)
-    check_defaults(args.pack, index, sets, problems, counts)
+    check_defaults(args.pack, index, sets, problems, counts, notes)
     check_print_nozzles(args.pack, index, sets, problems, counts)
     if args.community:
         models = {(v['id'], m['id']) for v in index['vendors'] for m in v['models']}
