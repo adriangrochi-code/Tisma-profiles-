@@ -75,7 +75,7 @@ owner gets a summary every 3 hours.
 | Elegoo Slicer | revisado 2026-11-10: the one model (pictures, G-code) |
 | UltiMaker Cura | revisado 2026-11-10: machine G-code (dialect cura), bed meshes (21994df); pendiente: its print/filament values (from Tisma's bundles, 15 filaments), translation table (3 of 739 keys translated), relative/absolute E |
 | BlackBelt Cura, VertexSlice, converted bundles (42 printers) | pendiente |
-| UVtools (167 resin printers, 484 resins, 35 resin prints) | pendiente (only: one resin left out for a missing parent, row 13 of Missing) |
+| UVtools (167 resin printers, 484 resins, 35 resin prints) | en curso 2026-11-10: bottom layers/exposure checked against UVtools' SL1 reader; first layer height open (see resin row); one resin left out (missing parent) |
 
 ### By option group
 
@@ -84,7 +84,7 @@ owner gets a summary every 3 hours.
 | printer (FFF machine) | revisado 2026-11-10: nozzle, height, bed, per-axis limits (0 limits not written), retraction of sparse presets, relative E with macros; pendiente: multi-extruder printers (per-extruder lists, offsets, toolchange values), machine_limits_usage per flavor |
 | print | revisado 2026-11-10: % bases of every percent option against Tisma's code, wall/outer/first-layer widths, support XY gap, first layer speed; pendiente: enum maps (fill patterns, ironing, seam beyond back), wipe tower and multi-material options, raft/brim/skirt semantics |
 | filament | revisado 2026-11-10: type/vendor quotes, temperatures and cooling filled, print limits, source_values; pendiente: multi-extruder lists (first item only), density/cost units, cooling semantics (fan_below_time etc.) against the source |
-| resin (SLA printer, resin, resin print) | pendiente |
+| resin (SLA printer, resin, resin print) | revisado 2026-11-10 (parcial): faded_layers/initial_exposure_time as UVtools reads them (bottom layers with the bottom exposure, no fade) = the engine's; hallazgo: the resin's initial_layer_height is PrusaSlicer's FIRST layer height, the pack writes it as resin.layer_height (the print overrides it): asked the spec for resin.first_layer_height; pendiente: material_notes keys, correction, display/mirror, lift values |
 | G-code (macros, templates, dialects) | revisado 2026-11-10: verbatim, GM13 2255/2267, list-as-number rule (spec GM15), unfilled variables report; pendiente: rarely-set variables per dialect against each program's GCode.cpp |
 | assets | revisado 2026-11-10: thumbnails/beds/textures from bundles and source programs, Cura beds converted and checked |
 | compatibility | revisado 2026-11-10: conditions as the programs evaluate them, merged presets, print limits of filaments, every FFF variant has a print and a filament |
