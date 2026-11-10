@@ -288,6 +288,15 @@ class ResinNotes(unittest.TestCase):
         self.assertEqual(settings['resin']['lift_speed'], 1.1667)
 
 
+class ResinCorrection(unittest.TestCase):
+    def test_per_axis_values(self):
+        # PrusaSlicer scales an SLA part by material_correction_x/y/z, not by the "1,1,1" list.
+        settings, _ = convert.map_resin_material({'material_correction': '1,1,1', 'material_correction_x': '1.0073',
+                                                  'material_correction_y': '1.0073'})
+        self.assertEqual((settings['resin']['scale_x'], settings['resin']['scale_y'], settings['resin']['scale_z']),
+                         (1.0073, 1.0073, 1))
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

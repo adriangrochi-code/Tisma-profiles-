@@ -252,7 +252,7 @@ TABLE = {
         E('exposure_time', 'resin.exposure'),
         E('initial_exposure_time', 'resin.bottom_exposure'),
         E('material_correction', 'resin.scale_x, resin.scale_y, resin.scale_z', 'rule', rule='correction',
-          note='three numbers, X Y Z'),
+          note='material_correction_x/y/z, as PrusaSlicer scales (the list only switches it on)'),
         E('material_notes', ', '.join('resin.' + v for k, v in RESIN_NOTE_KEYS.items()
                                       if v not in ('bottom_retract_speed', 'bottom_wait_before_exposure')),
           'rule', rule='resin_notes', used='never', note='"NAME = number" lines of the notes (UVtools)'),
@@ -401,12 +401,16 @@ def _rule(name, e, c, s, ctx):
             put(s, 'walls.gap_fill', False)
         return True, ('gap_fill_speed',)
     if name == 'correction':
-        corr = [num(x) for x in c.get('material_correction', '').split(',') if x.strip()]
-        if len(corr) == 3 and all(x is not None for x in corr):
-            for axis, v in zip('xyz', corr):
-                put(s, 'resin.scale_' + axis, v)
-            return True, ('material_correction',)
-        return False, ()
+        # PrusaSlicer scales by material_correction_x/y/z (SLAPrint::relative_correction: the list only has to have
+        # two values or more); a bundle without them has the program's 1.
+        corr = [x for x in c.get('material_correction', '').split(',') if x.strip()]
+        axes = ['material_correction_' + a for a in 'xyz']
+        if len(corr) < 2 and not any(k in c for k in axes):
+            return False, ()
+        for axis, k in zip('xyz', axes):
+            v = num(c.get(k)) if k in c else 1
+            put(s, 'resin.scale_' + axis, v if v else 1)
+        return True, ('material_correction',) + tuple(k for k in axes if k in c)
     if name == 'resin_notes':
         notes = unescape((c.get('material_notes') or '').strip().strip('"'))
         for m in re.finditer(r'^\s*([A-Z_]+)\s*=\s*([-\d.]+)', notes, re.M):
