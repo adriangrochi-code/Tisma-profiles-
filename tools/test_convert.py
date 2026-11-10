@@ -370,6 +370,14 @@ class ResinCorrection(unittest.TestCase):
                          (1.0073, 1.0073, 1))
 
 
+class ResinLayers(unittest.TestCase):
+    def test_initial_layer_height_is_the_first_layer(self):
+        # PrusaSlicer SLA: the resin's initial_layer_height is the first layer only; the print's layer_height the rest.
+        settings, _ = convert.map_resin_material({'initial_layer_height': '0.05', 'exposure_time': '2'})
+        self.assertEqual(settings['resin']['first_layer_height'], 0.05)
+        self.assertNotIn('layer_height', settings['resin'])
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

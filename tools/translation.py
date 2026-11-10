@@ -411,7 +411,8 @@ TABLE = {
         E('max_print_height', 'machine.max_height'),
     ],
     'sla_material': [
-        E('initial_layer_height', 'resin.layer_height'),
+        E('initial_layer_height', 'resin.first_layer_height',
+          note='the height of the first layer (PrusaSlicer SLA); the other layers take the print\'s layer_height'),
         E('exposure_time', 'resin.exposure'),
         E('initial_exposure_time', 'resin.bottom_exposure'),
         E('material_correction', 'resin.scale_x, resin.scale_y, resin.scale_z', 'rule', rule='correction',
