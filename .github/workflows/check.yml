@@ -71,6 +71,11 @@ jobs:
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json --community community
 
+      - name: docs/GCODE_VARIABLES.md in step with the pack
+        run: |
+          python3 tools/gcode_variables.py pack gcode_variables.md --defs prusaslicer=source/src/libslic3r/PrintConfig.cpp --defs orcaslicer=upstream/OrcaSlicer/src/libslic3r/PrintConfig.cpp --defs crealityprint=upstream/CrealityPrint/src/libslic3r/PrintConfig.cpp --defs elegooslicer=upstream/ElegooSlicer/src/libslic3r/PrintConfig.cpp --cura upstream/Cura --sources-json sources.json
+          diff -u docs/GCODE_VARIABLES.md gcode_variables.md || { echo "Regenerate docs/GCODE_VARIABLES.md with tools/gcode_variables.py"; exit 1; }
+
       - name: Keep the reports
         if: always()
         uses: actions/upload-artifact@v4
