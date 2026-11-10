@@ -534,6 +534,12 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 
 
+def template_values(values, wanted, exclude=()):
+    """The values of a source program's preset for the variables its machines' G-code uses (wanted), by name; not
+    the ones in exclude."""
+    return {k: v for k, v in sorted(values.items()) if k in wanted and k not in exclude}
+
+
 def generated_time():
     """The time of the conversion (UTC), or SOURCE_DATE_EPOCH's when it is set (reproducible builds: the same pack
     from the same sources)."""
@@ -1358,6 +1364,16 @@ def main():
                         w.stats['filaments with source_values (%s)' % src[0]] += 1
                 if fblock:
                     entry['gcode'] = fblock
+            if kind == 'print' and src and source_values:
+                # The print's values in the source program for the variables of the machines' G-code (OrcaSlicer's
+                # outer_wall_acceleration, timelapse_type…): the bundle keeps them under PrusaSlicer names or not at
+                # all, and the machine G-code reads them by the source program's names.
+                # Only the ones PrusaSlicer does not have: those the engine fills from the print's translated settings
+                # (OrcaSlicer's per-extruder default_acceleration list would take the place of its number).
+                given = template_values(source_values, template_variables.get(src[0], set()), exclude=OPTION_TYPES)
+                if given:
+                    entry['source_values'] = {'dialect': src[0], 'preset': from_source[0], 'values': given}
+                    w.stats['prints with source_values (%s)' % src[0]] += 1
             w.write(rel, entry)
             vendor[group].append(rel)
             w.stats[kind] += 1

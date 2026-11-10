@@ -166,9 +166,9 @@ def main():
         for part in (fil, pr):
             if part:
                 entry = json.load(open(os.path.join(args.pack, part), encoding='utf-8'))
-                if args.macros and part == fil and entry.get('source_values', {}).get('values'):
-                    # The filament's values in the source program go in machine.variables, under the ones the
-                    # profile gives (as the engine reads the pack).
+                if args.macros and entry.get('source_values', {}).get('values'):
+                    # The filament's and the print's values in the source program go in machine.variables, under
+                    # the ones the profile gives (as the engine reads the pack).
                     given = (entry['profile']['settings'].get('machine') or {}).get('variables') or {}
                     extra = {k: v for k, v in entry['source_values']['values'].items() if k not in given}
                     merge(cfg, {'machine': {'variables': extra}})

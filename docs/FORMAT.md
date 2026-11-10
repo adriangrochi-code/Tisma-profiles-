@@ -153,6 +153,12 @@ comparten:
   familia OrcaSlicer, los del mismo perfil en el programa de origen, con sus nombres (por ejemplo `temperature_vitrification`, `additional_fan_full_speed_layer`
   y `close_additional_fan_first_x_layers` de las Bambu Lab, que el paquete de Tisma Slicer no guarda). Con la versión
   del 05-11-2026, 7199 filamentos de paquetes de PrusaSlicer, 4121 de OrcaSlicer y 316 de Creality Print.
+- **`source_values`** (impresiones de la familia OrcaSlicer), con `dialect`, `preset` y `values`: los valores del mismo
+  perfil en el programa de origen para las variables que usa el G-code de las máquinas de ese dialecto y que
+  PrusaSlicer no tiene (por ejemplo `outer_wall_acceleration`, `timelapse_type`, `print_sequence`); las que PrusaSlicer
+  tiene salen de los ajustes traducidos de la impresión. Van, como las del filamento, en las variables del G-code de la
+  máquina. Una lista de números de OrcaSlicer usada donde se espera un número (`{if outer_wall_acceleration > 0}`) vale
+  la del extrusor en uso, o la única si hay una (PlaceholderParser.cpp de OrcaSlicer).
 - **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
   que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
   boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, la altura de 9

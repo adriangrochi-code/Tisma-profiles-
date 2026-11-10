@@ -141,6 +141,19 @@ class Reproducible(unittest.TestCase):
                 os.environ['SOURCE_DATE_EPOCH'] = old
 
 
+class SourceValues(unittest.TestCase):
+    def test_print_values_for_the_machine_gcode(self):
+        # OrcaSlicer machine G-code reads outer_wall_acceleration, a print setting, by its own name.
+        values = {'outer_wall_acceleration': ['5000'], 'layer_height': '0.2', 'sparse_infill_density': '15%'}
+        self.assertEqual(convert.template_values(values, {'outer_wall_acceleration', 'curr_bed_type'}),
+                         {'outer_wall_acceleration': ['5000']})
+        # A variable PrusaSlicer has too is the engine's, from the translated print (not a per-extruder list).
+        values['default_acceleration'] = ['10000', '10000']
+        self.assertEqual(convert.template_values(values, {'outer_wall_acceleration', 'default_acceleration'},
+                                                 exclude={'default_acceleration': 'coFloat'}),
+                         {'outer_wall_acceleration': ['5000']})
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')
