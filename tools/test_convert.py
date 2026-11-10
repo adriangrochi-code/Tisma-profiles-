@@ -323,6 +323,19 @@ class FilamentAndPrinterOptions(unittest.TestCase):
         self.assertEqual(settings['gcode']['thumbnails'], '64x64/JPG, 400x300/JPG')
         self.assertEqual(settings['travel'], {'ramping_lift': True, 'max_lift': 1.5})
         self.assertEqual(settings['sequential']['clearance_radius'], 45)
+        # PrusaSlicer's "marlin" is Marlin 1 (the engine's marlin_legacy: M204 S is the printing acceleration),
+        # "marlin2" Marlin 2, "reprapfirmware" Duet (G10/M116 temperatures), not the generic reprap.
+        for flavor, engine in (('marlin', 'marlin_legacy'), ('marlin2', 'marlin'), ('reprapfirmware', 'reprapfirmware'),
+                               ('reprap', 'reprap'), ('repetier', 'repetier'), ('no-extrusion', 'no_extrusion')):
+            settings, _ = convert.map_printer({'gcode_flavor': flavor})
+            self.assertEqual(settings['machine']['flavor'], engine)
+        # Junction deviation (M205 J) only with marlin2: on legacy Marlin, RepRapFirmware or Klipper the source
+        # programs keep the jerk (SeeMeCNC RepRapFirmware printers have 0.01).
+        settings, _ = convert.map_printer({'machine_max_junction_deviation': '0.01,0', 'gcode_flavor': 'marlin2'})
+        self.assertEqual(settings['machine']['junction_deviation'], 0.01)
+        for flavor in ('marlin', 'reprapfirmware', 'klipper'):
+            settings, _ = convert.map_printer({'machine_max_junction_deviation': '0.01', 'gcode_flavor': flavor})
+            self.assertNotIn('junction_deviation', settings.get('machine', {}))
         settings, _ = convert.map_printer({'autoemit_temperature_commands': '0'})
         self.assertIs(settings['gcode']['auto_temperatures'], False)
 

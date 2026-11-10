@@ -17,10 +17,12 @@ import re
 
 FORMAT_VERSION = 1
 
-FLAVORS = {'marlin': 'marlin', 'marlin2': 'marlin', 'marlinlegacy': 'marlin', 'klipper': 'klipper',
-           'reprap': 'reprap', 'reprapfirmware': 'reprap', 'repetier': 'marlin', 'sprinter': 'marlin',
-           'smoothie': 'marlin', 'teacup': 'marlin', 'makerware': None, 'sailfish': None, 'mach3': None,
-           'machinekit': None, 'no-extrusion': None}
+# The source's gcode_flavor (PrusaSlicer and OrcaSlicer names) as the engine's machine.flavor: "marlin" is Marlin 1
+# (the engine's marlin_legacy) and "marlin2" Marlin 2 (the engine's marlin); "reprap" is RepRap/Sprinter.
+FLAVORS = {'marlin': 'marlin_legacy', 'marlinlegacy': 'marlin_legacy', 'marlin2': 'marlin', 'klipper': 'klipper',
+           'reprap': 'reprap', 'reprapfirmware': 'reprapfirmware', 'repetier': 'repetier', 'smoothie': 'smoothie',
+           'teacup': 'teacup', 'makerware': 'makerware', 'sailfish': 'sailfish', 'mach3': 'mach3',
+           'machinekit': 'machinekit', 'no-extrusion': 'no_extrusion'}
 
 PATTERNS = {'rectilinear': 'rectilinear', 'monotonic': 'monotonic', 'grid': 'grid', 'gyroid': 'gyroid',
             'triangles': 'triangles', 'stars': 'stars', 'cubic': 'cubic', 'adaptivecubic': 'adaptive_cubic',
@@ -77,8 +79,7 @@ TABLE = {
         E('nozzle_diameter', 'machine.nozzle_diameter', note='the first extruder'),
         E('bed_shape', 'machine.bed', 'points', used='written', note='"XxY" corners; written only with 3 or more'),
         E('max_print_height', 'machine.max_height'),
-        E('gcode_flavor', 'machine.flavor', 'map', values=FLAVORS, group='similar',
-          note='firmware families: repetier, sprinter, smoothie and teacup write as marlin; the rest unknown'),
+        E('gcode_flavor', 'machine.flavor', 'map', values=FLAVORS),
         E('use_relative_e_distances', 'machine.relative_extrusion', 'flag'),
         E(['start_gcode', 'end_gcode'], 'machine.start_gcode, machine.end_gcode', 'rule', rule='gcode_template',
           note='only with simple variables; the whole G-code is in the "gcode" block (docs/FORMAT.md)'),
@@ -128,7 +129,9 @@ TABLE = {
         E('machine_max_jerk_e', 'machine.jerk_e', note='the normal mode (the first value)'),
         E('machine_min_extruding_rate', 'machine.min_extrude_feed', note='the normal mode (the first value)'),
         E('machine_min_travel_rate', 'machine.min_travel_feed', note='the normal mode (the first value)'),
-        E('machine_max_junction_deviation', 'machine.junction_deviation', note='the normal mode (the first value)'),
+        E(['machine_max_junction_deviation', 'gcode_flavor'], 'machine.junction_deviation', 'rule',
+          rule='junction_deviation', note='the normal mode (the first value); only with marlin2, the one flavor '
+                                         'the source programs send it to (M205 J), else they use the jerk'),
         E('travel_ramping_lift', 'travel.ramping_lift', 'flag'),
         E('travel_slope', 'travel.slope', note='the first extruder\'s'),
         E('travel_max_lift', 'travel.max_lift', note='the first extruder\'s; 0: the lift'),
@@ -533,6 +536,13 @@ def _rule(name, e, c, s, ctx):
             put(s, e['to'], nozzle * e['auto'])
             return True, tuple(k for k in e['from'] if k in c)
         return bool(e['auto'] is None), tuple(k for k in e['from'] if k in c)
+    if name == 'junction_deviation':
+        if 'machine_max_junction_deviation' not in c:
+            return False, ()
+        if (c.get('gcode_flavor') or '').strip() != 'marlin2':
+            return False, ('machine_max_junction_deviation',)
+        put(s, 'machine.junction_deviation', num(c['machine_max_junction_deviation']))
+        return True, ('machine_max_junction_deviation',)
     if name == 'thumbnails':
         v = (c.get('thumbnails') or '').strip().strip('"')
         if not v:
