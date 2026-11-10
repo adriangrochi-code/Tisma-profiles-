@@ -21,6 +21,8 @@ AGPL-3.0-or-later.
   valores de 37 impresiones y 11 filamentos que el paquete dejó casi vacíos (por ejemplo la altura de la primera
   capa de las impresiones de Elegoo y Artillery), del programa de origen.
 - **Datos de comunidad** enlazados a su modelo del paquete.
+- **Tablas de traducción:** la de OrcaSlicer da ahora los valores que tienen otro nombre en una clave con el mismo
+  nombre (la costura `back` es `rear`; la piel rugosa `disabled_fuzzy` es `none`).
 - **Tipo de material sin comillas:** 4682 filamentos de la familia OrcaSlicer decían `"PLA"` (con las comillas del
   archivo) en vez de `PLA`.
 - **Más revisiones en la CI** (`tools/check_pack.py`): perfiles por defecto, boquilla de los perfiles de impresión,

@@ -58,6 +58,20 @@ class LostValues(unittest.TestCase):
         self.assertNotIn('max_feed_e', settings['machine'])  # 0: no limit, not written
 
 
+class DialectTables(unittest.TestCase):
+    def test_same_key_with_other_value_names(self):
+        # OrcaSlicer's seam "back" is PrusaSlicer's "rear": the key keeps its name, its values do not.
+        r = convert.translation.Renames()
+        for i in range(20):
+            seam = ('aligned', 'nearest', 'back')[i % 3]
+            r.add('orcaslicer', 'print', {'seam_position': seam, 'layer_height': '0.2'},
+                  {'seam_position': 'rear' if seam == 'back' else seam, 'layer_height': '0.2'})
+        got = r.renames('orcaslicer', 'print')
+        self.assertEqual(got['seam_position'][0], 'seam_position')
+        self.assertEqual(got['seam_position'][3], {'aligned': 'aligned', 'back': 'rear', 'nearest': 'nearest'})
+        self.assertEqual(len(got['layer_height']), 3)  # numbers: no value names
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

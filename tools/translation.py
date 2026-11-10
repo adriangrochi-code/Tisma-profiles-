@@ -613,8 +613,37 @@ class Renames:
             if p != k and any(v[0] == p for v in out.values()):
                 continue
             out[k] = (p, hits, n)
+        for k, (p, hits, n) in list(out.items()):
+            if p == k:
+                values = self._own_value_names(pairs, k, agreement)
+                if values:
+                    out[k] = (p, hits, n, values)
         out.update(self._value_maps(pairs, set(out), {v[0] for v in out.values()}, min_presets, agreement))
         return out
+
+    @staticmethod
+    def _own_value_names(pairs, key, agreement, min_hits=2):
+        """For a key with the same name in the bundle: {source value: PrusaSlicer value} when some of its one-word
+        values have another name there (OrcaSlicer's seam "back" is PrusaSlicer's "rear"), each seen with the same
+        bundle value in at least `agreement` of its presets and `min_hits` of them; None when every value keeps its
+        name."""
+        table = {}
+        for src, dst in pairs:
+            if key not in src or key not in dst or isinstance(src[key], dict):
+                continue
+            sv, dv = _norm(src[key]), _norm(dst[key])
+            if len(sv) != 1 or len(dv) != 1 or not WORD_VALUE.match(sv[0]) or not WORD_VALUE.match(dv[0]):
+                continue
+            table.setdefault(sv[0], {}).setdefault(dv[0], 0)
+            table[sv[0]][dv[0]] += 1
+        mapping = {}
+        for sv, t in table.items():
+            dv = max(t, key=lambda x: (t[x], x == sv))
+            if t[dv] >= min_hits and t[dv] >= agreement * sum(t.values()):
+                mapping[sv] = dv
+        if all(a == b for a, b in mapping.items()):
+            return None
+        return dict(sorted(mapping.items()))
 
     @staticmethod
     def _value_maps(pairs, done_src, done_dst, min_presets, agreement, min_values=3, max_values=40):
