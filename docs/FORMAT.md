@@ -158,7 +158,7 @@ comparten:
   PrusaSlicer no tiene (por ejemplo `outer_wall_acceleration`, `timelapse_type`, `print_sequence`); las que PrusaSlicer
   tiene salen de los ajustes traducidos de la impresión. Van, como las del filamento, en las variables del G-code de la
   máquina. Una lista de números de OrcaSlicer usada donde se espera un número (`{if outer_wall_acceleration > 0}`) vale
-  la del extrusor en uso, o la única si hay una (PlaceholderParser.cpp de OrcaSlicer).
+  la del extrusor en uso, o la única si hay una (así lo hace OrcaSlicer).
 - **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
   que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
   boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, la altura de 9
