@@ -270,6 +270,15 @@ class PrintLimits(unittest.TestCase):
         self.assertIsNone(convert.prints_for({}, prints))
 
 
+class FirstLayerSpeed(unittest.TestCase):
+    def test_percent_kept(self):
+        # Tisma Slicer: "35%" is 35 % of each extrusion's speed on the first layer (GCode.cpp); the engine reads it.
+        settings, _ = convert.map_print({'layer_height': '0.2', 'first_layer_speed': '35%'}, 0.4)
+        self.assertEqual(settings['speed']['first_layer'], '35%')
+        settings, _ = convert.map_print({'layer_height': '0.2', 'first_layer_speed': '30'}, 0.4)
+        self.assertEqual(settings['speed']['first_layer'], 30)
+
+
 class Quotes(unittest.TestCase):
     def test_first_text_without_the_bundle_quotes(self):
         self.assertEqual(convert.first_text('"PLA";"PETG"'), 'PLA')

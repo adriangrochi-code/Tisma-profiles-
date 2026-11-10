@@ -391,14 +391,13 @@ Con la versión del 05-11-2026:
 
 `tools/validate.py` lamina un cubo de 20 mm con el motor con cada variante FDM y su filamento y perfil por defecto, y
 después con cada filamento y cada perfil de impresión en la primera impresora compatible. Con la versión del
-10-11-2026 y el motor de `dev` (5af1570):
+10-11-2026 y el motor de `dev` (b926456):
 - **variantes:** las 2267 laminan, también con el G-code propio de cada máquina (`--macros`), y en las 2255 que leen
   su G-code propio cada línea fija de su G-code de inicio y de fin sale igual y en el mismo orden (GM13);
-- **todo:** 18 325 combinaciones, 26 fallan (0,14 %), por datos del programa de origen. 11 son perfiles de impresión
-  con capas más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron de 0,25 y 0,3 mm), y
-  15 perfiles de Geeetech cuyo ancho de pared (111 % de la altura de capa, como lo calcula Tisma Slicer: 0,089 mm con
-  capas de 0,08) o de la primera capa (0,133 mm) es menos de un cuarto de la boquilla, lo mínimo que acepta el motor;
-  Tisma Slicer los acepta mientras sean más anchos que la capa.
+- **todo:** 18 325 combinaciones, 16 fallan (0,09 %), por datos del programa de origen, que tampoco las lamina. 11 son
+  perfiles de impresión con capas más gruesas que la boquilla de su impresora (CR-10 SE y LONGER LK10 de 0,2 mm, Voron
+  de 0,25 y 0,3 mm), y 5 de capas de 0,2 mm en boquilla de 0,2 mm (LNL3D D3, LONGER LK10) cuya pared exterior de
+  0,2 mm no es más ancha que la capa, lo que Tisma Slicer exige.
 
 `tools/check_pack.py` revisa el paquete convertido y la CI falla si encuentra:
 - un conjunto de compatibilidad vacío, o un perfil que apunta a uno que no existe;
