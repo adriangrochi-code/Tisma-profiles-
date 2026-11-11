@@ -1548,12 +1548,14 @@ def main():
                     entry['source_over_bundle'] = {k: {'bundle': a, 'source': b2} for k, (a, b2) in over.items()}
                     w.over.extend({'profile': rel, 'key': k, 'bundle': a, 'source': b2} for k, (a, b2) in over.items())
                 if kind == 'filament':
-                    entry['material'] = {'type': first_text(c.get('filament_type')),
-                                         'vendor': first_text(c.get('filament_vendor')),
-                                         'density': num(c.get('filament_density')),
-                                         'cost_per_kg': num(c.get('filament_cost')),
-                                         'colour': first_text(c.get('filament_colour')),
-                                         'soluble': flag(c.get('filament_soluble', '0'))}
+                    # With the source program's values over the bundle's, as the settings.
+                    mc = dict(c, **{k: v[1] for k, v in over.items()})
+                    entry['material'] = {'type': first_text(mc.get('filament_type')),
+                                         'vendor': first_text(mc.get('filament_vendor')),
+                                         'density': num(mc.get('filament_density')),
+                                         'cost_per_kg': num(mc.get('filament_cost')),
+                                         'colour': first_text(mc.get('filament_colour')),
+                                         'soluble': flag(mc.get('filament_soluble', '0'))}
                 if kind == 'print' and nozzle:
                     entry['nozzle'] = nozzle
                 if (b.id, kind, name) in synthetic:

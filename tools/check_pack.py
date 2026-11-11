@@ -271,6 +271,14 @@ def main():
                         node = node.get(part, {})
                     node.pop(parts[-1], None)
                 prune(settings)
+                if group == 'filaments':
+                    # The material block says what the settings say (type, density, cost).
+                    ext = e['profile']['settings'].get('extrusion') or {}
+                    mat = e.get('material') or {}
+                    for mk, sk in (('type', 'type'), ('density', 'density'), ('cost_per_kg', 'cost')):
+                        if mat.get(mk) not in (None, '') and ext.get(sk) is not None and mat[mk] != ext[sk]:
+                            problems['filament material block not as its settings'].append(
+                                '%s: material.%s %s, extrusion.%s %s' % (rel, mk, mat[mk], sk, ext[sk]))
                 # The source program's values over the bundle's (source_over_bundle) are part of the profile.
                 given = dict(e['original'], **{k: v['source'] for k, v in (e.get('source_over_bundle') or {}).items()})
                 same_translation(KINDS[group], given, settings, rel, problems, counts, nozzle=e.get('nozzle'))
