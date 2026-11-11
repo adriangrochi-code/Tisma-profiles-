@@ -831,13 +831,14 @@ def same_value(a, b):
         return False
 
 
-def source_over_bundle(kind, c, source, conv, nozzle=None):
+def source_over_bundle(kind, c, source, conv, nozzle=None, kept=None):
     """{PrusaSlicer key: (bundle text, source text)} of the options of the translation table of a kind that the bundle
     has with another value than the source program's preset gives through Tisma Slicer's converter (conv): the
     profile behaves as in its source program (owner's rule). For a print of any nozzle (nozzle None), the line widths
     are left as the bundle has them: the source's are a percent of each printer's nozzle. A print for belt printers
     (Tisma Slicer's belt bundles name BELT_ in its condition) keeps the bundle's brim: the engine refuses a brim on a
-    belt printer, where VertexSlice prints the 5 mm of its generic process."""
+    belt printer, where VertexSlice prints the 5 mm of its generic process; kept (a dict) gets those of the keys left as
+    the bundle has them that differ from the source's, {key: (bundle text, source text)}."""
     keys = {k for e in translation.TABLE[kind]
             for k in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]) if k}
     got = conv.convert(kind, dict(source), nozzle or 0.4)
@@ -847,6 +848,8 @@ def source_over_bundle(kind, c, source, conv, nozzle=None):
         if nozzle is None and kind == 'print' and k.endswith('extrusion_width'):
             continue
         if belt and k == 'brim_width':
+            if kept is not None and not same_value(c[k], got[k]):
+                kept[k] = (c[k], got[k])
             continue
         if not same_value(c[k], got[k]):
             out[k] = (c[k], got[k])
@@ -1575,10 +1578,10 @@ def main():
                 else:
                     settings, used = map_resin_print(c)
                     pk, folder, group = 'resin_print', 'resin_prints', 'resin_prints'
-                over = {}
+                over, kept = {}, {}
                 if kind in ('filament', 'print') and source_values and args.tisma_converter:
                     conv1 = tisma_converter(args.tisma_converter, os.path.dirname(vendor_presets.folder))
-                    over = source_over_bundle(kind, c, source_values, conv1, nozzle)
+                    over = source_over_bundle(kind, c, source_values, conv1, nozzle, kept)
                     if over:
                         # The bundle has another value than the source program: the source's (the profile behaves as
                         # there), listed in the entry and in stats.json.
@@ -1599,6 +1602,9 @@ def main():
                 if over:
                     entry['source_over_bundle'] = {k: {'bundle': a, 'source': b2} for k, (a, b2) in over.items()}
                     w.over.extend({'profile': rel, 'key': k, 'bundle': a, 'source': b2} for k, (a, b2) in over.items())
+                if kept:
+                    # Left as the bundle has them although the source program differs (the engine refuses the source's).
+                    entry['kept_from_bundle'] = {k: {'bundle': a, 'source': b2} for k, (a, b2) in kept.items()}
                 if kind == 'filament':
                     # With the source program's values over the bundle's, as the settings.
                     mc = dict(c, **{k: v[1] for k, v in over.items()})

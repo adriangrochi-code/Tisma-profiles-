@@ -178,6 +178,10 @@ comparten:
   como en su programa): `profile.settings` es la traducción de `original` con esos valores. `stats.json`
   (`source_over_bundle`) los lista todos con el perfil. En un perfil de impresión para cualquier boquilla, los anchos
   de línea quedan como el paquete los tiene (ver abajo).
+- **`kept_from_bundle`** (mismo formato que `source_over_bundle`): las claves que quedan como el paquete de Tisma
+  Slicer las tiene aunque el programa de origen da otro valor, porque el motor no acepta el del origen. Hoy solo el
+  borde (`brim_width`) de una impresión para impresoras de cinta: VertexSlice imprime 5 mm y el motor no pone borde en
+  la cinta (spec `belt_printer.md`, regla 4). Queda anotado por si el motor lo admite más adelante.
 - **Perfiles de impresión por boquilla:** un perfil del origen para impresoras de varias boquillas cuyos anchos son un
   porcentaje de la boquilla de cada una (OrcaSlicer: `line_width = 105%`) se escribe una vez por boquilla, con el mismo
   nombre, `nozzle` y sus impresoras de esa boquilla, y los anchos en mm que da el origen para ella; la ruta lleva la

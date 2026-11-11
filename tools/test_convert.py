@@ -189,7 +189,9 @@ class SourceOverBundle(unittest.TestCase):
         conv = self.Conv({'brim_width': '5', 'perimeters': '2'})
         belt = {'brim_width': '0', 'perimeters': '3',
                 'compatible_printers_condition': 'printer_notes=~/.*BELT_IDEAFORMER_IR3V2.*/'}
-        self.assertEqual(convert.source_over_bundle('print', belt, {}, conv), {'perimeters': ('3', '2')})
+        kept = {}
+        self.assertEqual(convert.source_over_bundle('print', belt, {}, conv, kept=kept), {'perimeters': ('3', '2')})
+        self.assertEqual(kept, {'brim_width': ('0', '5')})
         self.assertEqual(convert.source_over_bundle('print', {'brim_width': '0'}, {}, conv), {'brim_width': ('0', '5')})
 
 
