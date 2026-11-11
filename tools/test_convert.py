@@ -272,8 +272,8 @@ class PrintOptions(unittest.TestCase):
                                         0.4)
         self.assertIs(settings['walls']['gap_fill'], False)
         self.assertEqual((settings['speed']['over_bridges'], settings['acceleration']['short_travel']), ('35%', 250))
-        printer, _ = convert.map_printer({'nozzle_high_flow': '1,1'})
-        self.assertIs(printer['machine']['high_flow_nozzle'], True)
+        printer, _ = convert.map_printer({'nozzle_high_flow': '1,1', 'multimaterial_purging': '80'})
+        self.assertEqual((printer['machine']['high_flow_nozzle'], printer['wipe_tower']['purge_volumes']), (True, 80))
 
     def test_ooze_prevention(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'ooze_prevention': '1',
