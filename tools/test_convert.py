@@ -275,6 +275,14 @@ class PrintOptions(unittest.TestCase):
         printer, _ = convert.map_printer({'nozzle_high_flow': '1,1', 'multimaterial_purging': '80'})
         self.assertEqual((printer['machine']['high_flow_nozzle'], printer['wipe_tower']['purge_volumes']), (True, 80))
 
+    def test_no_speed_cap(self):
+        # The source programs cap no set speed (max_print_speed is only for speeds left at 0): IdeaFormer IR3
+        # "0.20mm Standard" prints its outer wall at 120 mm/s with walls at 50. speed.max would cap it.
+        settings, _ = convert.map_print({'layer_height': '0.2', 'perimeter_speed': '50', 'infill_speed': '50',
+                                         'external_perimeter_speed': '120', 'max_print_speed': '80'}, 0.4)
+        self.assertNotIn('max', settings['speed'])
+        self.assertEqual(settings['speed']['outer_wall'], 120)
+
     def test_ooze_prevention(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'ooze_prevention': '1',
                                          'standby_temperature_delta': '-150'}, 0.4)

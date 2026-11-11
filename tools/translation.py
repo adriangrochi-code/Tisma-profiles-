@@ -252,8 +252,6 @@ TABLE = {
         E('travel_speed', 'speed.travel'),
         E('first_layer_speed', 'speed.first_layer', 'number_or_percent',
           note='mm/s for every extrusion of the first layer, or "N%" of each extrusion\'s speed (as the source)'),
-        E(['perimeter_speed', 'infill_speed', 'solid_infill_speed', 'support_material_speed'], 'speed.max', 'rule',
-          rule='fastest', used='never', note='the fastest of these speeds'),
         E('skirts', 'adhesion.skirt_loops'),
         E('skirt_distance', 'adhesion.skirt_distance'),
         E('skirt_height', 'adhesion.skirt_layers'),
@@ -636,12 +634,6 @@ def _rule(name, e, c, s, ctx):
         if any(x or y for x, y in offsets) and not flag(c.get('single_extruder_multi_material', '0')):
             put(s, 'machine.extruder_offset', offsets)
         return True, ('extruder_offset',)
-    if name == 'fastest':
-        fastest = max([x for x in (get(s, 'speed.walls'), get(s, 'speed.infill'), get(s, 'speed.solid_infill'),
-                                   num(c.get('support_material_speed'))) if x] or [0])
-        if fastest:
-            put(s, 'speed.max', fastest)
-        return bool(fastest), ()
     if name == 'limits_usage':
         v = e['values'].get((c.get('machine_limits_usage') or '').strip())
         if v == 'emit' and (c.get('gcode_flavor') or '').strip() == 'klipper':
