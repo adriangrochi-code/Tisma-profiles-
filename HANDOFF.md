@@ -74,7 +74,7 @@ owner gets a summary every 3 hours.
 | Creality Print | revisado 2026-11-10: model pictures/materials (0289cb2), G-code from the source, compatible lists, filament G-code; pendiente: its own option names that differ from OrcaSlicer's |
 | Elegoo Slicer | revisado 2026-11-10: the one model (pictures, G-code) |
 | UltiMaker Cura | revisado 2026-11-10: machine G-code (dialect cura), bed meshes (21994df); pendiente: its print/filament values (from Tisma's bundles, 15 filaments), translation table (3 of 739 keys translated), relative/absolute E |
-| BlackBelt Cura, VertexSlice, converted bundles (42 printers) | pendiente |
+| BlackBelt Cura, VertexSlice, converted bundles (42 printers) | revisado 2026-11-11 (parcial): the belt bundles (Belt_Creality, Belt_BLACKBELT_3D, Belt_IdeaFormer, 42 variants) set Tisma Slicer's belt_printer/belt_angle/belt_axis_z, which the pack did not write: the engine sliced them as cartesian printers with a 1000 mm bed; now belt.enabled/angle/belt_is_z. Other Tisma-only options now written: over_bridge_speed, travel_short_distance_acceleration, gap_fill_enabled (0 in 6 prints: no gap fill), nozzle_high_flow, complete_objects. Engine gaps sent to the spec: a print's bridge_flow_ratio is dropped by the engine's pack reader (1364 prints), extrusion.type of every filament too, multimaterial_purging has no printer setting; pendiente: VertexSlice/BlackBelt Cura sources |
 | UVtools (167 resin printers, 484 resins, 35 resin prints) | en curso 2026-11-10: bottom layers/exposure checked against UVtools' SL1 reader; first layer height open (see resin row); one resin left out (missing parent) |
 
 ### By option group

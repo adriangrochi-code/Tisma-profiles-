@@ -143,6 +143,7 @@ TABLE = {
         E('travel_lift_before_obstacle', 'travel.lift_before_obstacle', 'flag'),
         E(['thumbnails', 'thumbnails_format'], 'gcode.thumbnails', 'rule', rule='thumbnails',
           note='"WxH/FORMAT" list; a size without a format takes thumbnails_format'),
+        E('nozzle_high_flow', 'machine.high_flow_nozzle', 'flag'),
         E('binary_gcode', 'gcode.binary', 'flag'),
         E('remaining_times', 'gcode.progress', 'flag'),
         E('autoemit_temperature_commands', 'gcode.auto_temperatures', 'flag'),
@@ -152,6 +153,9 @@ TABLE = {
         E('parking_pos_retraction', 'mmu.parking_position'),
         E('extra_loading_move', 'mmu.extra_loading_move'),
         E('high_current_on_filament_swap', 'mmu.high_current_on_swap', 'flag'),
+        E('belt_printer', 'belt.enabled', 'flag', note='a belt printer (Tisma Slicer\'s own option)'),
+        E('belt_angle', 'belt.angle', note='degrees between the gantry and the belt'),
+        E('belt_axis_z', 'belt.belt_is_z', 'flag', note='the belt is the firmware\'s Z axis, the gantry Y'),
         E('extruder_clearance_height', 'sequential.clearance_height'),
         E('extruder_clearance_radius', 'sequential.clearance_radius'),
     ],
@@ -267,8 +271,13 @@ TABLE = {
         E('support_material_interface_speed', 'speed.support_interface', 'number_or_percent',
           note='"N%" of the support speed'),
         E('bridge_speed', 'speed.bridges', nonzero=True),
-        E('gap_fill_speed', 'speed.gap_fill, walls.gap_fill', 'rule', rule='gap_fill',
-          note='0: no gap fill (walls.gap_fill false)'),
+        E(['gap_fill_speed', 'gap_fill_enabled'], 'speed.gap_fill, walls.gap_fill', 'rule', rule='gap_fill',
+          note='speed 0 or gap_fill_enabled 0: no gap fill (walls.gap_fill false)'),
+        E('over_bridge_speed', 'speed.over_bridges', 'number_or_percent', nonzero=True,
+          note='"N%" of the solid infill speed; 0: the solid infill speed, not written'),
+        E('travel_short_distance_acceleration', 'acceleration.short_travel',
+          note='travels shorter than retract_before_travel; 0: the travel acceleration'),
+        E('complete_objects', 'sequential.enabled', 'flag'),
         E('small_perimeter_speed', 'speed.small_loops', 'number_or_percent', nonzero=True,
           note='"N%" of the wall speed; 0: automatic, not written'),
         E('first_layer_infill_speed', 'speed.first_layer_infill', 'number_or_percent', nonzero=True,
@@ -637,13 +646,14 @@ def _rule(name, e, c, s, ctx):
         return v is not None, ('machine_limits_usage',)
     if name == 'gap_fill':
         n = num(c.get('gap_fill_speed'))
-        if n is None:
+        off = 'gap_fill_enabled' in c and not flag(c['gap_fill_enabled'])
+        if n is None and not off:
             return False, ('gap_fill_speed',)
         if n:
             put(s, 'speed.gap_fill', n)
-        else:
+        if off or n == 0:
             put(s, 'walls.gap_fill', False)
-        return True, ('gap_fill_speed',)
+        return True, ('gap_fill_speed',) + (('gap_fill_enabled',) if 'gap_fill_enabled' in c else ())
     if name == 'correction':
         # PrusaSlicer scales by material_correction_x/y/z (SLAPrint::relative_correction: the list only has to have
         # two values or more); a bundle without them has the program's 1.

@@ -265,6 +265,16 @@ class PrintOptions(unittest.TestCase):
                                          'support_material_interface_extruder': '5'}, 0.4)
         self.assertEqual(settings['extruders'], {'support': 0, 'support_interface': 5})
 
+    def test_tisma_options(self):
+        # Geeetech "M1 speed" prints: gap_fill_enabled = 0 with a gap fill speed of 100 (no gap fill in the source).
+        settings, _ = convert.map_print({'layer_height': '0.2', 'gap_fill_enabled': '0', 'gap_fill_speed': '100',
+                                         'over_bridge_speed': '35%', 'travel_short_distance_acceleration': '250'},
+                                        0.4)
+        self.assertIs(settings['walls']['gap_fill'], False)
+        self.assertEqual((settings['speed']['over_bridges'], settings['acceleration']['short_travel']), ('35%', 250))
+        printer, _ = convert.map_printer({'nozzle_high_flow': '1,1'})
+        self.assertIs(printer['machine']['high_flow_nozzle'], True)
+
     def test_ooze_prevention(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'ooze_prevention': '1',
                                          'standby_temperature_delta': '-150'}, 0.4)
@@ -352,6 +362,10 @@ class FilamentAndPrinterOptions(unittest.TestCase):
         for flavor in ('marlin', 'reprapfirmware', 'klipper'):
             settings, _ = convert.map_printer({'machine_max_junction_deviation': '0.01', 'gcode_flavor': flavor})
             self.assertNotIn('junction_deviation', settings.get('machine', {}))
+        # Creality CR-30 (Belt_Creality): a belt printer at 45 degrees, the belt on Z. Without these the engine
+        # slices it as a cartesian printer with a 1000 mm bed.
+        settings, _ = convert.map_printer({'belt_printer': '1', 'belt_angle': '45', 'belt_axis_z': '1'})
+        self.assertEqual(settings['belt'], {'enabled': True, 'angle': 45, 'belt_is_z': True})
         settings, _ = convert.map_printer({'autoemit_temperature_commands': '0'})
         self.assertIs(settings['gcode']['auto_temperatures'], False)
 
