@@ -579,6 +579,18 @@ def tisma_converter(path, profiles):
     return _TISMA[(path, profiles)]
 
 
+def converter_plates(path):
+    """The bed temperature per plate type of the OrcaSlicer family, as Tisma Slicer's converter (path) knows it, for
+    the dialect tables' plate_temperature rule (spec PF14): {plates: {plate: [bed key, first layer key]}, select: the
+    keys that name the plate, in order, index: the plate names by number, order: the keys to try when none does}."""
+    if not path:
+        return None
+    module = tisma_module(path)[0]
+    return {'plates': {plate: list(keys) for plate, keys in module.PLATE_TEMPS.items()},
+            'select': ['curr_bed_type', 'default_bed_type'], 'index': list(module.BED_TYPES),
+            'order': list(module.PLATE_ORDER)}
+
+
 def converter_renames(path):
     """{OrcaSlicer key: (PrusaSlicer key, extra fields)} of Tisma Slicer's converter (path), for the dialect tables:
     its renames, with its value renames of the patterns and the seam; an acceleration, which may be "N%" of the default
@@ -1800,8 +1812,10 @@ def main():
         seen = {k: set().union(*[set(x for x, v in sv.items() if not isinstance(v, dict))
                                   for sv, _ in renames.samples[(dialect, k)]]) for k in kinds}
         found = {k: renames.renames(dialect, k) for k in kinds}
+        orca_family = dialect in ('orcaslicer', 'crealityprint', 'elegooslicer')
         tables[dialect] = translation.table_json(dialect, seen, found, fallback=converter_renames(
-            args.tisma_converter) if dialect in ('orcaslicer', 'crealityprint', 'elegooslicer') else None, source={
+            args.tisma_converter) if orca_family else None, plates=converter_plates(
+            args.tisma_converter) if orca_family else None, source={
             'how': 'the same presets in the source program and in Tisma Slicer\'s bundle: a key whose value the bundle '
                    'has under a PrusaSlicer name in nearly every preset', 'presets': {
                        translation.KIND_NAMES[k]: len(renames.samples[(dialect, k)]) for k in kinds}})

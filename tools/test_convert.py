@@ -134,13 +134,27 @@ class OrcaProjectWidths(unittest.TestCase):
                          ('external_perimeter_speed', 'speed.outer_wall', 'converter'))
         self.assertEqual(t['kinds']['print']['sparse_infill_pattern']['prusaslicer_values'], {'crosshatch': 'grid'})
 
+    def test_bed_temperature_of_the_projects_plate(self):
+        # OrcaSlicer: one bed temperature per plate type; a project's is the one of its plate (spec PF14).
+        plates = {'plates': {'High Temp Plate': ['hot_plate_temp', 'hot_plate_temp_initial_layer']},
+                  'select': ['curr_bed_type', 'default_bed_type'], 'index': ['Default Plate', 'High Temp Plate'],
+                  'order': ['hot_plate_temp']}
+        t = convert.translation.table_json(
+            'orcaslicer', {'filament': {'hot_plate_temp', 'hot_plate_temp_initial_layer'}}, renames={}, plates=plates)
+        self.assertEqual(t['plate_temperature'], plates)
+        row = t['kinds']['filament']['hot_plate_temp_initial_layer']
+        self.assertEqual((row['prusaslicer'], row['rule'], row['plate']),
+                         ('first_layer_bed_temperature', 'plate_temperature', 'High Temp Plate'))
+        self.assertEqual(row['engine'], 'machine.variables.first_layer_bed_temperature')
+
     def test_accelerations_in_percent_of_the_default(self):
         # OrcaSlicer sparse_infill_acceleration "100%" is of default_acceleration (567 presets).
         S = os.environ.get('TISMA_CONVERTER')
         if not S:
             self.skipTest('needs Tisma Slicer\'s converter (TISMA_CONVERTER)')
         r = convert.converter_renames(S)
-        self.assertEqual(r['sparse_infill_acceleration'], ('infill_acceleration', {'percent_of': 'acceleration.default'}))
+        self.assertEqual(r['sparse_infill_acceleration'],
+                         ('infill_acceleration', {'percent_of': 'acceleration.default'}))
 
 
 class SourceOverBundle(unittest.TestCase):

@@ -792,7 +792,7 @@ EXPLICIT_RENAMES = {d: {'print': {
 }} for d in ('orcaslicer', 'crealityprint', 'elegooslicer')}
 
 
-def table_json(dialect, keys_seen, renames=None, source=None, fallback=None):
+def table_json(dialect, keys_seen, renames=None, source=None, fallback=None, plates=None):
     """The translation table of a dialect as the pack ships it (docs/FORMAT.md, «Traducción de claves»).
     keys_seen: {kind: source keys}; renames: {kind: {source key: (PrusaSlicer key, presets agreeing, presets)}}
     for the dialects other than prusaslicer; fallback: {source key: (PrusaSlicer key, extra fields)} for the keys the
@@ -806,6 +806,13 @@ def table_json(dialect, keys_seen, renames=None, source=None, fallback=None):
     out = {'format': 'tisma-pack-translation', 'version': FORMAT_VERSION, 'dialect': dialect, 'kinds': {}}
     if source:
         out['source'] = source
+    plate_rows = {}
+    if plates and renames is not None:
+        # The bed temperature per plate type (spec PF14): the one of the project's plate.
+        out['plate_temperature'] = plates
+        for plate, (bed, first) in plates['plates'].items():
+            plate_rows[bed] = ('bed_temperature', plate)
+            plate_rows[first] = ('first_layer_bed_temperature', plate)
     for kind in TABLE:
         if kind not in keys_seen:
             continue
@@ -818,7 +825,10 @@ def table_json(dialect, keys_seen, renames=None, source=None, fallback=None):
                 p, seen = (hit[0], list(hit[1:3])) if hit else (None, None)
                 values = hit[3] if hit and len(hit) > 3 else None
             extra = {}
-            if renames is not None and not p and key in EXPLICIT_RENAMES.get(dialect, {}).get(kind, {}):
+            if renames is not None and kind == 'filament' and key in plate_rows:
+                p, plate = plate_rows[key]
+                seen, values, extra = None, None, {'rule': 'plate_temperature', 'plate': plate}
+            elif renames is not None and not p and key in EXPLICIT_RENAMES.get(dialect, {}).get(kind, {}):
                 p, extra = EXPLICIT_RENAMES[dialect][kind][key]
             elif renames is not None and not p and fallback and key in fallback and (kind, fallback[key][0]) in by_key:
                 p, extra = fallback[key]

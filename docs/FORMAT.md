@@ -395,6 +395,13 @@ paquete, da exactamente su `profile.settings`.
   que allí pueden ser `"N%"` de la aceleración por defecto, llevan `percent_of` `"acceleration.default"`: el
   porcentaje se pasa a número con la del proyecto antes de traducir (spec PF13; `percent_of` nombra una clave del motor
   o `"nozzle"`).
+- **`plate_temperature`** (tablas de la familia OrcaSlicer): la temperatura de cama va por tipo de placa
+  (`hot_plate_temp`, `textured_plate_temp`…, cada una con su `_initial_layer`). Arriba de la tabla, `plate_temperature`
+  da `plates` (placa: [clave de la cama, clave de la primera capa]), `select` (las claves que nombran la placa:
+  `curr_bed_type` del proyecto, si no `default_bed_type`), `index` (los nombres de las placas por número) y `order`
+  (las claves a probar, en orden, si ninguna placa está nombrada). Cada clave de placa lleva `rule` `"plate_temperature"`,
+  su `plate` y el nombre de PrusaSlicer (`bed_temperature` o `first_layer_bed_temperature`): vale la de la placa del
+  proyecto (spec PF14), como el conversor de Tisma Slicer elige la de la placa de la impresora.
 - **Solo lo que significa lo mismo:** una clave entra con el sentido y las unidades que le dan PrusaSlicer (su
   `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor, desde `dev` b3f296b). Si el valor de origen no tiene
   equivalente en el motor, no se escribe y `note` lo dice (por ejemplo, el ancho de la pared externa en %).
