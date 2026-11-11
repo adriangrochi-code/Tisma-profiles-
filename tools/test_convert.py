@@ -57,6 +57,14 @@ class LostValues(unittest.TestCase):
         finally:
             convert.VALUE_NAMES.pop('orcaslicer')
 
+    def test_scarf_seam_from_orcaslicer(self):
+        # OrcaSlicer "0.20mm Standard @Creality Sermoon V1": seam_slope_type external ("Contour"), 12 mm long.
+        lost = convert.lost_values('print', {}, {'seam_slope_type': 'external', 'seam_slope_min_length': '12'},
+                                   'orcaslicer')
+        self.assertEqual(lost, {'scarf_seam_placement': 'external', 'scarf_seam_length': '12'})
+        settings, _ = convert.map_print(dict({'layer_height': '0.2'}, **lost), 0.4)
+        self.assertEqual((settings['walls']['scarf'], settings['walls']['scarf_length']), ('contours', 12))
+
     def test_with_tisma_slicers_converter(self):
         # Tisma Slicer's converter turns the whole preset (brim_type "no_brim" is a 0 mm brim, printable_area the bed),
         # and misses the per-axis machine limits (it does not know their type): those by name.

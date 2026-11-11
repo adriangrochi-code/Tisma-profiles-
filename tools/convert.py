@@ -549,6 +549,9 @@ def engine_texts(block, c):
 
 # PrusaSlicer names of the machine options that the OrcaSlicer family names otherwise (besides ORCA_TO_PRUSA).
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
+# Options Tisma Slicer's converter knows but does not fill from an OrcaSlicer preset (it keeps only the scarf seam's
+# start height): from the source by name, as the ones it does not know.
+NOT_CONVERTED = {'scarf_seam_placement', 'scarf_seam_entire_loop', 'scarf_seam_length', 'scarf_seam_on_inner_perimeters'}
 
 
 _TISMA = {}
@@ -751,7 +754,7 @@ def lost_values(kind, c, source, dialect=None, conv=None, nozzle=0.4):
         # which PrusaSlicer defines in a loop over the axes) or whose OrcaSlicer name it does not rename
         # (machine_max_speed_* is machine_max_feedrate_*): by name, as below.
         unknown = {k: v for k, v in lost_values(kind, c, source, dialect).items()
-                   if k not in conv.types or k in MACHINE_RENAMES}
+                   if k not in conv.types or k in MACHINE_RENAMES or k in NOT_CONVERTED}
         return dict(unknown, **out)
     names_of = VALUE_NAMES.get(dialect, {})
     back = {v: k for k, v in upstream.ORCA_TO_PRUSA.items()}

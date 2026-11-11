@@ -340,7 +340,11 @@ ORCA_TO_PRUSA = {'nozzle_temperature_initial_layer': 'first_layer_temperature', 
                  'initial_no_support_extruder': 'initial_extruder', 'initial_layer_print_height': 'first_layer_height',
                  'printable_height': 'max_print_height', 'adaptive_bed_mesh_min': 'first_layer_print_min',
                  'adaptive_bed_mesh_max': 'first_layer_print_max', 'retraction_length': 'retract_length',
-                 'z_hop': 'retract_lift', 'spiral_mode': 'spiral_vase'}
+                 'z_hop': 'retract_lift', 'spiral_mode': 'spiral_vase',
+                 # The scarf seam: Tisma Slicer's converter keeps only its start height.
+                 'seam_slope_type': 'scarf_seam_placement', 'seam_slope_entire_loop': 'scarf_seam_entire_loop',
+                 'seam_slope_min_length': 'scarf_seam_length',
+                 'seam_slope_inner_walls': 'scarf_seam_on_inner_perimeters'}
 _SPAN = re.compile(r'\[[^\]\n]*\]|\{[^}\n]*\}')
 _WORD = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
 
