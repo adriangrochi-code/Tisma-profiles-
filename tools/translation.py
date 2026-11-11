@@ -792,10 +792,11 @@ EXPLICIT_RENAMES = {d: {'print': {
 }} for d in ('orcaslicer', 'crealityprint', 'elegooslicer')}
 
 
-def table_json(dialect, keys_seen, renames=None, source=None):
+def table_json(dialect, keys_seen, renames=None, source=None, fallback=None):
     """The translation table of a dialect as the pack ships it (docs/FORMAT.md, «Traducción de claves»).
     keys_seen: {kind: source keys}; renames: {kind: {source key: (PrusaSlicer key, presets agreeing, presets)}}
-    for the dialects other than prusaslicer."""
+    for the dialects other than prusaslicer; fallback: {source key: (PrusaSlicer key, extra fields)} for the keys the
+    comparison does not name (Tisma Slicer's converter's own renames)."""
     by_key = {}
     for kind, entries in TABLE.items():
         for e in entries:
@@ -819,6 +820,9 @@ def table_json(dialect, keys_seen, renames=None, source=None):
             extra = {}
             if renames is not None and not p and key in EXPLICIT_RENAMES.get(dialect, {}).get(kind, {}):
                 p, extra = EXPLICIT_RENAMES[dialect][kind][key]
+            elif renames is not None and not p and fallback and key in fallback and (kind, fallback[key][0]) in by_key:
+                p, extra = fallback[key]
+                extra = dict(extra, renamed_by='converter')
             row = {}
             if p in (None,) or (kind, p) not in by_key:
                 row = {'engine': None, 'group': 'none'}

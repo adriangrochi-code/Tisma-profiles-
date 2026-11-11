@@ -551,15 +551,15 @@ def engine_texts(block, c):
 MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a in 'xyze'}
 # Options Tisma Slicer's converter knows but does not fill from an OrcaSlicer preset (it keeps only the scarf seam's
 # start height): from the source by name, as the ones it does not know.
-NOT_CONVERTED = {'scarf_seam_placement', 'scarf_seam_entire_loop', 'scarf_seam_length', 'scarf_seam_on_inner_perimeters'}
+NOT_CONVERTED = {'scarf_seam_placement', 'scarf_seam_entire_loop', 'scarf_seam_length',
+                 'scarf_seam_on_inner_perimeters'}
 
 
 _TISMA = {}
 
 
-def tisma_converter(path, profiles):
-    """Tisma Slicer's converter (path: its tools/profiles/convert_orca_profiles.py) for the source program whose
-    resources/profiles is profiles, with that program's option defaults."""
+def tisma_module(path):
+    """(module, option types) of Tisma Slicer's converter at path, loaded once."""
     if path not in _TISMA:
         import importlib.util
         spec = importlib.util.spec_from_file_location('tisma_convert_orca_profiles', path)
@@ -567,10 +567,35 @@ def tisma_converter(path, profiles):
         spec.loader.exec_module(module)
         root = os.path.abspath(os.path.join(os.path.dirname(path), '..', '..'))
         _TISMA[path] = (module, module.tisma_option_types(root))
-    module, types = _TISMA[path]
+    return _TISMA[path]
+
+
+def tisma_converter(path, profiles):
+    """Tisma Slicer's converter (path: its tools/profiles/convert_orca_profiles.py) for the source program whose
+    resources/profiles is profiles, with that program's option defaults."""
+    module, types = tisma_module(path)
     if (path, profiles) not in _TISMA:
         _TISMA[(path, profiles)] = module.Converter(types, module.orca_option_defaults(profiles))
     return _TISMA[(path, profiles)]
+
+
+def converter_renames(path):
+    """{OrcaSlicer key: (PrusaSlicer key, extra fields)} of Tisma Slicer's converter (path), for the dialect tables:
+    its renames, with its value renames of the patterns and the seam; an acceleration, which may be "N%" of the default
+    acceleration there, with percent_of "acceleration.default" (spec PF13). None without it."""
+    if not path:
+        return None
+    module = tisma_module(path)[0]
+    pattern = {k: v for k, v in module.INFILL.items() if k != v}
+    values = {'fill_pattern': pattern, 'top_fill_pattern': pattern, 'bottom_fill_pattern': pattern,
+              'seam_position': dict(module.SEAM)}
+    out = {}
+    for orca, prusa in module.RENAMED.items():
+        if prusa in module.ACCELERATIONS:
+            out[orca] = (prusa, {'percent_of': 'acceleration.default'})
+            continue
+        out[orca] = (prusa, {'prusaslicer_values': values[prusa]} if values.get(prusa) else {})
+    return out
 
 
 def tisma_merge_key(path, kind, src, presets):
@@ -1775,7 +1800,8 @@ def main():
         seen = {k: set().union(*[set(x for x, v in sv.items() if not isinstance(v, dict))
                                   for sv, _ in renames.samples[(dialect, k)]]) for k in kinds}
         found = {k: renames.renames(dialect, k) for k in kinds}
-        tables[dialect] = translation.table_json(dialect, seen, found, source={
+        tables[dialect] = translation.table_json(dialect, seen, found, fallback=converter_renames(
+            args.tisma_converter) if dialect in ('orcaslicer', 'crealityprint', 'elegooslicer') else None, source={
             'how': 'the same presets in the source program and in Tisma Slicer\'s bundle: a key whose value the bundle '
                    'has under a PrusaSlicer name in nearly every preset', 'presets': {
                        translation.KIND_NAMES[k]: len(renames.samples[(dialect, k)]) for k in kinds}})

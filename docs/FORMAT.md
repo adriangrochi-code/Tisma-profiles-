@@ -389,6 +389,12 @@ paquete, da exactamente su `profile.settings`.
   `"nozzle"`: en OrcaSlicer un `"N%"` es de la boquilla, y se pasa a mm con la del proyecto antes de la traducción de
   PrusaSlicer, donde un `"N%"` es de la altura de capa (spec PF12). `seam_slope_type` es `scarf_seam_placement`, con
   `prusaslicer_values` (`external`: `contours`, `all`: `everywhere`).
+- **Nombres del conversor de Tisma Slicer:** una clave de la familia OrcaSlicer que la comparación no nombra y que el
+  conversor de Tisma Slicer renombra toma ese nombre (con sus valores renombrados: los patrones de relleno y la
+  costura), con **`renamed_by`** `"converter"`; por ejemplo `outer_wall_speed` de Creality Print. Las aceleraciones,
+  que allí pueden ser `"N%"` de la aceleración por defecto, llevan `percent_of` `"acceleration.default"`: el
+  porcentaje se pasa a número con la del proyecto antes de traducir (spec PF13; `percent_of` nombra una clave del motor
+  o `"nozzle"`).
 - **Solo lo que significa lo mismo:** una clave entra con el sentido y las unidades que le dan PrusaSlicer (su
   `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor, desde `dev` b3f296b). Si el valor de origen no tiene
   equivalente en el motor, no se escribe y `note` lo dice (por ejemplo, el ancho de la pared externa en %).

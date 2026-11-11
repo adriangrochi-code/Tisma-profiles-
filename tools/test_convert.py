@@ -122,6 +122,26 @@ class OrcaProjectWidths(unittest.TestCase):
                          ('extrusion_width', 'nozzle', 'walls.width'))
         self.assertEqual(t['kinds']['print']['seam_slope_type']['prusaslicer_values']['external'], 'contours')
 
+    def test_names_from_tisma_slicers_converter(self):
+        # Creality Print "outer_wall_speed": the value comparison finds no name; Tisma Slicer's converter renames it.
+        t = convert.translation.table_json('crealityprint', {'print': {'outer_wall_speed', 'sparse_infill_pattern'}},
+                                           renames={}, fallback={
+                                               'outer_wall_speed': ('external_perimeter_speed', {}),
+                                               'sparse_infill_pattern': ('fill_pattern', {
+                                                   'prusaslicer_values': {'crosshatch': 'grid'}})})
+        row = t['kinds']['print']['outer_wall_speed']
+        self.assertEqual((row['prusaslicer'], row['engine'], row['renamed_by']),
+                         ('external_perimeter_speed', 'speed.outer_wall', 'converter'))
+        self.assertEqual(t['kinds']['print']['sparse_infill_pattern']['prusaslicer_values'], {'crosshatch': 'grid'})
+
+    def test_accelerations_in_percent_of_the_default(self):
+        # OrcaSlicer sparse_infill_acceleration "100%" is of default_acceleration (567 presets).
+        S = os.environ.get('TISMA_CONVERTER')
+        if not S:
+            self.skipTest('needs Tisma Slicer\'s converter (TISMA_CONVERTER)')
+        r = convert.converter_renames(S)
+        self.assertEqual(r['sparse_infill_acceleration'], ('infill_acceleration', {'percent_of': 'acceleration.default'}))
+
 
 class SourceOverBundle(unittest.TestCase):
     """Where Tisma Slicer's bundle has another value than its source program's preset, the source's wins (the

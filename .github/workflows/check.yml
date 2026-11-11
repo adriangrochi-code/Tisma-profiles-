@@ -55,6 +55,8 @@ jobs:
           python3 tools/check_knowledge.py knowledge
 
       - name: Converter tests
+        env:
+          TISMA_CONVERTER: source/tools/profiles/convert_orca_profiles.py
         run: python3 -m unittest discover -s tools -p 'test_*.py'
 
       - name: Fetch the programs the bundles were converted from
