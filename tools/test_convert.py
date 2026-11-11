@@ -258,6 +258,13 @@ class PrintOptions(unittest.TestCase):
     """Print options the engine reads (its docs/CONFIG.md) and the bundles set: written, not left to the engine's
     defaults."""
 
+    def test_support_extruders(self):
+        # Prusa "0.15mm OPTIMAL SOLUBLE INTERFACE @MK2.5" (MMU, 5 tools): the interface with tool 5, the base with
+        # the one printing. On a machine with fewer tools the engine takes the first, as the source (ME14).
+        settings, _ = convert.map_print({'layer_height': '0.2', 'support_material_extruder': '0',
+                                         'support_material_interface_extruder': '5'}, 0.4)
+        self.assertEqual(settings['extruders'], {'support': 0, 'support_interface': 5})
+
     def test_ooze_prevention(self):
         settings, _ = convert.map_print({'layer_height': '0.2', 'ooze_prevention': '1',
                                          'standby_temperature_delta': '-150'}, 0.4)
