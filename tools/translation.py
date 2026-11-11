@@ -774,6 +774,24 @@ KIND_NAMES = {'printer': 'printer', 'filament': 'filament', 'print': 'print', 'p
               'sla_material': 'resin', 'sla_print': 'resin_print'}
 
 
+# Names the value comparison cannot find (Tisma Slicer's converter changes the value), for the OrcaSlicer family:
+# {source key: (PrusaSlicer key, extra fields of the row)}. A line width in "N%" is of the nozzle there, of the layer
+# height in PrusaSlicer: percent_of "nozzle" makes it mm with the project's nozzle first (spec PF12).
+_ORCA_WIDTH = {'percent_of': 'nozzle'}
+EXPLICIT_RENAMES = {d: {'print': {
+    'line_width': ('extrusion_width', _ORCA_WIDTH),
+    'outer_wall_line_width': ('external_perimeter_extrusion_width', _ORCA_WIDTH),
+    'inner_wall_line_width': ('perimeter_extrusion_width', _ORCA_WIDTH),
+    'initial_layer_line_width': ('first_layer_extrusion_width', _ORCA_WIDTH),
+    'sparse_infill_line_width': ('infill_extrusion_width', _ORCA_WIDTH),
+    'internal_solid_infill_line_width': ('solid_infill_extrusion_width', _ORCA_WIDTH),
+    'support_line_width': ('support_material_extrusion_width', _ORCA_WIDTH),
+    'top_surface_line_width': ('top_infill_extrusion_width', _ORCA_WIDTH),
+    'seam_slope_type': ('scarf_seam_placement',
+                        {'prusaslicer_values': {'none': 'nowhere', 'external': 'contours', 'all': 'everywhere'}}),
+}} for d in ('orcaslicer', 'crealityprint', 'elegooslicer')}
+
+
 def table_json(dialect, keys_seen, renames=None, source=None):
     """The translation table of a dialect as the pack ships it (docs/FORMAT.md, «Traducción de claves»).
     keys_seen: {kind: source keys}; renames: {kind: {source key: (PrusaSlicer key, presets agreeing, presets)}}
@@ -798,6 +816,9 @@ def table_json(dialect, keys_seen, renames=None, source=None):
                 hit = renames.get(kind, {}).get(key)
                 p, seen = (hit[0], list(hit[1:3])) if hit else (None, None)
                 values = hit[3] if hit and len(hit) > 3 else None
+            extra = {}
+            if renames is not None and not p and key in EXPLICIT_RENAMES.get(dialect, {}).get(kind, {}):
+                p, extra = EXPLICIT_RENAMES[dialect][kind][key]
             row = {}
             if p in (None,) or (kind, p) not in by_key:
                 row = {'engine': None, 'group': 'none'}
@@ -815,6 +836,7 @@ def table_json(dialect, keys_seen, renames=None, source=None):
                     row['seen'] = seen
                 if values:
                     row['prusaslicer_values'] = values  # the source value -> the PrusaSlicer value
+                row.update(extra)
             rows[key] = row
         out['kinds'][KIND_NAMES[kind]] = rows
     return out

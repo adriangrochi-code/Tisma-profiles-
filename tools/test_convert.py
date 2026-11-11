@@ -113,6 +113,16 @@ class LostValues(unittest.TestCase):
         self.assertNotIn('max_feed_e', settings['machine'])  # 0: no limit, not written
 
 
+class OrcaProjectWidths(unittest.TestCase):
+    def test_widths_in_percent_of_the_nozzle(self):
+        # An OrcaSlicer 3MF: line_width "105%" is of the nozzle; without a name the engine dropped the widths.
+        t = convert.translation.table_json('orcaslicer', {'print': {'line_width', 'seam_slope_type'}}, renames={})
+        row = t['kinds']['print']['line_width']
+        self.assertEqual((row['prusaslicer'], row['percent_of'], row['engine']),
+                         ('extrusion_width', 'nozzle', 'walls.width'))
+        self.assertEqual(t['kinds']['print']['seam_slope_type']['prusaslicer_values']['external'], 'contours')
+
+
 class SourceOverBundle(unittest.TestCase):
     """Where Tisma Slicer's bundle has another value than its source program's preset, the source's wins (the
     profile behaves as in its source program)."""

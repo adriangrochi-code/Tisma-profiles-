@@ -382,6 +382,13 @@ paquete, da exactamente su `profile.settings`.
   `crosshatch` de OrcaSlicer es `grid`), también en una clave que conserva su nombre (la costura `back` de OrcaSlicer
   es `rear`; ahí, un valor que no aparece se escribe igual en PrusaSlicer). Una clave sin `prusaslicer` no tiene un
   nombre que los perfiles muestren.
+- **Nombres que los valores no muestran** (familia OrcaSlicer): el conversor de Tisma Slicer cambia el valor, así que
+  la comparación no los encuentra; van escritos en la tabla. Los anchos de línea (`line_width`,
+  `outer_wall_line_width`, `inner_wall_line_width`, `initial_layer_line_width`, `sparse_infill_line_width`,
+  `internal_solid_infill_line_width`, `support_line_width`, `top_surface_line_width`) llevan **`percent_of`**
+  `"nozzle"`: en OrcaSlicer un `"N%"` es de la boquilla, y se pasa a mm con la del proyecto antes de la traducción de
+  PrusaSlicer, donde un `"N%"` es de la altura de capa (spec PF12). `seam_slope_type` es `scarf_seam_placement`, con
+  `prusaslicer_values` (`external`: `contours`, `all`: `everywhere`).
 - **Solo lo que significa lo mismo:** una clave entra con el sentido y las unidades que le dan PrusaSlicer (su
   `PrintConfig.cpp`) y el motor (`docs/CONFIG.md` del motor, desde `dev` b3f296b). Si el valor de origen no tiene
   equivalente en el motor, no se escribe y `note` lo dice (por ejemplo, el ancho de la pared externa en %).
