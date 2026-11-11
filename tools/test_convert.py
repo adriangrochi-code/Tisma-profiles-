@@ -316,6 +316,11 @@ class Widths(unittest.TestCase):
         self.assertAlmostEqual(settings['walls']['outer_width'], 0.126)
         settings, _ = convert.map_print({'layer_height': '0.12', 'external_perimeter_extrusion_width': '0'}, 0.4)
         self.assertNotIn('outer_width', settings['walls'])
+        # E2D "0.20mm QUALITY @E2D i310": no outer width of its own, extrusion_width 0.4: the source prints the outer
+        # wall at 0.4 mm (Flow.cpp takes extrusion_width), not at the automatic 0.45.
+        settings, _ = convert.map_print({'layer_height': '0.2', 'external_perimeter_extrusion_width': '0',
+                                         'extrusion_width': '0.4'}, 0.4)
+        self.assertEqual(settings['walls']['outer_width'], 0.4)
 
 
 class SupportGap(unittest.TestCase):

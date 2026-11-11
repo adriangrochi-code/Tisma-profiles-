@@ -368,7 +368,6 @@ paquete, da exactamente su `profile.settings`.
 | `number_or_percent` | `"N%"` queda como texto; si no, el número; `nonzero`: no se escribe si es 0; `bare_percent_over`: un número sin `%` mayor que este es `"N%"` |
 | `absolute_only` | El número; un porcentaje no se escribe |
 | `percent_only` | El número de un `"N%"`; un número sin `%` no se escribe |
-| `width_of_layer` | Un ancho de línea: el número en mm, o `"N%"` de la altura de capa (`layer_height`), como lo calcula el programa de origen; 0 no se escribe |
 | `at_least` | El número si es al menos `min` |
 | `points` | `"XxY,XxY,…"` como lista de puntos, con 3 o más |
 | `rule` | Una conversión con sus pasos, por nombre (`rule`), descrita en `note`: `acceleration`, `fans`, `wall_width`, `role_width` (el ancho de un tipo de línea en mm: el suyo, si es 0 `extrusion_width`, y si los dos son 0 el automático del programa de origen solo donde el 0 del motor es otro, `auto` veces la boquilla), `xy_gap`, `extruders` (con dos boquillas o más: `machine.extruders`, la lista de boquillas si difieren y `machine.extruder_offset` si alguna no es 0, salvo con una MMU de una boquilla), `junction_deviation` (solo con `marlin2`), `gap_fill`, `limits_usage`, `correction`, `resin_notes`, `gcode_template` |
