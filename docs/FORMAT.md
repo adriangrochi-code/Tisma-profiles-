@@ -182,6 +182,11 @@ comparten:
   Slicer las tiene aunque el programa de origen da otro valor, porque el motor no acepta el del origen. Hoy solo el
   borde (`brim_width`) de una impresión para impresoras de cinta: VertexSlice imprime 5 mm y el motor no pone borde en
   la cinta (spec `belt_printer.md`, regla 4). Queda anotado por si el motor lo admite más adelante.
+- **`machine.flavor_choices`** (en `profile.settings` de una impresora): los firmwares entre los que el usuario
+  elige, cuando el programa de origen no dice cuál. Hoy solo las impresoras de Cura con `machine_gcode_flavor`
+  «RepRap (Marlin/Sprinter)»: `machine.flavor` es `"marlin"` (Marlin 2), el que vale si el usuario no elige, y
+  `flavor_choices` es `["marlin_legacy", "marlin"]` (decisión del dueño del 11-11-2026; spec PF15). PrusaSlicer y la
+  familia OrcaSlicer distinguen los dos (`marlin` es «Marlin (legacy)» y `marlin2` «Marlin 2»), así que ahí no va.
 - **Perfiles de impresión por boquilla:** un perfil del origen para impresoras de varias boquillas cuyos anchos son un
   porcentaje de la boquilla de cada una (OrcaSlicer: `line_width = 105%`) se escribe una vez por boquilla, con el mismo
   nombre, `nozzle` y sus impresoras de esa boquilla, y los anchos en mm que da el origen para ella; la ruta lleva la

@@ -442,6 +442,9 @@ PRINTER_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if not v.startswith
 FILAMENT_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if v.startswith('filament_')}
 
 
+# Cura's machine_gcode_flavor for Marlin, without saying which (fdmprinter.def.json).
+CURA_MARLIN = 'RepRap (Marlin/Sprinter)'
+
 # Printers whose bundle section has another name than its preset in the source program: (bundle, section) -> preset.
 # Tisma Slicer's tools/profiles/make_belt_profiles.py builds the CR-30 PrintMill from Creality Print's
 # "Creality CR-30 0.4 nozzle".
@@ -469,9 +472,9 @@ def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozens
                    'relative_extrusion': rel if block['relative_extrusion'] is None else block['relative_extrusion']}
             out['keys'] = {k: v for k, v in out['keys'].items() if k in out['templates']}
             out['from'] = {k: v for k, v in out['from'].items() if k in out['templates']}
-            for k in ('expressions', 'values'):
+            for k in ('expressions', 'values', 'flavor'):
                 if block.get(k):
-                    out[k] = block[k]
+                    out[k] = block[k]  # flavor: only read by the caller, not written
             return out
         stats['printer G-code from the bundle: not in the source program (%s)' % dialect] += 1
     templates, keys, origin = bundle_gcode(b, 'printer', name, c, everything, PRINTER_KEYS)
@@ -1343,6 +1346,17 @@ def main():
                 put(settings, 'machine', 'max_height', height)
                 filled.append('machine.max_height')
                 w.stats['printer height from the source program'] += 1
+            source_flavor = block.pop('flavor', None) if block else None
+            if not sla and source_flavor == CURA_MARLIN and \
+                    settings.get('machine', {}).get('flavor') in ('marlin', 'marlin_legacy'):
+                # Cura's "RepRap (Marlin/Sprinter)" does not say which Marlin: Marlin 2 by default, and both to
+                # choose from (owner's decision of 2026-11-11, spec PF15).
+                if settings['machine']['flavor'] != 'marlin':
+                    settings['machine']['flavor'] = 'marlin'
+                    filled.append('machine.flavor')
+                settings['machine']['flavor_choices'] = ['marlin_legacy', 'marlin']
+                filled.append('machine.flavor_choices')
+                w.stats['printer with both Marlin to choose from (Cura)'] += 1
             if not sla and block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
                 # Other machine values the bundle lost (the per-axis limits of every OrcaSlicer-family printer, and
                 # most of the values of a few): translated from the source program's preset, as the bundle would

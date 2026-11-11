@@ -276,7 +276,7 @@ def cura_machine_gcode(cura, def_id):
                                for i in sorted(trains, key=lambda x: int(x))]
     rel = values.get('relative_extrusion', (False, None))[0]
     out = {'preset': def_id, 'templates': templates, 'keys': keys, 'from': origin,
-           'relative_extrusion': bool(rel)}
+           'relative_extrusion': bool(rel), 'flavor': values.get('machine_gcode_flavor', (None, None))[0]}
     if expressions:
         out['expressions'] = expressions
     return out

@@ -195,6 +195,21 @@ class SourceOverBundle(unittest.TestCase):
         self.assertEqual(convert.source_over_bundle('print', {'brim_width': '0'}, {}, conv), {'brim_width': ('0', '5')})
 
 
+class CuraFlavor(unittest.TestCase):
+    def test_marlin_without_a_version(self):
+        # Cura 5bea2f8 fdmprinter.def.json: machine_gcode_flavor "RepRap (Marlin/Sprinter)", which does not say which
+        # Marlin; a definition inherits it.
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, 'definitions'))
+            json.dump({'settings': {'machine_settings': {'children': {
+                'machine_gcode_flavor': {'default_value': 'RepRap (Marlin/Sprinter)'},
+                'machine_start_gcode': {'default_value': 'G28'}}}}},
+                open(os.path.join(d, 'definitions', 'fdmprinter.def.json'), 'w'))
+            json.dump({'inherits': 'fdmprinter'}, open(os.path.join(d, 'definitions', 'box.def.json'), 'w'))
+            block = convert.upstream.cura_machine_gcode(convert.upstream.CuraDefinitions(d), 'box')
+        self.assertEqual(block['flavor'], convert.CURA_MARLIN)
+
+
 class DialectTables(unittest.TestCase):
     def test_same_key_with_other_value_names(self):
         # OrcaSlicer's seam "back" is PrusaSlicer's "rear": the key keeps its name, its values do not.
