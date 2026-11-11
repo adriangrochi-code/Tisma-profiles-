@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths: ['tools/**', 'community/**', 'knowledge/**', 'sources.json', '.github/workflows/release.yml']
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Publish as a prerelease (the published latest release stays as it is)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -82,4 +87,4 @@ jobs:
           gh release create "pack-${{ steps.pkg.outputs.version }}" dist/* \
             --title "Profile pack ${{ steps.pkg.outputs.version }}" \
             --notes "$( { cat docs/RELEASE_NOTES.md 2>/dev/null; echo; echo "Converted from ${{ steps.src.outputs.repo }}@${{ steps.src.outputs.commit }} with the community data of $(git rev-parse --short HEAD). AGPL-3.0-or-later; see README.md."; } )" \
-            --latest
+            $( [ "${{ inputs.prerelease }}" = "true" ] && echo "--prerelease --latest=false" || echo "--latest" )
