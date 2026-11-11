@@ -91,6 +91,7 @@ owner gets a summary every 3 hours.
 | defaults | revisado 2026-11-10: source-named when it fits, same material, quotes, default filament fits the default print |
 | translation tables (translation/*.json) | revisado 2026-11-10: same-name value renames (seam, fuzzy skin), reproducible order; pendiente: Cura and Creality Print tables, conversions vs. each program's semantics |
 | community data | revisado 2026-11-10: pack_model links (5 printers); pendiente: re-check each value against its source page |
+| engine's pack reader (validate.py --reader) | revisado 2026-11-11: every printer, filament, print, resin and resin print through `tisma-engine profile --pack` (19000 runs on 4d2bf58): 0 refused besides 35 print/filament pairs the source's conditions exclude; left out by the engine (sent to the spec): extrusion.type (18270), a print's bridge_flow_ratio (17523), the filament's travel overrides extrusion.travel (4831), resin.bottom_layers from resin prints (47). b050244 (printer purge volume) made 4d2bf58 refuse 22 MMU/IDEX models: reverted in 6668972 |
 | index / packaging / CI | revisado 2026-11-10: index vs model files, archives hold every asset, reproducible (two seeds), GCODE_VARIABLES.md in step, CI green |
 
 ## Missing or wrongly generated elements (owner's request of 2026-11-10)

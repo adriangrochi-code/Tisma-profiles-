@@ -6,8 +6,13 @@ With --macros, each printer slices with its own G-code (the pack's "gcode" block
 the report lists the engine's gcode_macro warnings: templates it could not read, and the variables it leaves at 0 or
 empty, by dialect.
 
+With --reader, nothing is sliced: each printer (resin printers too), filament and print goes through the engine's own
+pack reader (`tisma-engine profile --pack`), as the app loads them, and the report lists what it refuses and the
+settings it leaves out (a setting of another kind, an unknown one). The other checks merge the parts themselves and
+cannot see that.
+
 Usage: validate.py <pack dir> <tisma-engine binary> <report.json> [--jobs N] [--limit N] [--all] [--macros]
-                   [--only REGEX]
+                   [--reader] [--only REGEX]
 """
 
 import argparse
@@ -111,6 +116,7 @@ def main():
     ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--all', action='store_true', help='also every filament and print profile')
     ap.add_argument('--macros', action='store_true', help="each printer's own G-code, with its macros")
+    ap.add_argument('--reader', action='store_true', help="through the engine's pack reader, without slicing")
     ap.add_argument('--only', help='only the printers whose "model file#variant" matches this regular expression')
     args = ap.parse_args()
 
@@ -119,7 +125,11 @@ def main():
     for v in index['vendors']:
         for rel in v['printers']:
             e = printer_entry(args.pack, rel)
+            if e['technology'] != 'fff' and not args.reader:
+                continue
             if e['technology'] != 'fff':
+                work.append((rel, e, (e['defaults'].get('resin') or [None])[0],
+                             (e['defaults'].get('resin_print') or [None])[0]))
                 continue
             fil = (e['defaults']['filament'] or [None])[0]
             pr = (e['defaults']['print'] or [None])[0]
@@ -136,7 +146,7 @@ def main():
                 loaded[rel] = printer_entry(args.pack, rel)
             return loaded[rel]
         for v in index['vendors']:
-            for group in ('filaments', 'prints'):
+            for group in ('filaments', 'prints') + (('resins', 'resin_prints') if args.reader else ()):
                 for rel in v[group]:
                     e = json.load(open(os.path.join(args.pack, rel), encoding='utf-8'))
                     if e['compatible'] is None or not sets[e['compatible']]:
@@ -145,9 +155,12 @@ def main():
                         os.path.dirname(rel)) + '/')]
                     prel = (own or [printers[i] for i in sets[e['compatible']]])[0]
                     pe = printer(prel)
-                    if pe['technology'] != 'fff':
+                    if pe['technology'] != 'fff' and not args.reader:
                         continue
-                    if group == 'filaments':
+                    if group in ('resins', 'resin_prints'):
+                        work.append((prel, pe, rel if group == 'resins' else None,
+                                     rel if group == 'resin_prints' else None))
+                    elif group == 'filaments':
                         work.append((prel, pe, rel, (pe['defaults']['print'] or [None])[0]))
                     else:
                         work.append((prel, pe, (pe['defaults']['filament'] or [None])[0], rel))
@@ -158,6 +171,25 @@ def main():
 
     tmp = tempfile.mkdtemp(prefix='packcheck_')
     counter = itertools.count()
+
+    if args.reader:
+        # The engine reads an installed pack from <folder>/pack.
+        os.symlink(os.path.abspath(args.pack), os.path.join(tmp, 'pack'))
+
+    def read(item):
+        rel, e, fil, pr = item
+        out = os.path.join(tmp, '%06d.json' % next(counter))
+        cmd = [args.engine, 'profile', '--pack', tmp, '--printer', rel]
+        cmd += (['--filament', fil] if fil else []) + (['--print', pr] if pr else []) + ['-o', out]
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        lines = [l for l in (p.stderr + p.stdout).splitlines() if l.strip()]
+        res = {'printer': rel, 'filament': fil, 'print': pr, 'exit': p.returncode,
+               'left_out': [l for l in lines if 'left out' in l]}
+        if p.returncode:
+            res['error'] = ([l for l in lines if 'error' in l.lower()] or lines[-1:] or [''])[0][:300]
+        if os.path.exists(out):
+            os.remove(out)
+        return res
 
     def run(item):
         rel, e, fil, pr = item
@@ -243,11 +275,13 @@ def main():
 
     results = []
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as ex:
-        for r in ex.map(run, work):
+        for r in ex.map(read if args.reader else run, work):
             results.append(r)
     summary = collections.Counter('ok' if r['exit'] == 0 else 'exit %d' % r['exit'] for r in results)
     errors = collections.Counter(re.sub(r'[\d.]+', 'N', r.get('error', ''))[:160] for r in results if r['exit'])
     left = collections.Counter(n for r in results for n in r.get('placeholders_left', []))
+    left_out = collections.Counter(re.sub(r'^warning: [^:]*: ', '', w)[:160]
+                                   for r in results for w in r.get('left_out', []))
     gm13 = collections.Counter(r['printer'] for r in results if r.get('gm13'))
     unfilled = collections.defaultdict(collections.Counter)  # dialect -> variable -> printers
     unread = collections.Counter()
@@ -264,12 +298,16 @@ def main():
               'macros_not_read': dict(unread.most_common()),
               'gm13_checked': sum(1 for r in results if 'gm13' in r), 'gm13_broken': len(gm13),
               'no_print': sum(1 for r in results if not r['print']), 'errors': dict(errors.most_common()),
-              'placeholders_left': dict(left.most_common()), 'results': results}
+              'placeholders_left': dict(left.most_common()), 'left_out': dict(left_out.most_common()),
+              'results': results}
     json.dump(report, open(args.report, 'w'), indent=1)
     print(json.dumps({k: report[k] for k in ('summary', 'no_filament', 'no_print')}))
     for k, n in errors.most_common(15):
         print(n, k)
-    print('placeholders left:', dict(left.most_common(15)))
+    if args.reader:
+        print('left out by the reader:', sum(left_out.values()), dict(left_out.most_common(15)))
+    else:
+        print('placeholders left:', dict(left.most_common(15)))
     if args.macros:
         for d, c in unfilled.items():
             print('unfilled (%s): %d variables' % (d, len(c)), dict(c.most_common(30)))
