@@ -130,15 +130,11 @@ Measured on the pack of 5f546b2. "Source" says whether a program the converter r
   mm (100 mm). The pack takes a bare number over 10 as a percent.
 
 - Tisma Slicer's converter turns an OrcaSlicer width in % (of each printer's nozzle) into mm with the first compatible
-  printer's nozzle: a process for several nozzles gets the smallest one's widths for all (Creality Ender-3 V3 KE
-  "0.12mm Fine", for the 0.2, 0.4 and 0.6 nozzles: `line_width = 105%` is 0.21 mm for the three). 32 prints of 7
-  OrcaSlicer vendors. The engine's widths are in mm only, so the pack cannot write "% of the nozzle": open (one print per
-  nozzle, or a width in % of the nozzle in the engine; sent to the spec).
-- Tisma Slicer's bundles of the OrcaSlicer family differ from their source preset at the same commit (1d577ea) in 160 values
-  of filaments (Flashforge 80, Snapmaker 35, Anycubic 26, Prusa 12...: temperatures, flow, bed, chamber, volumetric
-  speed, density), for example Anycubic ABS @ Kobra S1 Max
-  0.8: 250 °C in the bundle, 220 in OrcaSlicer. The pack takes the bundle's value; whether the source program's should
-  win is the owner's decision (list: scratchpad diff.log, regenerable with the logging converter).
+  printer's nozzle, and its OrcaSlicer-family bundles differ from their source preset at the same commit (1d577ea) in 160
+  filament values (Anycubic ABS @ Kobra S1 Max 0.8: 250 °C in the bundle, 220 in OrcaSlicer). Decided by the spec on
+  the owner's rule (2026-11-11): the source program's value wins (entry field `source_over_bundle`, all of them in
+  stats.json, 1799 with the widths), and a print for several nozzles with widths in % of the nozzle is written once per
+  nozzle (113 prints, 318 entries).
 
 ## Contacts
 

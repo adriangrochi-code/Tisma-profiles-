@@ -271,8 +271,9 @@ def main():
                         node = node.get(part, {})
                     node.pop(parts[-1], None)
                 prune(settings)
-                same_translation(KINDS[group], e['original'], settings, rel, problems, counts,
-                                 nozzle=e.get('nozzle'))
+                # The source program's values over the bundle's (source_over_bundle) are part of the profile.
+                given = dict(e['original'], **{k: v['source'] for k, v in (e.get('source_over_bundle') or {}).items()})
+                same_translation(KINDS[group], given, settings, rel, problems, counts, nozzle=e.get('nozzle'))
                 sv = (e.get('source_values') or {}).get('dialect')
                 g = e.get('gcode') or {}
                 if group == 'filaments' and sv in SOURCE_PROGRAMS and \

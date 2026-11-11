@@ -105,6 +105,33 @@ class LostValues(unittest.TestCase):
         self.assertNotIn('max_feed_e', settings['machine'])  # 0: no limit, not written
 
 
+class SourceOverBundle(unittest.TestCase):
+    """Where Tisma Slicer's bundle has another value than its source program's preset, the source's wins (the
+    profile behaves as in its source program)."""
+
+    class Conv:
+        def __init__(self, out):
+            self.out = out
+
+        def convert(self, kind, flat, nozzle):
+            return {k: (v(nozzle) if callable(v) else v) for k, v in self.out.items()}
+
+    def test_source_value_wins(self):
+        # OrcaSlicer 1d577ea "Anycubic ABS @Anycubic Kobra S1 Max 0.8 nozzle": 220 degrees; the bundle has 250.
+        conv = self.Conv({'first_layer_temperature': '220', 'temperature': '220', 'bed_temperature': '90'})
+        over = convert.source_over_bundle('filament', {'first_layer_temperature': '250', 'temperature': '220',
+                                                       'bed_temperature': '90.0'}, {}, conv)
+        self.assertEqual(over, {'first_layer_temperature': ('250', '220')})
+
+    def test_widths_of_a_print_for_any_nozzle(self):
+        # A width in % of each printer's nozzle: for a print of any nozzle the bundle's mm are not replaced here.
+        conv = self.Conv({'extrusion_width': lambda n: '%g' % (1.05 * n), 'perimeters': '2'})
+        self.assertEqual(convert.source_over_bundle('print', {'extrusion_width': '0.21', 'perimeters': '3'}, {}, conv),
+                         {'perimeters': ('3', '2')})
+        self.assertEqual(convert.source_over_bundle('print', {'extrusion_width': '0.21'}, {}, conv, 0.4),
+                         {'extrusion_width': ('0.21', '0.42')})
+
+
 class DialectTables(unittest.TestCase):
     def test_same_key_with_other_value_names(self):
         # OrcaSlicer's seam "back" is PrusaSlicer's "rear": the key keeps its name, its values do not.

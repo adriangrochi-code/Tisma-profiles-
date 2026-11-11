@@ -172,6 +172,16 @@ comparten:
   tiene salen de los ajustes traducidos de la impresión. Van, como las del filamento, en las variables del G-code de la
   máquina. Una lista de números de OrcaSlicer usada donde se espera un número (`{if outer_wall_acceleration > 0}`) vale
   la del extrusor en uso, o la única si hay una (así lo hace OrcaSlicer).
+- **`source_over_bundle`** (en un filamento o un perfil de impresión de la familia OrcaSlicer): las claves del paquete de
+  Tisma Slicer (nombres de PrusaSlicer) cuyo valor no es el que da el perfil del programa de origen pasado por el
+  conversor de Tisma Slicer, como `{"clave": {"bundle": …, "source": …}}`. Vale el del origen (el perfil se comporta
+  como en su programa): `profile.settings` es la traducción de `original` con esos valores. `stats.json`
+  (`source_over_bundle`) los lista todos con el perfil. En un perfil de impresión para cualquier boquilla, los anchos
+  de línea quedan como el paquete los tiene (ver abajo).
+- **Perfiles de impresión por boquilla:** un perfil del origen para impresoras de varias boquillas cuyos anchos son un
+  porcentaje de la boquilla de cada una (OrcaSlicer: `line_width = 105%`) se escribe una vez por boquilla, con el mismo
+  nombre, `nozzle` y sus impresoras de esa boquilla, y los anchos en mm que da el origen para ella; la ruta lleva la
+  boquilla (`…_0.4mm.json`). El perfil por defecto de cada impresora es el de su boquilla.
 - **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
   que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
   boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, la altura de 9
