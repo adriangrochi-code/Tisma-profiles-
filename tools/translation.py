@@ -144,6 +144,8 @@ TABLE = {
         E(['thumbnails', 'thumbnails_format'], 'gcode.thumbnails', 'rule', rule='thumbnails',
           note='"WxH/FORMAT" list; a size without a format takes thumbnails_format'),
         E('nozzle_high_flow', 'machine.high_flow_nozzle', 'flag'),
+        E('multimaterial_purging', 'wipe_tower.purge_volumes',
+          note='mm3 for every change (before the filament\'s purge multiplier); a printer setting (spec PF8)'),
         E('binary_gcode', 'gcode.binary', 'flag'),
         E('remaining_times', 'gcode.progress', 'flag'),
         E('autoemit_temperature_commands', 'gcode.auto_temperatures', 'flag'),
