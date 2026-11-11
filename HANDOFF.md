@@ -47,6 +47,12 @@ changes.
 
 ## Open
 
+- PF15 (`machine.flavor_choices`, owner's decision of 2026-11-11): ready but not pushed, because engine dev 05023bf
+  refuses the unknown setting (278 Cura printers). When the engine reads it: Cura's
+  `machine_gcode_flavor` "RepRap (Marlin/Sprinter)" (read with the definition's G-code) gives `machine.flavor`
+  "marlin" plus `flavor_choices` ["marlin_legacy", "marlin"]; check_pack's same-translation check must allow the
+  field; docs/FORMAT.md entry; a CuraDefinitions test. The patch is in the session scratchpad
+  (pf15-flavor-choices.patch); redo it from this note if it is gone.
 - Variables in `orcaslicer`/`cura` G-code use the source program's names; filament and print profiles keep
   PrusaSlicer names. `gcode.values` gives the machine values with the source names. The engine's macro spec
   (spec session) must say how it maps the rest.
