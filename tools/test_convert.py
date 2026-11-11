@@ -362,6 +362,11 @@ class FilamentAndPrinterOptions(unittest.TestCase):
         for flavor in ('marlin', 'reprapfirmware', 'klipper'):
             settings, _ = convert.map_printer({'machine_max_junction_deviation': '0.01', 'gcode_flavor': flavor})
             self.assertNotIn('junction_deviation', settings.get('machine', {}))
+        # Ginger Additive G1 (OrcaSlicer): a pellet printer; Tisma Slicer's bundle lost the flag, the source has it.
+        settings, _ = convert.map_printer({'pellet_modded_printer': '1'})
+        self.assertEqual(settings['machine']['feedstock'], 'pellet')
+        lost = convert.lost_values('printer', {}, {'pellet_modded_printer': '1'}, 'orcaslicer')
+        self.assertEqual(lost, {'pellet_modded_printer': '1'})
         # Creality CR-30 (Belt_Creality): a belt printer at 45 degrees, the belt on Z. Without these the engine
         # slices it as a cartesian printer with a 1000 mm bed.
         settings, _ = convert.map_printer({'belt_printer': '1', 'belt_angle': '45', 'belt_axis_z': '1'})

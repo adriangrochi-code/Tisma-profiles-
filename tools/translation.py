@@ -155,6 +155,8 @@ TABLE = {
         E('parking_pos_retraction', 'mmu.parking_position'),
         E('extra_loading_move', 'mmu.extra_loading_move'),
         E('high_current_on_filament_swap', 'mmu.high_current_on_swap', 'flag'),
+        E('pellet_modded_printer', 'machine.feedstock', 'map', values={'1': 'pellet', '0': 'filament'},
+          note='OrcaSlicer\'s pellet printer (Tisma Slicer\'s bundle does not have it: from the source program)'),
         E('belt_printer', 'belt.enabled', 'flag', note='a belt printer (Tisma Slicer\'s own option)'),
         E('belt_angle', 'belt.angle', note='degrees between the gantry and the belt'),
         E('belt_axis_z', 'belt.belt_is_z', 'flag', note='the belt is the firmware\'s Z axis, the gantry Y'),
