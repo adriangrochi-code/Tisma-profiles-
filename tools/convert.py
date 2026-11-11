@@ -442,6 +442,12 @@ PRINTER_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if not v.startswith
 FILAMENT_KEYS = {k: v for k, v in upstream.PRUSA_KEYS.items() if v.startswith('filament_')}
 
 
+# Printers whose bundle section has another name than its preset in the source program: (bundle, section) -> preset.
+# Tisma Slicer's tools/profiles/make_belt_profiles.py builds the CR-30 PrintMill from Creality Print's
+# "Creality CR-30 0.4 nozzle".
+SOURCE_PRESET_NAMES = {('Belt_Creality', 'Creality CR-30 PrintMill 0.4 nozzle'): 'Creality CR-30 0.4 nozzle'}
+
+
 def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozenset()):
     """The printer's G-code block: from the source program when the bundle was converted from another one and its
     checkout is given, else from the bundle."""
@@ -453,7 +459,7 @@ def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozens
             m = re.search(r'CURA_DEFINITION_(\S+?)(?:\\n|$)', c.get('printer_notes', ''))
             block = upstream.cura_machine_gcode(reader, m.group(1)) if m else None
         else:
-            block = upstream.orca_machine_gcode(reader, name)
+            block = upstream.orca_machine_gcode(reader, SOURCE_PRESET_NAMES.get((b.id, name), name))
         if block is not None and block['templates'] and not block.get('expressions', {}).get('start'):
             stats['printer G-code from the source program (%s)' % dialect] += 1
             out = {'dialect': dialect, 'origin': 'source_program',
@@ -636,9 +642,9 @@ def tisma_merge_key(path, kind, src, presets):
 
 def add_source_prints(deferred, sources, everything, merged_lists, tisma_converter, stats):
     """The print presets of an OrcaSlicer-family source program for printers of the pack that Tisma Slicer's bundle
-    lacks, neither kept nor merged into a preset it keeps (upstream.merged_groups): converted by Tisma Slicer's own
-    converter (tisma_converter) and added to the bundle as sections. A name the pack has is not added. Fills
-    merged_lists for the prints. {(bundle, 'print', name): provenance}."""
+    lacks, neither kept nor merged into a preset it keeps (upstream.merged_groups), for printers of that bundle:
+    converted by Tisma Slicer's own converter (tisma_converter) and added to the bundle as sections. A name the
+    pack has is not added. Fills merged_lists for the prints. {(bundle, 'print', name): provenance}."""
     out = {}
     if not tisma_converter:
         return out
@@ -651,6 +657,7 @@ def add_source_prints(deferred, sources, everything, merged_lists, tisma_convert
         presets = sources.presets(b, 'process')
         if presets is None:
             continue
+        own = {rel for _, rel, _ in printers}  # only presets for this bundle's printers (other bundles add their own)
         converted = tisma_merge_key(tisma_converter, 'print', src, presets)
         groups = upstream.merged_groups(presets, converted)
         merged_lists[presets] = {n: union for names, union in groups for n in names}
@@ -660,7 +667,7 @@ def add_source_prints(deferred, sources, everything, merged_lists, tisma_convert
             if hit:
                 in_bundle.add(hit[0])
         for names, union in groups:
-            if any(n in in_bundle for n in names) or not any(sources.names.get((src[1], x)) for x in union):
+            if any(n in in_bundle for n in names) or not any(sources.names.get((src[1], x)) in own for x in union):
                 continue
             name = names[0]
             if name in taken:
@@ -828,13 +835,18 @@ def source_over_bundle(kind, c, source, conv, nozzle=None):
     """{PrusaSlicer key: (bundle text, source text)} of the options of the translation table of a kind that the bundle
     has with another value than the source program's preset gives through Tisma Slicer's converter (conv): the
     profile behaves as in its source program (owner's rule). For a print of any nozzle (nozzle None), the line widths
-    are left as the bundle has them: the source's are a percent of each printer's nozzle."""
+    are left as the bundle has them: the source's are a percent of each printer's nozzle. A print for belt printers
+    (Tisma Slicer's belt bundles name BELT_ in its condition) keeps the bundle's brim: the engine refuses a brim on a
+    belt printer, where VertexSlice prints the 5 mm of its generic process."""
     keys = {k for e in translation.TABLE[kind]
             for k in (e['from'] if isinstance(e.get('from'), list) else [e.get('from')]) if k}
     got = conv.convert(kind, dict(source), nozzle or 0.4)
+    belt = kind == 'print' and 'BELT_' in c.get('compatible_printers_condition', '')
     out = {}
     for k in sorted(keys & set(got) & set(c)):
         if nozzle is None and kind == 'print' and k.endswith('extrusion_width'):
+            continue
+        if belt and k == 'brim_width':
             continue
         if not same_value(c[k], got[k]):
             out[k] = (c[k], got[k])

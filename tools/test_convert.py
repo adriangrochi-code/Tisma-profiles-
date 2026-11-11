@@ -183,6 +183,15 @@ class SourceOverBundle(unittest.TestCase):
         self.assertEqual(convert.source_over_bundle('print', {'extrusion_width': '0.21'}, {}, conv, 0.4),
                          {'extrusion_width': ('0.21', '0.42')})
 
+    def test_belt_print_keeps_the_bundles_brim(self):
+        # VertexSlice 1d6ad28 "0.20mm Standard @IdeaFormer IR3 V2": brim_width 5 (its generic process); Tisma Slicer's
+        # belt bundle has 0, and the engine refuses a brim on a belt printer.
+        conv = self.Conv({'brim_width': '5', 'perimeters': '2'})
+        belt = {'brim_width': '0', 'perimeters': '3',
+                'compatible_printers_condition': 'printer_notes=~/.*BELT_IDEAFORMER_IR3V2.*/'}
+        self.assertEqual(convert.source_over_bundle('print', belt, {}, conv), {'perimeters': ('3', '2')})
+        self.assertEqual(convert.source_over_bundle('print', {'brim_width': '0'}, {}, conv), {'brim_width': ('0', '5')})
+
 
 class DialectTables(unittest.TestCase):
     def test_same_key_with_other_value_names(self):

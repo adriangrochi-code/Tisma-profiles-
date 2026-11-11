@@ -289,10 +289,16 @@ usan los G-code del paquete (contadas en el paquete convertido), su tipo y qué 
 de origen, en qué G-code aparece y su nombre en PrusaSlicer. La genera `tools/gcode_variables.py` con cada versión
 nueva del paquete; no se edita a mano.
 
-Con la versión del 05-11-2026, de los 2317 perfiles de impresora FFF de origen: 902 de OrcaSlicer, 16 de Creality
-Print, 1 de Elegoo Slicer y 296 de Cura salen del programa de origen; 1060 de paquetes de PrusaSlicer; 42 del paquete
-convertido (las impresoras de cinta de BlackBelt y VertexSlice, y la CR-30 PrintMill, que no tienen un perfil con su
-nombre en el programa de origen o cuyo programa el paquete no lee).
+Con la versión del 11-11-2026, de los 2317 perfiles de impresora FFF de origen: 903 de OrcaSlicer (uno es la
+IdeaFormer IR3 V2 de VertexSlice, una variante de OrcaSlicer para impresoras de cinta con sus mismos nombres, por eso
+con el dialecto `orcaslicer` y `source.repository` de VertexSlice), 17 de Creality Print (con la CR-30 PrintMill, que
+allí se llama «Creality CR-30 0.4 nozzle»), 1 de Elegoo Slicer y 296 de Cura salen del programa de origen; 1060 de
+paquetes de PrusaSlicer; 40 del paquete convertido: las de BlackBelt, porque su G-code en BlackBelt Cura usa
+`{blackbelt_z_offset}`, que solo calcula ese programa a partir del ancho de pared, el ángulo y la separación; el
+paquete de Tisma Slicer lo trae ya calculado para cada variante.
+
+Una impresión para impresoras de cinta conserva el borde (brim) del paquete: VertexSlice imprime los 5 mm de su
+proceso genérico, pero el motor no acepta un borde en una impresora de cinta.
 
 ## G-code de inicio y de fin con variables simples (`profile`)
 

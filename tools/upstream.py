@@ -19,7 +19,9 @@ COMMIT = re.compile(r'from commit ([0-9a-f]{40})')
 DIALECTS = {'https://github.com/SoftFever/OrcaSlicer': 'orcaslicer',
             'https://github.com/CrealityOfficial/CrealityPrint': 'crealityprint',
             'https://github.com/ELEGOO-3D/ElegooSlicer': 'elegooslicer',
-            'https://github.com/Ultimaker/Cura': 'cura'}
+            'https://github.com/Ultimaker/Cura': 'cura',
+            # A fork of OrcaSlicer for belt printers, with OrcaSlicer's option names (its IdeaFormer IR3 V2 preset).
+            'https://github.com/kdho77/VertexSlice': 'orcaslicer'}
 
 # The custom G-code keys of each dialect and the pack's name for each (docs/FORMAT.md). Keys of a dialect that end in
 # "_gcode" and are not here are kept with their own name.
