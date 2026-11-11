@@ -47,9 +47,9 @@ changes.
 
 ## Open
 
-- PF15 (`machine.flavor_choices`, owner's decision of 2026-11-11): in the pack (278 Cura variants). Engine dev
-  5b0730a slices with it (0 refusals), but its `profile --pack` reader still leaves it out with a warning (617 runs);
-  reported to the engine. Re-run `validate.py --reader` when it changes.
+- PF15 (`machine.flavor_choices`, owner's decision of 2026-11-11): in the pack (278 Cura variants, 2eb8fec). With
+  engine dev fed27b1 the pack reader keeps it: `validate.py --reader` 19205 runs, 0 settings left out, 35 refusals
+  (pairs the source excludes).
 - Variables in `orcaslicer`/`cura` G-code use the source program's names; filament and print profiles keep
   PrusaSlicer names. `gcode.values` gives the machine values with the source names. The engine's macro spec
   (spec session) must say how it maps the rest.
