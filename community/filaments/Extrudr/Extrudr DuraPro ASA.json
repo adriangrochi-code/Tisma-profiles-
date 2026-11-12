@@ -1,0 +1,197 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro ASA",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr DuraPro ASA @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Extrudr DuraPro ASA"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ASTM D792",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 96.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ASTM D1525",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 96.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "HDT/B, ASTM D648",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

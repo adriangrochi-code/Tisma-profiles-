@@ -1,0 +1,75 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr Pearl",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    140,
+    210
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/pearl-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Pearl",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    20,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/pearl-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Pearl",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.25,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 2781",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/pearl-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Pearl",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 58.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/pearl-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Pearl",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 51.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "HDT/B, ISO 75",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/pearl-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Pearl",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

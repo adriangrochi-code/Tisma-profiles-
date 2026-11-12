@@ -1,0 +1,184 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr Flax",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flax @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Extrudr Flax"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    180,
+    240
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flax-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flax",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    20,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flax-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flax",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.45,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 2781",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flax-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flax",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 48.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flax-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flax",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

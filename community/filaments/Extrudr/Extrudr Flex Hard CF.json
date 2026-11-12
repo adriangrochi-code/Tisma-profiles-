@@ -1,0 +1,62 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr Flex Hard CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    230,
+    260
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-hard-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Hard CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    50,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-hard-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Hard CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.22,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 2781",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-hard-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Hard CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 140.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-hard-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Hard CF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

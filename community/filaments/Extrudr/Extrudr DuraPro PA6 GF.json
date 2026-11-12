@@ -1,0 +1,21 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro PA6 GF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    270,
+    300
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pa6-gf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PA6 GF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

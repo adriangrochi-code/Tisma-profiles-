@@ -1,0 +1,36 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro PC-PBT CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    265,
+    295
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pc-pbt-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PC-PBT CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pc-pbt-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PC-PBT CF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

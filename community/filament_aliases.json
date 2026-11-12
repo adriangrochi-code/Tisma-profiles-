@@ -115,6 +115,11 @@
    "file": "Polymaker/PolyLite Translucent PETG.json",
    "pack_name": "PolyLite PETG Translucent",
    "reason": "the same words in another order"
+  },
+  {
+   "file": "Extrudr/Extrudr GreenTEC Pro CF.json",
+   "pack_name": "Extrudr GreenTEC Pro Carbon",
+   "reason": "the data sheet of GreenTEC Pro CF names the product GreenTEC Pro Carbon in its description"
   }
  ]
 }

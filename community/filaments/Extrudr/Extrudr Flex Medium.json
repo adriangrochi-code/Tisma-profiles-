@@ -1,0 +1,120 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr Flex Medium",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr Flex Medium @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Extrudr Flex Medium"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    230,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-medium-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Medium",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    50,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-medium-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Medium",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.19,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 2781",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-medium-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Medium",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 110.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/flex-medium-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet Flex Medium",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

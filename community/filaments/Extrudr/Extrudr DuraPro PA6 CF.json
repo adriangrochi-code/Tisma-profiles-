@@ -1,0 +1,49 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro PA6 CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    270,
+    300
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pa6-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PA6 CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    80,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pa6-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PA6 CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.15,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-pa6-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro PA6 CF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

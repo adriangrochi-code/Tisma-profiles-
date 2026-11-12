@@ -1,0 +1,124 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr XPETG CF",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr XPETG CF @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Extrudr XPETG CF"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/xpetg-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet XPETG CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    60,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/xpetg-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet XPETG CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 85.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/xpetg-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet XPETG CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 69.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "HDT/B, ISO 75",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/xpetg-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet XPETG CF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

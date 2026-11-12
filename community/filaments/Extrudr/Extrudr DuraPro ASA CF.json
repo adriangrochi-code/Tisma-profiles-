@@ -1,0 +1,75 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro ASA CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    240,
+    260
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.14,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ASTM D792",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 101.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ASTM D1525",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA CF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 96.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "HDT/B, ASTM D648",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-cf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA CF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

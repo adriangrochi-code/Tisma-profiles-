@@ -1,0 +1,49 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr DuraPro ASA GF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    230,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-gf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA GF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-gf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA GF",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.18,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/durapro-asa-gf-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet DuraPro ASA GF",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

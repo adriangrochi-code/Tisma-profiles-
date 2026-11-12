@@ -1,0 +1,184 @@
+{
+ "vendor": "Extrudr",
+ "name": "Extrudr BioFusion",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Extrudr BioFusion @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Extrudr BioFusion"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    200,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/biofusion-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet BioFusion",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    20,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/biofusion-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet BioFusion",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.25,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ASTM D792",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/biofusion-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet BioFusion",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 75.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ASTM D1525",
+   "source": {
+    "type": "datasheet",
+    "url": "https://s3.extrudr.com/extrudr-media/datasheets/tds/tds-en/biofusion-TDS-en.pdf",
+    "title": "Extrudr, technical data sheet BioFusion",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}
