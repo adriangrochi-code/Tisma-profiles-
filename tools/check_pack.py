@@ -63,29 +63,34 @@ def check_community_filaments(pack, community, problems, counts, notes):
             path = os.path.join(root, f)
             d = json.load(open(path, encoding='utf-8'))
             counts['community filaments'] += 1
-            pf = d.get('pack_filament')
-            if not pf:
+            links = d.get('pack_filament') or []
+            for pf in links if isinstance(links, list) else [links]:
+                e = entries.get((pf.get('bundle'), pf.get('name')))
+                if e is None:
+                    problems['community filament without a filament of the pack'].append(
+                        '%s (%s, %s)' % (path, pf.get('bundle'), pf.get('name')))
+                    continue
+                check_ranges(d, pf, e, notes)
+
+
+def check_ranges(d, pf, e, notes):
+    """Notes a filament profile's temperatures outside its manufacturer's ranges (community data)."""
+    variables = (e['profile']['settings'].get('machine') or {}).get('variables') or {}
+    for item in d['data']:
+        for key, names in (('filament.nozzle_temperature_range', ('temperature', 'first_layer_temperature')),
+                           ('filament.bed_temperature_range', ('bed_temperature',
+                                                               'first_layer_bed_temperature'))):
+            if item['key'] != key:
                 continue
-            e = entries.get((pf.get('bundle'), pf.get('name')))
-            if e is None:
-                problems['community filament without a filament of the pack'].append(path)
-                continue
-            variables = (e['profile']['settings'].get('machine') or {}).get('variables') or {}
-            for item in d['data']:
-                for key, names in (('filament.nozzle_temperature_range', ('temperature', 'first_layer_temperature')),
-                                   ('filament.bed_temperature_range', ('bed_temperature',
-                                                                       'first_layer_bed_temperature'))):
-                    if item['key'] != key:
-                        continue
-                    low, high = item['value']
-                    for name in names:
-                        try:
-                            v = float(str(variables.get(name, '')).split(',')[0])
-                        except ValueError:
-                            continue
-                        if not low <= v <= high:
-                            notes['profile temperature outside the manufacturer\'s range'].append(
-                                '%s: %s %g, the sheet %g-%g' % (pf['name'], name, v, low, high))
+            low, high = item['value']
+            for name in names:
+                try:
+                    v = float(str(variables.get(name, '')).split(',')[0])
+                except ValueError:
+                    continue
+                if not low <= v <= high:
+                    notes['profile temperature outside the manufacturer\'s range'].append(
+                        '%s: %s %g, the sheet %g-%g' % (pf['name'], name, v, low, high))
 
 
 def load(pack, rel):

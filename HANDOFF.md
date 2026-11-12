@@ -95,7 +95,8 @@ values, check_pack notes where a profile is outside the maker's range.
 | Maker | State |
 |---|---|
 | Prusa Polymers (Prusament) | 2026-11-12: 22 materials from prusament.com/materials (nozzle and bed ranges, temperature resistance); 14 linked to the pack's filament. Note: Prusament PA11 Carbon Fiber first layer bed 90 °C, the sheet 100-120 |
-| Polymaker, Bambu Lab | pendiente (pages reachable) |
+| Polymaker | 2026-11-12: 78 products from us.polymaker.com/products/<handle> (nozzle and bed ranges, drying, density ISO 1183, Vicat ISO 306); 27 linked to 142 pack filaments (same name without the brand, only Polymaker filaments). Notes: Snapmaker U1's Fiberon profiles below the sheet (PA12-CF10, PA612-ESD, ASA-CF08 nozzle; PA612-ESD bed 100 °C, the sheet 40-50; PETG-ESD bed 60, the sheet 70-80) |
+| Bambu Lab | pendiente (pages reachable) |
 | eSun | pendiente: esun3d.com answers 403 from here |
 | Sunlu, Elegoo | pendiente: the product pages to read are still to be found |
 

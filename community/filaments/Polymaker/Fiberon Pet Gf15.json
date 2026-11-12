@@ -1,0 +1,73 @@
+{
+ "vendor": "Polymaker",
+ "name": "Fiberon Pet Gf15",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    280,
+    310
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pet-gf15",
+    "title": "Polymaker, Fiberon Pet Gf15",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    70,
+    80
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pet-gf15",
+    "title": "Polymaker, Fiberon Pet Gf15",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 100,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pet-gf15",
+    "title": "Polymaker, Fiberon Pet Gf15",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 10,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pet-gf15",
+    "title": "Polymaker, Fiberon Pet Gf15",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 232.6,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pet-gf15",
+    "title": "Polymaker, Fiberon Pet Gf15",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

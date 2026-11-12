@@ -1,0 +1,60 @@
+{
+ "vendor": "Polymaker",
+ "name": "Polycast",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    220
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polycast",
+    "title": "Polymaker, Polycast",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    70
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polycast",
+    "title": "Polymaker, Polycast",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polycast",
+    "title": "Polymaker, Polycast",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 12,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polycast",
+    "title": "Polymaker, Polycast",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

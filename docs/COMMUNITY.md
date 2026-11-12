@@ -61,7 +61,8 @@ community/resins/<Fabricante>/<Nombre>.json
 - **Filamentos y resinas:** llevan `name` en lugar de `model`.
 - **`pack_model`:** opcional. Une el archivo al modelo del paquete (`id` es el del índice).
 - **`pack_filament`:** opcional, en un filamento. Lo une al filamento del paquete: `{"bundle": …, "name": …}`, el
-  paquete (la carpeta de `vendors/`) y el nombre del perfil. `tools/check_pack.py` revisa que exista y anota como
+  paquete (la carpeta de `vendors/`) y el nombre del perfil, o una lista de esos cuando el mismo producto está en
+  varios paquetes o perfiles (solo los que tienen el mismo nombre sin la marca, sin espacios ni guiones). `tools/check_pack.py` revisa que exista y anota como
   nota (no como falla) cuando las temperaturas del perfil quedan fuera del rango del fabricante.
 
 **Tipos de dato (`kind`):**
@@ -100,6 +101,7 @@ community/resins/<Fabricante>/<Nombre>.json
 | `filament.drying_temperature`, `filament.drying_hours` | °C, h | Secado |
 | `filament.nozzle_temperature_range` | °C | Temperatura de boquilla que da el fabricante, `[mínima, máxima]` («210 ± 10» es `[200, 220]`; el texto de la hoja en `conditions`) |
 | `filament.bed_temperature_range` | °C | Temperatura de cama que da el fabricante, `[mínima, máxima]` |
+| `filament.vicat_softening` | °C | Temperatura de ablandamiento Vicat (método, por ejemplo ISO 306, en `conditions`) |
 | `filament.temperature_resistance` | °C | Resistencia a la temperatura que declara el fabricante, cuando no dice el método (si dice HDT, va en `filament.hdt`) |
 | `filament.price_per_kg` | moneda/kg | Precio, con la moneda y la fecha en `conditions` |
 | `resin.exposure`, `resin.bottom_exposure` | s | Exposición que alguien probó en esa impresora (en `conditions`) |
