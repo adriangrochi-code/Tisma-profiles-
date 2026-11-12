@@ -79,7 +79,7 @@ PrusaSlicer bundle has stay from it (Creality, Elegoo, QIDITechnology).
 | Anycubic | Anycubic Slicer Next 6103ed8 | AGPL-3.0 | 14 (17) | Kobra 3 Max, 3 V2, Neo, S1 Max, X: not in it (older than OrcaSlicer) |
 | Flashforge | Orca-Flashforge c45cc82 | AGPL-3.0 | 6 (21) | Adventurer 4, Artemis, Creator 5, Creator 5 Pro: not in it; Guider 2s, Guider4, Guider4 Pro: unusable there (print templates only; HF nozzles "0.6HF") |
 | Creality | Creality Print 59ae8cb | AGPL-3.0 | 37 (73) | Ender-3 S1 Sonic, Ender-5S, Ender-5 Pro 2019, Ender-5 S1 Sonic: not in it |
-| Elegoo | Elegoo Slicer 2d507e3 | AGPL-3.0 | 10 (43) | none. ELEGOO-3D/ElegooSlicer and elegooofficial/ElegooSlicer are the same repository (same HEAD 2d507e3; search lists only elegooofficial). elegoo.com/pages/download loads its slicer link dynamically: not checked from here |
+| Elegoo | Elegoo Slicer 2d507e3 | AGPL-3.0 | 10 (43) | none. Proof it is Elegoo's: https://www.elegoo.com/pages/download offers ElegooSlicer V1.5.3.5 from Elegoo's own storage (QA, browser, 2026-11-12); the repository has tag v1.5.3.5 (3f1042e), and 2d507e3 is that tag plus one commit that only changes the mesh reader (deps_src/admesh), no profiles. ELEGOO-3D/ElegooSlicer and elegooofficial/ElegooSlicer are the same repository |
 
 Not done: Snapmaker (already from Snapmaker's own PrusaSlicer bundle), Sovol (Sovol3d/Sovol-OrcaSlicer has no
 LICENSE: cannot be used), FLSun (Flsun3d/FlsunSlicer fb02854, AGPL-3.0, PrusaSlicer format; its model names do not
