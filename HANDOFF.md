@@ -66,6 +66,26 @@ changes.
 - 4 groups of models share the vendor-wide base start G-code of OrcaSlicer (DeltaMaker, LONGER LK10, E3NG/VIRTU,
   WonderMaker): that is how the source has them; reported as notes, not failures.
 
+## P3 for the pack: manufacturers' own slicers (closed 2026-11-12)
+
+Rule (owner, through QA, 2026-11-12): the manufacturer's own slicer over OrcaSlicer, model by model; its web page or
+data sheet only to compare; every difference in stats.json `official_over_replaced`. Models the manufacturer's own
+PrusaSlicer bundle has stay from it (Creality, Elegoo, QIDITechnology).
+
+| Manufacturer | Source (sources.json `official`) | License | Models (variants) from it | Left from OrcaSlicer, why |
+|---|---|---|---|---|
+| Bambu Lab | Bambu Studio 930fe93 | AGPL-3.0 | 15 (60), with the new H3C | none |
+| QIDI | QIDI Studio 21d4745 | AGPL-3.0 | 5 (20): Q2, Q2C, X-Max 4, X-Plus 5, X-Smart 5 | X-CF Pro, X-Max, X-Plus: not in QIDI Studio |
+| Anycubic | Anycubic Slicer Next 6103ed8 | AGPL-3.0 | 14 (17) | Kobra 3 Max, 3 V2, Neo, S1 Max, X: not in it (older than OrcaSlicer) |
+| Flashforge | Orca-Flashforge c45cc82 | AGPL-3.0 | 6 (21) | Adventurer 4, Artemis, Creator 5, Creator 5 Pro: not in it; Guider 2s, Guider4, Guider4 Pro: unusable there (print templates only; HF nozzles "0.6HF") |
+| Creality | Creality Print 59ae8cb | AGPL-3.0 | 37 (73) | Ender-3 S1 Sonic, Ender-5S, Ender-5 Pro 2019, Ender-5 S1 Sonic: not in it |
+| Elegoo | Elegoo Slicer 2d507e3 | AGPL-3.0 | 10 (43) | none. ELEGOO-3D/ElegooSlicer and elegooofficial/ElegooSlicer are the same repository (same HEAD 2d507e3; search lists only elegooofficial). elegoo.com/pages/download loads its slicer link dynamically: not checked from here |
+
+Not done: Snapmaker (already from Snapmaker's own PrusaSlicer bundle), Sovol (Sovol3d/Sovol-OrcaSlicer has no
+LICENSE: cannot be used), FLSun (Flsun3d/FlsunSlicer fb02854, AGPL-3.0, PrusaSlicer format; its model names do not
+match OrcaSlicer's and its prints use conditions: needs a PrusaSlicer-format path, later), Artillery (no public slicer
+found), Voron and RatRig (no slicer; documentation is not a source under the rule).
+
 ## Coverage (owner's request of 2026-11-10 21:00)
 
 Every part of the pack, "revisado (fecha, qué se probó, hallazgos)" or "pendiente". Update it with each pass; the
