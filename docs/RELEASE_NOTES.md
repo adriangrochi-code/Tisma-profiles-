@@ -9,7 +9,7 @@ VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, Anyc
 
 - **Bambu Lab desde su propio laminador, Bambu Studio**, en lugar de OrcaSlicer: 60 variantes (con la nueva H3C),
   16 perfiles de impresión y 77 filamentos más. Cada valor que cambia frente a OrcaSlicer está en `stats.json`
-  (`official_over_replaced`). La H3C usa por ahora el G-code simple: el suyo tiene variables propias de Bambu Studio.
+  (`official_over_replaced`). La H3C imprime con su propio G-code desde el motor dev 237dac0.
 - **QIDI desde QIDI Studio** donde OrcaSlicer las traía: Q2, Q2C, X-Max 4, X-Plus 5 y la nueva X-Smart 5. Las que
   tiene el paquete propio de QIDI siguen de ahí, y X-CF Pro, X-Max y X-Plus, que QIDI Studio no tiene, de OrcaSlicer.
 - **Anycubic desde Anycubic Slicer Next** donde OrcaSlicer las traía: 14 modelos (Kobra, Kobra 2, Kobra 3, Kobra S1,
