@@ -849,12 +849,26 @@ def replace_models(old, new, stats=None):
             del old.sections[(kind, name)]
     for mid in gone_models:
         del old.models[mid]
-    for (kind, name), values in list(old.sections.items()):
+    drop = set()
+    for (kind, name), values in old.sections.items():
         if kind not in ('print', 'filament') or name.startswith('*'):
             continue
         cps = [x.strip().strip('"') for x in values.get('compatible_printers', '').split(';') if x.strip()]
         if (kind, name) in new.sections or (cps and all(c in gone for c in cps)):
-            del old.sections[(kind, name)]
+            drop.add((kind, name))
+    # A preset that a remaining one inherits from stays (unless new has one of that name, which the other takes).
+    changed = True
+    while changed:
+        changed = False
+        for (kind, name), values in old.sections.items():
+            if (kind, name) in drop:
+                continue
+            for parent in [x.strip().strip('"') for x in values.get('inherits', '').split(';') if x.strip()]:
+                if (kind, parent) in drop and (kind, parent) not in new.sections:
+                    drop.discard((kind, parent))
+                    changed = True
+    for key in drop:
+        del old.sections[key]
     return gone
 
 

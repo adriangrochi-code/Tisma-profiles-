@@ -83,6 +83,24 @@
    "prefix": "QIDIStudio_",
    "replaces": "Orca_Qidi",
    "license": "AGPL-3.0 (LICENSE at the commit: GNU Affero General Public License, version 3)"
+  },
+  {
+   "program": "Anycubic Slicer Next",
+   "repository": "https://github.com/ANYCUBIC-3D/AnycubicSlicerNext",
+   "commit": "6103ed8b511609658d00d0538cc7f0609cdb57da",
+   "directory": [
+    "resources/profiles/Anycubic.json",
+    "resources/profiles/Anycubic",
+    "resources/profiles/OrcaFilamentLibrary.json",
+    "resources/profiles/OrcaFilamentLibrary",
+    "src/libslic3r"
+   ],
+   "vendors": [
+    "Anycubic"
+   ],
+   "prefix": "AnycubicSlicerNext_",
+   "replaces": "Orca_Anycubic",
+   "license": "AGPL-3.0 (LICENSE at the commit: GNU Affero General Public License, version 3)"
   }
  ]
 }

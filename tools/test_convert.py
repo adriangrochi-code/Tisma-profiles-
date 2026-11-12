@@ -242,6 +242,24 @@ class ReplaceModels(unittest.TestCase):
         self.assertEqual(list(o.models), ['Qidi X-CF Pro'])
         self.assertEqual(sorted(o.sections), [('print', '0.2mm @Qidi X-CF Pro'), ('printer', 'Qidi X-CF Pro 0.4 nozzle')])
 
+    def test_a_parent_of_a_remaining_preset_stays(self):
+        # OrcaSlicer 1d577ea "Anycubic PLA-CF @Anycubic Kobra S1 Max 0.4 nozzle" (a model Anycubic Slicer Next 6103ed8
+        # lacks) inherits "Generic PLA-CF @Anycubic", whose printers are all models Anycubic Slicer Next has.
+        with tempfile.TemporaryDirectory() as d:
+            old, new = os.path.join(d, 'Orca_Anycubic.ini'), os.path.join(d, 'AnycubicSlicerNext_Anycubic.ini')
+            with open(old, 'w') as f:
+                f.write('[vendor]\nname = Anycubic\n\n[printer_model:Anycubic Kobra 3]\nname = Anycubic Kobra 3\n\n'
+                        '[printer:Anycubic Kobra 3 0.4 nozzle]\nprinter_model = Anycubic Kobra 3\n\n'
+                        '[filament:Generic PLA-CF @Anycubic]\ncompatible_printers = "Anycubic Kobra 3 0.4 nozzle"\n\n'
+                        '[filament:Anycubic PLA-CF @Anycubic Kobra S1 Max 0.4 nozzle]\n'
+                        'inherits = Generic PLA-CF @Anycubic\ncompatible_printers = "Anycubic Kobra S1 Max 0.4 nozzle"\n')
+            with open(new, 'w') as f:
+                f.write('[vendor]\nname = Anycubic\n\n[printer_model:Anycubic Kobra 3]\nname = Anycubic Kobra 3\n\n'
+                        '[printer:Anycubic Kobra 3 0.4 nozzle]\nprinter_model = Anycubic Kobra 3\n')
+            o = convert.Bundle(old)
+            convert.replace_models(o, convert.Bundle(new))
+        self.assertIn(('filament', 'Generic PLA-CF @Anycubic'), o.sections)
+
 
 class CuraFlavor(unittest.TestCase):
     def test_marlin_without_a_version(self):

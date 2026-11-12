@@ -136,7 +136,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `total_layer_count` | entero | `start`, `layer_change` (224) | Total layer count | `total_layer_count` |
 | `first_layer_print_max` | lista de números | `start`, `layer_change`, `before_layer_change` (194) | Top-right corner of the first layer bounding box | `first_layer_print_max` |
 | `first_layer_bed_temperature` | lista de enteros | `start` (185) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
-| `next_extruder` | entero | `toolchange`, `toolchange_gcode`, `filament_swap_gcode` (154) | set by the program while slicing (GCode.cpp) | `next_extruder` |
+| `next_extruder` | entero | `toolchange`, `toolchange_gcode`, `filament_swap_gcode` (153) | set by the program while slicing (GCode.cpp) | `next_extruder` |
 | `print_bed_max` | lista de números | `start`, `end`, `toolchange`, `layer_change` (140) | Top-right corner of print bed bounding box | `print_bed_max` |
 | `initial_no_support_extruder` | entero | `start`, `toolchange` (132) | set by the program while slicing (Print.cpp) | `initial_extruder` |
 | `chamber_temperature` | lista de enteros | `start`, `end` (127) | Chamber temperature | `chamber_temperature` |
@@ -252,7 +252,6 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `minute` | entero | `start` (13) | Minute | `minute` |
 | `month` | entero | `start` (13) | Month | `month` |
 | `second` | entero | `start` (13) | Second | `second` |
-| `toolchange_z` | número | `toolchange` (13) | set by the program while slicing (GCode.cpp) | `toolchange_z` |
 | `year` | entero | `start` (13) | Year | `year` |
 | `current_hotend` | entero | `toolchange`, `end` (12) | set by the program while slicing (GCode.cpp) |  |
 | `first_filaments` | lista de enteros | `start` (12) | set by the program while slicing (GCode.cpp) |  |
@@ -265,6 +264,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `nozzle_volume_types` | lista de textos | `toolchange` (12) | set by the program while slicing (GCode.cpp) |  |
 | `print_bed_size` | lista de números | `start` (12) | Size of the print bed bounding box | `print_bed_size` |
 | `scan_first_layer` | sí/no | `start` (12) | Scan first layer |  |
+| `toolchange_z` | número | `toolchange` (12) | set by the program while slicing (GCode.cpp) | `toolchange_z` |
 | `z_hop_types` | lista de opciones | `toolchange` (12) | Type of Z-hop |  |
 | `machine_max_acceleration_travel` | lista de números | `start` (11) | Maximum acceleration for travel | `machine_max_acceleration_travel` |
 | `pressure_advance` | lista de números | `start` (11) | Pressure advance (Klipper) AKA Linear advance factor (Marlin) |  |

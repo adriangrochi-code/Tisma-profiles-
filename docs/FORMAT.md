@@ -300,7 +300,9 @@ fabricante tiene con el mismo nombre o que solo eran para esas impresoras; sus o
 propio del fabricante en formato PrusaSlicer también tiene el modelo, vale ese, como antes, y el del laminador solo
 agrega las boquillas que le faltan. Hoy: Bambu Lab desde Bambu Studio (`BambuStudio_BBL`, en lugar de `Orca_BBL`) y
 QIDI desde QIDI Studio (sus cuatro series, en lugar de los modelos de `Orca_Qidi` que tiene; la X-CF Pro, la X-Max y la
-X-Plus siguen de OrcaSlicer, y las Q1 Pro, X-Max 3, X-Plus 3, X-Plus 4 y X-Smart 3 de `QIDITechnology`). `stats.json`
+X-Plus siguen de OrcaSlicer, y las Q1 Pro, X-Max 3, X-Plus 3, X-Plus 4 y X-Smart 3 de `QIDITechnology`) y Anycubic
+desde Anycubic Slicer Next (14 modelos; Kobra 3 Max, Kobra 3 V2, Kobra Neo, Kobra S1 Max y Kobra X, que no tiene,
+siguen de OrcaSlicer). Un perfil del paquete reemplazado del que hereda otro que queda, queda también. `stats.json`
 (`official_over_replaced`) anota cada diferencia con el paquete reemplazado, preset por preset
 (`{official, replaced, kind, name, key, replaced_value, official_value}`), y `counts` los presets que solo están en
 uno de los dos. Los filamentos de la biblioteca de OrcaSlicer que nombran una impresora reemplazada siguen siendo
@@ -475,8 +477,9 @@ después con cada filamento y cada perfil de impresión en la primera impresora 
 Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabricante dicen la suya:
 - **PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0;
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
-- **VertexSlice** (la IdeaFormer IR3 V2), **Bambu Studio** (las Bambu Lab) y **QIDI Studio** (las QIDI;
-  `sources.json`, `official`): AGPL-3.0, según el `LICENSE` de cada repositorio en su commit;
+- **VertexSlice** (la IdeaFormer IR3 V2), **Bambu Studio** (las Bambu Lab), **QIDI Studio** (las QIDI) y **Anycubic
+  Slicer Next** (las Anycubic; `sources.json`, `official`): AGPL-3.0, según el `LICENSE` de cada repositorio en su
+  commit;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
 - **mallas de las camas de UltiMaker Cura** (`resources/meshes`, en el commit de `sources.json`): LGPL-3.0, la licencia
