@@ -234,13 +234,36 @@ class ReplaceModels(unittest.TestCase):
                         '[filament:QIDI PLA Rapido]\ncompatible_printers = "Qidi X-CF Pro 0.4 nozzle"\n')
             with open(new, 'w') as f:
                 f.write('[vendor]\nname = Qidi\n\n[printer_model:Q1 Pro]\nname = Q1 Pro\n\n'
-                        '[printer:Qidi Q1 Pro 0.4 nozzle]\nprinter_model = Q1 Pro\n\n'
+                        '[printer:Qidi Q1 Pro 0.4 nozzle]\nprinter_model = Q1 Pro\nnozzle_diameter = 0.4\n\n'
+                        '[print:0.2mm @Qidi Q1 Pro]\ncompatible_printers = "Qidi Q1 Pro 0.4 nozzle"\n\n'
                         '[filament:QIDI PLA Rapido]\ncompatible_printers = "Qidi Q1 Pro 0.4 nozzle"\n')
             o = convert.Bundle(old)
             gone = convert.replace_models(o, convert.Bundle(new))
         self.assertEqual(gone, {'Qidi Q1 Pro 0.4 nozzle'})
         self.assertEqual(list(o.models), ['Qidi X-CF Pro'])
         self.assertEqual(sorted(o.sections), [('print', '0.2mm @Qidi X-CF Pro'), ('printer', 'Qidi X-CF Pro 0.4 nozzle')])
+
+    def test_an_unusable_official_model_stays_from_the_replaced_bundle(self):
+        # Orca-Flashforge c45cc82: the Guider 2s has only print templates (instantiation false), and the Guider4 HF
+        # nozzles are "0.6HF"; OrcaSlicer's Flashforge has them usable, so those models stay from it.
+        with tempfile.TemporaryDirectory() as d:
+            old, new = os.path.join(d, 'Orca_Flashforge.ini'), os.path.join(d, 'OrcaFlashforge_Flashforge.ini')
+            with open(old, 'w') as f:
+                f.write('[vendor]\nname = Flashforge\n\n[printer_model:Flashforge Guider4]\nname = Flashforge Guider4\n\n'
+                        '[printer:Flashforge Guider4 0.6 HF nozzle]\nprinter_model = Flashforge Guider4\n'
+                        'nozzle_diameter = 0.6\n\n[print:0.30mm @FF G4]\n'
+                        'compatible_printers = "Flashforge Guider4 0.6 HF nozzle"\n')
+            with open(new, 'w') as f:
+                f.write('[vendor]\nname = Flashforge\n\n[printer_model:Flashforge Guider4]\nname = Flashforge Guider4\n\n'
+                        '[printer:Flashforge Guider4 0.6 HF nozzle]\nprinter_model = Flashforge Guider4\n'
+                        'nozzle_diameter = 0.6HF\n\n[print:0.30mm @FF G4]\n'
+                        'compatible_printers = "Flashforge Guider4 0.6 HF nozzle"\n')
+            o, n = convert.Bundle(old), convert.Bundle(new)
+            stats = convert.collections.Counter()
+            convert.replace_models(o, n, stats)
+        self.assertEqual(list(o.models), ['Flashforge Guider4'])
+        self.assertEqual(list(n.models), [])
+        self.assertEqual(sum(stats.values()), 1)
 
     def test_a_parent_of_a_remaining_preset_stays(self):
         # OrcaSlicer 1d577ea "Anycubic PLA-CF @Anycubic Kobra S1 Max 0.4 nozzle" (a model Anycubic Slicer Next 6103ed8
@@ -255,7 +278,8 @@ class ReplaceModels(unittest.TestCase):
                         'inherits = Generic PLA-CF @Anycubic\ncompatible_printers = "Anycubic Kobra S1 Max 0.4 nozzle"\n')
             with open(new, 'w') as f:
                 f.write('[vendor]\nname = Anycubic\n\n[printer_model:Anycubic Kobra 3]\nname = Anycubic Kobra 3\n\n'
-                        '[printer:Anycubic Kobra 3 0.4 nozzle]\nprinter_model = Anycubic Kobra 3\n')
+                        '[printer:Anycubic Kobra 3 0.4 nozzle]\nprinter_model = Anycubic Kobra 3\nnozzle_diameter = 0.4\n\n'
+                        '[print:0.2mm @Anycubic Kobra 3]\ncompatible_printers = "Anycubic Kobra 3 0.4 nozzle"\n')
             o = convert.Bundle(old)
             convert.replace_models(o, convert.Bundle(new))
         self.assertIn(('filament', 'Generic PLA-CF @Anycubic'), o.sections)

@@ -59,6 +59,24 @@
    ]
   },
   {
+   "program": "Orca-Flashforge",
+   "repository": "https://github.com/FlashForge/Orca-Flashforge",
+   "commit": "c45cc8216c184574c36873314ae7caea67c7a1ad",
+   "directory": [
+    "resources/profiles/Flashforge.json",
+    "resources/profiles/Flashforge",
+    "resources/profiles/OrcaFilamentLibrary.json",
+    "resources/profiles/OrcaFilamentLibrary",
+    "src/libslic3r"
+   ],
+   "vendors": [
+    "Flashforge"
+   ],
+   "prefix": "OrcaFlashforge_",
+   "replaces": "Orca_Flashforge",
+   "license": "AGPL-3.0 (LICENSE.txt at the commit: GNU Affero General Public License, version 3)"
+  },
+  {
    "program": "QIDI Studio",
    "repository": "https://github.com/QIDITech/QIDIStudio",
    "commit": "21d47457919212b8af3f97705716c261b97be559",

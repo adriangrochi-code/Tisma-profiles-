@@ -834,12 +834,55 @@ def same_value(a, b):
         return False
 
 
+def usable_models(b):
+    """The printer models of a bundle whose every printer has a nozzle in mm and a print preset of its own (an
+    instantiated one that lists it)."""
+    printers = collections.defaultdict(list)
+    for (kind, name) in b.sections:
+        if kind == 'printer' and not name.startswith('*'):
+            try:
+                c = b.flat(kind, name, b.sections)
+            except KeyError:
+                continue
+            printers[c.get('printer_model', '')].append((name, c))
+    listed = set()
+    for (kind, name), values in b.sections.items():
+        if kind == 'print' and not name.startswith('*'):
+            listed.update(x.strip().strip('"') for x in values.get('compatible_printers', '').split(';') if x.strip())
+    return {mid for mid in b.models if printers.get(mid) and all(
+        num((c.get('nozzle_diameter') or '').split(',')[0]) and name in listed for name, c in printers[mid])}
+
+
+def drop_models(b, models):
+    """Takes printer models out of a bundle, with their printers and the prints and filaments only for them."""
+    gone = set()
+    for (kind, name), values in list(b.sections.items()):
+        if kind == 'printer' and not name.startswith('*') and values.get('printer_model') in models:
+            gone.add(name)
+            del b.sections[(kind, name)]
+    for mid in models:
+        b.models.pop(mid, None)
+    for (kind, name), values in list(b.sections.items()):
+        cps = [x.strip().strip('"') for x in values.get('compatible_printers', '').split(';') if x.strip()]
+        if kind in ('print', 'filament') and cps and all(c in gone for c in cps):
+            del b.sections[(kind, name)]
+    return gone
+
+
 def replace_models(old, new, stats=None):
     """Takes out of the bundle old the printer models that the bundle new has (the same model by name, without the
     vendor's words), their printers, and the print and filament presets that new has by name or that are only for
-    those printers. The names of the printers taken out."""
+    those printers. A model of new that cannot be used (a printer without a nozzle in mm or without a print preset;
+    usable_models) stays from old and is taken out of new. The names of the printers taken out of old."""
     words = vendor_words(old.vendor.get('name', ''), old.id) | vendor_words(new.vendor.get('name', ''), new.id) | \
         vendor_words(new.vendor.get('name', ''), old.id)
+    ours = {canonical_model(m.get('name', mid) or mid, words) for mid, m in old.models.items()}
+    unusable = {mid for mid in set(new.models) - usable_models(new)
+                if canonical_model(new.models[mid].get('name', mid) or mid, words) in ours}
+    if unusable:
+        if stats is not None:
+            stats['official models left as the replaced bundle has them (not usable: %s)' % new.id] += len(unusable)
+        drop_models(new, unusable)
     theirs = {canonical_model(m.get('name', mid) or mid, words) for mid, m in new.models.items()}
     gone_models = {mid for mid, m in old.models.items() if canonical_model(m.get('name', mid) or mid, words) in theirs}
     gone = set()
@@ -872,14 +915,14 @@ def replace_models(old, new, stats=None):
     return gone
 
 
-def official_differences(official, profiles, stats):
+def official_differences(official, profiles, stats, loaded=None):
     """What the bundles made from the manufacturers' own slicers change against the bundle they replace: for every
     preset in both (the same name, as Tisma Slicer's converter writes them), the keys with another value.
     [{official, replaced, kind, name, key, replaced_value, official_value}]; counts give the presets only in one."""
     out = []
     groups = collections.defaultdict(list)
     for path, gone in sorted(official.items()):
-        groups[gone].append(Bundle(path))
+        groups[gone].append((loaded or {}).get(path) or Bundle(path))  # as used: without the unusable models
     for gone, news in sorted(groups.items()):
         old = Bundle(os.path.join(profiles, gone + '.ini'))
         for new in news:
@@ -1346,9 +1389,11 @@ def main():
     paths = [os.path.join(args.profiles, f) for f in os.listdir(args.profiles) if f.endswith('.ini')] + list(official)
     bundles = [Bundle(p) for p in sorted(paths, key=os.path.basename)]
     by_id = {b.id: b for b in bundles}
+    by_path = {b.path: b for b in bundles}
+    early_stats = collections.Counter()
     for path, gone in sorted(official.items()):
         # The manufacturer's models replace the same models of the replaced bundle; its other models stay.
-        replace_models(by_id[gone], Bundle(path), stats=None)
+        replace_models(by_id[gone], by_path[path], early_stats)
     bundles = [b for b in bundles if b.models or b.id not in official.values()]
     for b in bundles:
         if b.path in official:
@@ -1375,6 +1420,7 @@ def main():
                                           if not local)
 
     w = Writer(args.out)
+    w.stats.update(early_stats)
     index = {'format': 'tisma-profile-pack', 'version': FORMAT_VERSION,
              'generated': generated_time(),
              'source': {'program': 'Tisma Slicer', 'repository':
@@ -1962,7 +2008,7 @@ def main():
     w.write('index.json', index)
     w.write('stats.json', {'counts': dict(w.stats),
                            'left_out': w.left_out, 'source_over_bundle': w.over,
-                           'official_over_replaced': official_differences(official, args.profiles, w.stats),
+                           'official_over_replaced': official_differences(official, args.profiles, w.stats, by_path),
                            'unmapped_keys': {k: dict(v.most_common()) for k, v in w.unmapped.items()}})
     print(json.dumps(dict(w.stats)))
 

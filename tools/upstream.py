@@ -26,6 +26,8 @@ DIALECTS = {'https://github.com/SoftFever/OrcaSlicer': 'orcaslicer',
             'https://github.com/bambulab/BambuStudio': 'orcaslicer',
             # QIDI's own slicer, from Bambu Studio and OrcaSlicer.
             'https://github.com/QIDITech/QIDIStudio': 'orcaslicer',
+            # Flashforge's own OrcaSlicer.
+            'https://github.com/FlashForge/Orca-Flashforge': 'orcaslicer',
             # Anycubic's own OrcaSlicer.
             'https://github.com/ANYCUBIC-3D/AnycubicSlicerNext': 'orcaslicer'}
 
