@@ -1,0 +1,42 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PETG Magnetite 40%",
+ "pack_filament": {
+  "bundle": "PrusaResearch",
+  "name": "Prusament PETG Magnetite 40%"
+ },
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    265,
+    275
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 270 ± 5 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-magnetite-40/",
+    "title": "Prusament PETG Magnetite 40%, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 100 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-magnetite-40/",
+    "title": "Prusament PETG Magnetite 40%, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

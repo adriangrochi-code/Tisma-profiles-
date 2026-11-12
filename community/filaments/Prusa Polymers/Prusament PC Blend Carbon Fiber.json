@@ -1,0 +1,55 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PC Blend Carbon Fiber",
+ "pack_filament": {
+  "bundle": "PrusaResearch",
+  "name": "Prusament PC Blend Carbon Fiber"
+ },
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    275,
+    295
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 285 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pc-blend-carbon-fiber/",
+    "title": "Prusament PC Blend Carbon Fiber, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    120
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 110 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pc-blend-carbon-fiber/",
+    "title": "Prusament PC Blend Carbon Fiber, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.temperature_resistance",
+   "value": 114,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "el fabricante no dice el método",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pc-blend-carbon-fiber/",
+    "title": "Prusament PC Blend Carbon Fiber, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

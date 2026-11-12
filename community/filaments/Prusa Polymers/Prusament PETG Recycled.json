@@ -1,0 +1,51 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PETG Recycled",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    240,
+    260
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 250 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-recycled/",
+    "title": "Prusament PETG Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    70,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 80 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-recycled/",
+    "title": "Prusament PETG Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.temperature_resistance",
+   "value": 68,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "el fabricante no dice el método",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-recycled/",
+    "title": "Prusament PETG Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

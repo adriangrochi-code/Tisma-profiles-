@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PP",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    260,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 270 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pp/",
+    "title": "Prusament PP, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    75,
+    95
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 85 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pp/",
+    "title": "Prusament PP, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

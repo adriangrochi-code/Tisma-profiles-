@@ -1,0 +1,42 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PP Glass Fiber",
+ "pack_filament": {
+  "bundle": "PrusaResearch",
+  "name": "Prusament PP Glass Fiber"
+ },
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    235,
+    255
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 245 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pp-glass-fiber/",
+    "title": "Prusament PP Glass Fiber, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    85,
+    105
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 95 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pp-glass-fiber/",
+    "title": "Prusament PP Glass Fiber, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

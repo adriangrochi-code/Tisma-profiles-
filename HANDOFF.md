@@ -86,6 +86,19 @@ LICENSE: cannot be used), FLSun (Flsun3d/FlsunSlicer fb02854, AGPL-3.0, PrusaSli
 match OrcaSlicer's and its prints use conditions: needs a PrusaSlicer-format path, later), Artillery (no public slicer
 found), Voron and RatRig (no slicer; documentation is not a source under the rule).
 
+## Filament data sheets (community, kind official)
+
+QA, 2026-11-12: filament makers with a public data sheet, values from it with the source. They go in
+`community/filaments/<maker>/` (docs/COMMUNITY.md), not into the profiles: the profiles keep their source program's
+values, check_pack notes where a profile is outside the maker's range.
+
+| Maker | State |
+|---|---|
+| Prusa Polymers (Prusament) | 2026-11-12: 22 materials from prusament.com/materials (nozzle and bed ranges, temperature resistance); 14 linked to the pack's filament. Note: Prusament PA11 Carbon Fiber first layer bed 90 °C, the sheet 100-120 |
+| Polymaker, Bambu Lab | pendiente (pages reachable) |
+| eSun | pendiente: esun3d.com answers 403 from here |
+| Sunlu, Elegoo | pendiente: the product pages to read are still to be found |
+
 ## Coverage (owner's request of 2026-11-10 21:00)
 
 Every part of the pack, "revisado (fecha, qué se probó, hallazgos)" or "pendiente". Update it with each pass; the

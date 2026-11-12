@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PA11",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    265,
+    285
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 275 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pa11/",
+    "title": "Prusament PA11, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 100 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pa11/",
+    "title": "Prusament PA11, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

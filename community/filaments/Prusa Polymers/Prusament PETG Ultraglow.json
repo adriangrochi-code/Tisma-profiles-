@@ -1,0 +1,42 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PETG Ultraglow",
+ "pack_filament": {
+  "bundle": "PrusaResearch",
+  "name": "Prusament PETG Ultraglow"
+ },
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 260 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-ultraglow/",
+    "title": "Prusament PETG Ultraglow, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    75,
+    95
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 85 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-petg-ultraglow/",
+    "title": "Prusament PETG Ultraglow, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PC Space Grade",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    280,
+    300
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 290 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pc-space-grade/",
+    "title": "Prusament PC Space Grade, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    130
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 120 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pc-space-grade/",
+    "title": "Prusament PC Space Grade, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

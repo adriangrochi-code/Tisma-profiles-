@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament TPU 95A",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    240
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 230 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-tpu-95a/",
+    "title": "Prusament TPU 95A, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    55,
+    75
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 65 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-tpu-95a/",
+    "title": "Prusament TPU 95A, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

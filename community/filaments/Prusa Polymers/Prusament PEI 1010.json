@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PEI 1010",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    400,
+    420
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 410 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pei-1010/",
+    "title": "Prusament PEI 1010, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    140,
+    160
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 150 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pei-1010/",
+    "title": "Prusament PEI 1010, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

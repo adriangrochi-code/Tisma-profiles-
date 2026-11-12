@@ -1,0 +1,51 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PLA Recycled",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    200,
+    220
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 210 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pla-recycled/",
+    "title": "Prusament PLA Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    40,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 40–60 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pla-recycled/",
+    "title": "Prusament PLA Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.temperature_resistance",
+   "value": 55,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "el fabricante no dice el método",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pla-recycled/",
+    "title": "Prusament PLA Recycled, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

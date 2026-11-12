@@ -43,6 +43,51 @@ SOURCE_PROGRAMS = ('orcaslicer', 'crealityprint', 'elegooslicer', 'cura')  # the
 VENDOR_ROOT = re.compile(r'(^|/)fdm_machine_common\.json$')
 
 
+def check_community_filaments(pack, community, problems, counts, notes):
+    """A community filament with pack_filament names a filament of the pack; its profile's nozzle and bed temperatures
+    against the manufacturer's ranges (docs/COMMUNITY.md): outside them is a note, not a failure (the profile keeps its
+    source program's values)."""
+    entries = {}
+    vendors = os.path.join(pack, 'vendors')
+    for vid in os.listdir(vendors):
+        folder = os.path.join(vendors, vid, 'filaments')
+        if not os.path.isdir(folder):
+            continue
+        for f in os.listdir(folder):
+            e = load(pack, os.path.join('vendors', vid, 'filaments', f))
+            entries.setdefault((vid, e['profile']['name']), e)
+    for root, _, files in os.walk(os.path.join(community, 'filaments')):
+        for f in sorted(files):
+            if not f.endswith('.json'):
+                continue
+            path = os.path.join(root, f)
+            d = json.load(open(path, encoding='utf-8'))
+            counts['community filaments'] += 1
+            pf = d.get('pack_filament')
+            if not pf:
+                continue
+            e = entries.get((pf.get('bundle'), pf.get('name')))
+            if e is None:
+                problems['community filament without a filament of the pack'].append(path)
+                continue
+            variables = (e['profile']['settings'].get('machine') or {}).get('variables') or {}
+            for item in d['data']:
+                for key, names in (('filament.nozzle_temperature_range', ('temperature', 'first_layer_temperature')),
+                                   ('filament.bed_temperature_range', ('bed_temperature',
+                                                                       'first_layer_bed_temperature'))):
+                    if item['key'] != key:
+                        continue
+                    low, high = item['value']
+                    for name in names:
+                        try:
+                            v = float(str(variables.get(name, '')).split(',')[0])
+                        except ValueError:
+                            continue
+                        if not low <= v <= high:
+                            notes['profile temperature outside the manufacturer\'s range'].append(
+                                '%s: %s %g, the sheet %g-%g' % (pf['name'], name, v, low, high))
+
+
 def load(pack, rel):
     with open(os.path.join(pack, rel), encoding='utf-8') as f:
         return json.load(f)
@@ -407,6 +452,7 @@ def main():
                 counts['community printers'] += 1
                 if (pm.get('bundle'), pm.get('id')) not in models:
                     problems['community printer without a pack model of the pack'].append(path)
+        check_community_filaments(args.pack, args.community, problems, counts, notes)
     check_tables(args.pack, index, problems, counts)
     report = {'counts': dict(counts), 'problems': dict(problems), 'notes': dict(notes)}
     if args.report:

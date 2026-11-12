@@ -1,0 +1,38 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament PLA High Speed",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 210 ± 20 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pla-high-speed/",
+    "title": "Prusament PLA High Speed, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    40,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 50 ± 10 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-pla-high-speed/",
+    "title": "Prusament PLA High Speed, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

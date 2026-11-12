@@ -1,0 +1,55 @@
+{
+ "vendor": "Prusa Polymers",
+ "name": "Prusament ASA",
+ "pack_filament": {
+  "bundle": "PrusaResearch",
+  "name": "Prusament ASA"
+ },
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    255,
+    265
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 260 ± 5 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-asa/",
+    "title": "Prusament ASA, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    105,
+    115
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "la hoja da 110 ± 5 °C",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-asa/",
+    "title": "Prusament ASA, Prusament",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.temperature_resistance",
+   "value": 93,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "el fabricante no dice el método",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://prusament.com/materials/prusament-asa/",
+    "title": "Prusament ASA, Prusament",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}
