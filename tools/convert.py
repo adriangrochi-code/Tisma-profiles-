@@ -834,6 +834,35 @@ def same_value(a, b):
         return False
 
 
+def official_differences(official, profiles, stats):
+    """What the bundles made from the manufacturers' own slicers change against the bundles they replace: for every
+    preset in both (the same name, as Tisma Slicer's converter writes them), the keys with another value.
+    [{official, replaced, kind, name, key, replaced_value, official_value}], and the presets only in one."""
+    out = []
+    for path, gone in sorted(official.items()):
+        new, old = Bundle(path), Bundle(os.path.join(profiles, gone + '.ini'))
+        for kind, name in new.sections:
+            if name.startswith('*'):
+                continue
+            if (kind, name) not in old.sections:
+                stats['official presets not in the replaced bundle (%s)' % kind] += 1
+                continue
+            try:
+                a, b = old.flat(kind, name, old.sections), new.flat(kind, name, new.sections)
+            except KeyError:  # a parent in another bundle (the filament library)
+                stats['official presets not compared (a parent in another bundle)'] += 1
+                continue
+            for k in sorted(set(a) | set(b)):
+                if k in ('inherits', 'compatible_printers_condition') or same_value(a.get(k, ''), b.get(k, '')):
+                    continue
+                out.append({'official': new.id, 'replaced': gone, 'kind': kind, 'name': name, 'key': k,
+                            'replaced_value': a.get(k), 'official_value': b.get(k)})
+        stats['replaced presets not in the official bundle'] += sum(
+            1 for key in old.sections if not key[1].startswith('*') and key not in new.sections)
+    stats['official values over the replaced bundle\'s'] = len(out)
+    return out
+
+
 def source_over_bundle(kind, c, source, conv, nozzle=None, kept=None):
     """{PrusaSlicer key: (bundle text, source text)} of the options of the translation table of a kind that the bundle
     has with another value than the source program's preset gives through Tisma Slicer's converter (conv): the
@@ -1248,6 +1277,9 @@ def main():
                                               "commit, with its src/libslic3r): which presets it merged into one")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
+    ap.add_argument('--official-bundle', action='append', default=[], metavar='BUNDLE.ini=REPLACED',
+                    help="a bundle that Tisma Slicer's converter made from the manufacturer's own slicer, in place of "
+                         "the bundle REPLACED (e.g. BambuStudio_BBL.ini=Orca_BBL): sources.json, \"official\"")
     args = ap.parse_args()
     if args.prusa_config:
         OPTION_TYPES.update(translation.option_types(args.prusa_config))
@@ -1261,8 +1293,15 @@ def main():
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
 
-    bundles = [Bundle(os.path.join(args.profiles, f)) for f in sorted(os.listdir(args.profiles))
-               if f.endswith('.ini')]
+    official = dict(x.rsplit('=', 1) for x in args.official_bundle)
+    paths = [os.path.join(args.profiles, f) for f in os.listdir(args.profiles)
+             if f.endswith('.ini') and f[:-len('.ini')] not in official.values()] + list(official)
+    bundles = [Bundle(p) for p in sorted(paths, key=os.path.basename)]
+    replaced_repo = {}  # official bundle -> repository of the bundle it replaces
+    for path, gone in official.items():
+        src = upstream.bundle_source(os.path.join(args.profiles, gone + '.ini'))
+        if src:
+            replaced_repo[path] = src[1]
     if args.uvtools:
         bundles += uvtools_bundles(args.uvtools)
     everything = {}
@@ -1415,6 +1454,10 @@ def main():
                     (rel, num(match.get('nozzle_diameter')), is_hf(name)))
             if block and block.get('origin') == 'source_program' and block['dialect'] != 'cura':
                 sources.names[(block['source']['repository'], block['source']['preset'])] = rel
+                if b.path in replaced_repo:
+                    # The same printer in the program of the bundle it replaces (OrcaSlicer's filament library names
+                    # Bambu Lab's printers by OrcaSlicer's presets).
+                    sources.names.setdefault((replaced_repo[b.path], block['source']['preset']), rel)
                 sources.matched.add(b.path)
                 if block.get('values'):
                     renames.add(block['dialect'], 'printer', block['values'], c)
@@ -1438,9 +1481,9 @@ def main():
                                            if x.strip()]}
             assets = {}
             for key in ('bed_model', 'bed_texture', 'thumbnail'):
-                f = asset_file(os.path.join(args.profiles, b.id),
-                               m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else ''))
-                src = os.path.join(args.profiles, b.id, f) if f else ''
+                folder = os.path.join(os.path.dirname(b.path), b.id)  # the bundle's own pictures, next to it
+                f = asset_file(folder, m.get(key) or (mid + '_thumbnail.png' if key == 'thumbnail' else ''))
+                src = os.path.join(folder, f) if f else ''
                 if f and os.path.isfile(src):
                     rel = os.path.join(vdir, 'assets', f)
                     os.makedirs(os.path.dirname(os.path.join(args.out, rel)), exist_ok=True)
@@ -1863,6 +1906,7 @@ def main():
     w.write('index.json', index)
     w.write('stats.json', {'counts': dict(w.stats),
                            'left_out': w.left_out, 'source_over_bundle': w.over,
+                           'official_over_replaced': official_differences(official, args.profiles, w.stats),
                            'unmapped_keys': {k: dict(v.most_common()) for k, v in w.unmapped.items()}})
     print(json.dumps(dict(w.stats)))
 

@@ -289,6 +289,17 @@ plantillas aparte), así que todas las Bambu Lab quedaban con el G-code genéric
 otro modelo de la misma base. Por eso el convertidor lee esos programas en el commit que dice cada paquete
 (`sources.json`, `converted_from`). Los paquetes que ya eran de PrusaSlicer entran tal cual.
 
+**Laminador del fabricante (`sources.json`, `official`):** cuando el fabricante tiene su propio laminador de la
+familia OrcaSlicer, sus perfiles reemplazan a los de OrcaSlicer (regla del dueño; la página o la hoja técnica del
+fabricante solo sirven para cotejar). `tools/fetch_sources.py` baja ese programa en su commit, lo convierte con el
+mismo conversor de Tisma Slicer (`convert_orca_profiles.py --prefix … --source … --url …`) y le pasa a
+`tools/convert.py` `--official-bundle <paquete>.ini=<el que reemplaza>`; el programa de origen de esos perfiles es el
+del fabricante. Hoy: Bambu Lab desde Bambu Studio (`BambuStudio_BBL` en lugar de `Orca_BBL`). `stats.json`
+(`official_over_replaced`) anota cada diferencia con el paquete reemplazado, preset por preset
+(`{official, replaced, kind, name, key, replaced_value, official_value}`), y `counts` los presets que solo están en
+uno de los dos. Los filamentos de la biblioteca de OrcaSlicer que nombran una impresora reemplazada siguen siendo
+compatibles con la del fabricante del mismo nombre.
+
 **Variables de los filamentos y la impresión:** los perfiles de filamento y de impresión siguen con los nombres de
 PrusaSlicer (`original`). Un G-code `orcaslicer` usa los nombres de OrcaSlicer (`nozzle_temperature_initial_layer`
 por `first_layer_temperature`, `bed_temperature_initial_layer_single` por `first_layer_bed_temperature`…).
@@ -458,6 +469,8 @@ después con cada filamento y cada perfil de impresión en la primera impresora 
 Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabricante dicen la suya:
 - **PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0;
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
+- **VertexSlice** (la IdeaFormer IR3 V2) y **Bambu Studio** (las Bambu Lab, `sources.json`, `official`): AGPL-3.0,
+  según el `LICENSE` de cada repositorio en su commit;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
 - **mallas de las camas de UltiMaker Cura** (`resources/meshes`, en el commit de `sources.json`): LGPL-3.0, la licencia

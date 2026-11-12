@@ -40,5 +40,17 @@
    "commit": "1d6ad2816b4cfdfdc76f6b90213ff4c0b0d772a8",
    "directory": "resources/profiles/IdeaFormer"
   }
+ ],
+ "official": [
+  {
+   "program": "Bambu Studio",
+   "repository": "https://github.com/bambulab/BambuStudio",
+   "commit": "930fe93851afbc76b1c64dd37d8728b6a9afc89c",
+   "directory": "resources/profiles/BBL.json resources/profiles/BBL src/libslic3r",
+   "vendor": "BBL",
+   "prefix": "BambuStudio_",
+   "replaces": "Orca_BBL",
+   "license": "AGPL-3.0 (LICENSE at the commit: GNU Affero General Public License, version 3)"
+  }
  ]
 }

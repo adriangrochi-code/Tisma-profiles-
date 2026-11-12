@@ -2,7 +2,7 @@
  "vendor": "Bambu Lab",
  "model": "A1 mini",
  "pack_model": {
-  "bundle": "Orca_BBL",
+  "bundle": "BambuStudio_BBL",
   "id": "Bambu Lab A1 mini"
  },
  "data": [

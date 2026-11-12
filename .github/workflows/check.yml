@@ -60,7 +60,7 @@ jobs:
         run: python3 -m unittest discover -s tools -p 'test_*.py'
 
       - name: Fetch the programs the bundles were converted from
-        run: python3 tools/fetch_sources.py sources.json upstream > upstream.args
+        run: python3 tools/fetch_sources.py sources.json upstream source/tools/profiles/convert_orca_profiles.py > upstream.args
 
       - name: Convert
         run: SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) PYTHONHASHSEED=1 python3 tools/convert.py "source/${{ steps.src.outputs.dir }}" pack --source-commit "${{ steps.src.outputs.commit }}" --uvtools uvtools --uvtools-commit "${{ steps.src.outputs.uv_commit }}" --prusa-config source/src/libslic3r/PrintConfig.cpp --tisma-converter source/tools/profiles/convert_orca_profiles.py $(cat upstream.args)

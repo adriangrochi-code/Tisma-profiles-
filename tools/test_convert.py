@@ -195,6 +195,29 @@ class SourceOverBundle(unittest.TestCase):
         self.assertEqual(convert.source_over_bundle('print', {'brim_width': '0'}, {}, conv), {'brim_width': ('0', '5')})
 
 
+class OfficialBundles(unittest.TestCase):
+    def test_differences_with_the_replaced_bundle(self):
+        # Bambu Studio 930fe93 against OrcaSlicer 1d577ea, as Tisma Slicer's converter writes them: "Bambu Lab A1 0.4
+        # nozzle" gets extruder_clearance_radius 57 (none in OrcaSlicer's); a preset only in one is counted.
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, 'Orca_BBL.ini'), 'w') as f:
+                f.write('[printer:Bambu Lab A1 0.4 nozzle]\nprinter_notes = PRINTER_VENDOR_ORCA_BBL\n'
+                        'bed_shape = 0x0,256x0,256x256,0x256\n\n[print:Old only]\nperimeters = 2\n')
+            new = os.path.join(d, 'new', 'BambuStudio_BBL.ini')
+            os.makedirs(os.path.dirname(new))
+            with open(new, 'w') as f:
+                f.write('[printer:Bambu Lab A1 0.4 nozzle]\nprinter_notes = PRINTER_VENDOR_BAMBUSTUDIO_BBL\n'
+                        'bed_shape = 0x0,256x0,256x256,0x256\nextruder_clearance_radius = 57\n\n'
+                        '[printer:Bambu Lab H3C 0.4 nozzle]\nprinter_notes = x\n')
+            stats = convert.collections.Counter()
+            out = convert.official_differences({new: 'Orca_BBL'}, d, stats)
+        self.assertEqual([(x['key'], x['replaced_value'], x['official_value']) for x in out],
+                         [('extruder_clearance_radius', None, '57'),
+                          ('printer_notes', 'PRINTER_VENDOR_ORCA_BBL', 'PRINTER_VENDOR_BAMBUSTUDIO_BBL')])
+        self.assertEqual(stats['official presets not in the replaced bundle (printer)'], 1)
+        self.assertEqual(stats['replaced presets not in the official bundle'], 1)
+
+
 class CuraFlavor(unittest.TestCase):
     def test_marlin_without_a_version(self):
         # Cura 5bea2f8 fdmprinter.def.json: machine_gcode_flavor "RepRap (Marlin/Sprinter)", which does not say which
