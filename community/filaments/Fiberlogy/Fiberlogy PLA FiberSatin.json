@@ -1,6 +1,128 @@
 {
  "vendor": "Fiberlogy",
  "name": "Fiberlogy PLA FiberSatin",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSatin @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy FiberSatin"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

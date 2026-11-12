@@ -71,6 +71,19 @@ def main():
                     continue
                 for i, item in enumerate(d['data']):
                     check_value(path, i, item, errors)
+    aliases = os.path.join(root, 'filament_aliases.json')
+    if os.path.exists(aliases):
+        try:
+            items = json.load(open(aliases, encoding='utf-8'))['aliases']
+        except (OSError, ValueError, KeyError) as e:
+            errors.append('%s: not valid (%s)' % (aliases, e))
+            items = []
+        for i, a in enumerate(items):
+            for field in ('file', 'pack_name', 'reason'):
+                if not str(a.get(field, '')).strip():
+                    errors.append('%s: aliases[%d] without "%s"' % (aliases, i, field))
+            if a.get('file') and not os.path.exists(os.path.join(root, 'filaments', a['file'])):
+                errors.append('%s: aliases[%d]: no file filaments/%s' % (aliases, i, a['file']))
     for e in errors:
         print(e)
     print('%d files, %d problems' % (count, len(errors)))

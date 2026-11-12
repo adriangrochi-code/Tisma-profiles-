@@ -1,0 +1,90 @@
+{
+ "vendor": "Polymaker",
+ "name": "Panchroma CoPE",
+ "pack_filament": [
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @BBL A1"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @BBL A1 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @BBL P1P"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @BBL P1P 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @BBL X1C"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma CoPE @Orca"
+  },
+  {
+   "bundle": "Orca_Snapmaker",
+   "name": "Panchroma CoPE @Snapmaker U1"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/cope-filament",
+    "title": "Polymaker, Panchroma CoPE",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/cope-filament",
+    "title": "Polymaker, Panchroma CoPE",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 55,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/cope-filament",
+    "title": "Polymaker, Panchroma CoPE",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 6,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/cope-filament",
+    "title": "Polymaker, Panchroma CoPE",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

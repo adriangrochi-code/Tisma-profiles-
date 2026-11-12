@@ -1,0 +1,120 @@
+{
+ "about": "Pack filament names that are the same product as a community file under another name, each checked by hand against the manufacturer's page (docs/COMMUNITY.md, pack_filament). Never filled by similarity.",
+ "aliases": [
+  {
+   "file": "Fiberlogy/Fiberlogy PLA FiberSatin.json",
+   "pack_name": "Fiberlogy FiberSatin",
+   "reason": "Fiberlogy sells FiberSatin as its PLA line PLA FiberSatin (fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/)"
+  },
+  {
+   "file": "Fiberlogy/Fiberlogy PLA FiberSilk.json",
+   "pack_name": "Fiberlogy FiberSilk",
+   "reason": "the same PLA line, PLA FiberSilk on the manufacturer's page"
+  },
+  {
+   "file": "Fiberlogy/Fiberlogy PLA FiberWood.json",
+   "pack_name": "Fiberlogy FiberWood",
+   "reason": "the same PLA line, PLA FiberWood on the manufacturer's page"
+  },
+  {
+   "file": "Fiberlogy/Fiberlogy PLA Impact.json",
+   "pack_name": "Fiberlogy Impact PLA",
+   "reason": "the same product, the words in another order (PLA Impact on the manufacturer's page)"
+  },
+  {
+   "file": "Fiberlogy/Fiberlogy Nylon PA12+GF.json",
+   "pack_name": "Fiberlogy Nylon PA12+GF15",
+   "reason": "the manufacturer's Nylon PA12+GF page gives 15% glass fiber"
+  },
+  {
+   "file": "Fiberlogy/Fiberlogy Nylon PA12+CF.json",
+   "pack_name": "Fiberlogy Nylon PA12+CF15",
+   "reason": "the manufacturer's Nylon PA12+CF page gives 15% carbon fiber"
+  },
+  {
+   "file": "Polymaker/Panchroma Basic PLA.json",
+   "pack_name": "Panchroma PLA",
+   "reason": "the store sells it at us.polymaker.com/products/panchroma-pla"
+  },
+  {
+   "file": "Polymaker/Panchroma Celestial PLA.json",
+   "pack_name": "Panchroma PLA Celestial",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Galaxy PLA.json",
+   "pack_name": "Panchroma PLA Galaxy",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Glow PLA.json",
+   "pack_name": "Panchroma PLA Glow",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Luminous PLA.json",
+   "pack_name": "Panchroma PLA Luminous",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Marble PLA.json",
+   "pack_name": "Panchroma PLA Marble",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Matte PLA.json",
+   "pack_name": "Panchroma PLA Matte",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Metallic PLA.json",
+   "pack_name": "Panchroma PLA Metallic",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Neon PLA.json",
+   "pack_name": "Panchroma PLA Neon",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Satin PLA.json",
+   "pack_name": "Panchroma PLA Satin",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Silk PLA.json",
+   "pack_name": "Panchroma PLA Silk",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Starlight PLA.json",
+   "pack_name": "Panchroma PLA Starlight",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma Translucent PLA.json",
+   "pack_name": "Panchroma PLA Translucent",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/Panchroma UV Shift PLA.json",
+   "pack_name": "Panchroma PLA UV Shift",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/PolyDissolve S1 (PVA).json",
+   "pack_name": "Polymaker PolyDissolve S1",
+   "reason": "the same product; the store adds the material (PVA)"
+  },
+  {
+   "file": "Polymaker/PolyLite Metallic PLA Pro.json",
+   "pack_name": "PolyLite PLA Pro Metallic",
+   "reason": "the same words in another order"
+  },
+  {
+   "file": "Polymaker/PolyLite Translucent PETG.json",
+   "pack_name": "PolyLite PETG Translucent",
+   "reason": "the same words in another order"
+  }
+ ]
+}

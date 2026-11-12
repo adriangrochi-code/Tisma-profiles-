@@ -1,10 +1,64 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PETG Magnetite 40%",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PETG Magnetite 40%"
- },
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40%"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Magnetite 40% @XL 0.8"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

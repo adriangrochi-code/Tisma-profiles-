@@ -1,0 +1,96 @@
+{
+ "vendor": "Polymaker",
+ "name": "Fiberon PA612-ESD",
+ "pack_filament": [
+  {
+   "bundle": "CrealityPrintOfficial_Creality",
+   "name": "Fiberon PA612-ESD @Creality K2 Plus 0.4 nozzle"
+  },
+  {
+   "bundle": "Orca_Snapmaker",
+   "name": "Fiberon PA612-ESD @Snapmaker U1"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    280,
+    300
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    40,
+    50
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 100,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 10,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.1,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 190.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-pa612-esd",
+    "title": "Polymaker, Fiberon PA612-ESD",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

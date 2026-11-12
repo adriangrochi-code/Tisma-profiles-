@@ -1,10 +1,116 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament rPLA",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament rPLA"
- },
+ "pack_filament": [
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S HF0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S HF0.5"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S HF0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @MK4S HF0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament rPLA @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament rPLA @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament rPLA"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

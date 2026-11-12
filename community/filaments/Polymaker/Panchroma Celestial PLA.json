@@ -1,0 +1,98 @@
+{
+ "vendor": "Polymaker",
+ "name": "Panchroma Celestial PLA",
+ "pack_filament": [
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL A1"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL A1 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL P1P"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL P1P 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL X1"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL X1 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @BBL X1C"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA Celestial @Orca"
+  },
+  {
+   "bundle": "Orca_Snapmaker",
+   "name": "Panchroma PLA Celestial @Snapmaker U1"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/celestial-pla",
+    "title": "Polymaker, Panchroma Celestial PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/celestial-pla",
+    "title": "Polymaker, Panchroma Celestial PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 55,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/celestial-pla",
+    "title": "Polymaker, Panchroma Celestial PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 6,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/celestial-pla",
+    "title": "Polymaker, Panchroma Celestial PLA",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

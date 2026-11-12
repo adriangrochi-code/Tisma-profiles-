@@ -1,10 +1,284 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PETG",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PETG"
- },
+ "pack_filament": [
+  {
+   "bundle": "Anycubic",
+   "name": "Prusament PETG @MEGA0"
+  },
+  {
+   "bundle": "BIBO",
+   "name": "Prusament PETG @BIBO2"
+  },
+  {
+   "bundle": "Creality",
+   "name": "Prusament PETG @CREALITY"
+  },
+  {
+   "bundle": "Infinity3D",
+   "name": "Prusament PETG @Infinity3D"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One HF 0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One HF 0.5"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One HF 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @CORE One HF 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S HF0.4 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S HF0.5 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S HF0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @MK4S HF0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @Prusa CORE One INDX"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PETG @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @0.6 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @0.6 nozzle MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @0.8 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @0.8 nozzle MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MINIIS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MMU 0.25"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MMU 0.6 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @MMU1"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PGIS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PGIS 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @PGIS 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament PETG"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PETG @AQD"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PETG @AQI"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PETG @DQ2"
+  },
+  {
+   "bundle": "gCreate",
+   "name": "Prusament PETG @GCREATE"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

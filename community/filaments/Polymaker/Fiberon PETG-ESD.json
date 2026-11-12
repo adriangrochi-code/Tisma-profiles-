@@ -1,0 +1,108 @@
+{
+ "vendor": "Polymaker",
+ "name": "Fiberon PETG-ESD",
+ "pack_filament": [
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "Fiberon PETG-ESD @BBL H2D"
+  },
+  {
+   "bundle": "CrealityPrintOfficial_Creality",
+   "name": "Fiberon PETG-ESD @Creality K2 Plus 0.4 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Fiberon PETG-ESD @BBL X1"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Fiberon PETG-ESD @Orca"
+  },
+  {
+   "bundle": "Orca_Snapmaker",
+   "name": "Fiberon PETG-ESD @Snapmaker U1"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    290
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    70,
+    80
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 65,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 3,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.24,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 86.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/fiberon-petg-esd",
+    "title": "Polymaker, Fiberon PETG-ESD",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

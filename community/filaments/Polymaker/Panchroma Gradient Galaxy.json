@@ -1,0 +1,36 @@
+{
+ "vendor": "Polymaker",
+ "name": "Panchroma Gradient Galaxy",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/gradient-galaxy-pla",
+    "title": "Polymaker, Panchroma Gradient Galaxy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/gradient-galaxy-pla",
+    "title": "Polymaker, Panchroma Gradient Galaxy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

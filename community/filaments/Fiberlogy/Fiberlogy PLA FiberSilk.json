@@ -1,6 +1,64 @@
 {
  "vendor": "Fiberlogy",
  "name": "Fiberlogy PLA FiberSilk",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberSilk @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy FiberSilk"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

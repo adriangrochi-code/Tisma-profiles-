@@ -1,10 +1,272 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PLA",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PLA"
- },
+ "pack_filament": [
+  {
+   "bundle": "Anycubic",
+   "name": "Prusament PLA @MEGA"
+  },
+  {
+   "bundle": "Anycubic",
+   "name": "Prusament PLA @MEGA0"
+  },
+  {
+   "bundle": "BIBO",
+   "name": "Prusament PLA @BIBO2"
+  },
+  {
+   "bundle": "Creality",
+   "name": "Prusament PLA @CREALITY"
+  },
+  {
+   "bundle": "Infinity3D",
+   "name": "Prusament PLA @Infinity3D"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One HF 0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One HF 0.5"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One HF 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @CORE One HF 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S HF0.4 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S HF0.5 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S HF0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @MK4S HF0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @Prusa CORE One INDX"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PLA @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @0.8 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MINIIS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK3.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @MMU 0.25"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @PGIS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @PGIS 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XL HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PLA @XLIS"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament PLA"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PLA @DQ2"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PLA @DQ2 0.6 nozzle"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PLA @DQ2 0.8 nozzle"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PLA @DQ2FP2"
+  },
+  {
+   "bundle": "gCreate",
+   "name": "Prusament PLA @GCREATE"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

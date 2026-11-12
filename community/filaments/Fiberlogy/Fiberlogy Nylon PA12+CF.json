@@ -1,0 +1,155 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy Nylon PA12+CF",
+ "pack_filament": [
+  {
+   "bundle": "MakerGear",
+   "name": "Fiberlogy Nylon PA12+CF15 @MakerGear"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+CF15 @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy Nylon PA12+CF15"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Fiberlogy Nylon PA12+CF15 @DQ2"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Fiberlogy Nylon PA12+CF15 @DQ2 0.6 nozzle"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    255,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 80,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.07,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 150.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/nylon-pa12cf-en/",
+    "title": "Nylon PA12+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

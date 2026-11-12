@@ -1,6 +1,72 @@
 {
  "vendor": "Fiberlogy",
  "name": "Fiberlogy Nylon PA12+GF",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Nylon PA12+GF15 @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy Nylon PA12+GF15"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Fiberlogy Nylon PA12+GF15 @DQ2"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Fiberlogy Nylon PA12+GF15 @DQ2 0.6 nozzle"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

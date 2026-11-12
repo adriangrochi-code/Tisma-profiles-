@@ -1,0 +1,116 @@
+{
+ "vendor": "Polymaker",
+ "name": "Panchroma Basic PLA",
+ "pack_filament": [
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @BBL A1"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @BBL A1 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @BBL P1P"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @BBL P1P 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @BBL X1C"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "Panchroma PLA @Orca"
+  },
+  {
+   "bundle": "Orca_Snapmaker",
+   "name": "Panchroma PLA @Snapmaker U1"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 55,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 6,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.32,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 62.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/panchroma-pla",
+    "title": "Polymaker, Panchroma Basic PLA",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

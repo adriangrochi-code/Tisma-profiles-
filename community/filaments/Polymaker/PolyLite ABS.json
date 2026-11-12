@@ -1,0 +1,216 @@
+{
+ "vendor": "Polymaker",
+ "name": "PolyLite ABS",
+ "pack_filament": [
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL A1"
+  },
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL A1 0.2 nozzle"
+  },
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL H2D"
+  },
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL H2D 0.2 nozzle"
+  },
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL X1C"
+  },
+  {
+   "bundle": "BambuStudio_BBL",
+   "name": "PolyLite ABS @BBL X1C 0.2 nozzle"
+  },
+  {
+   "bundle": "Orca_OrcaFilamentLibrary",
+   "name": "PolyLite ABS @Orca"
+  },
+  {
+   "bundle": "Orca_Qidi",
+   "name": "PolyLite ABS @Qidi"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q1 Pro 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q1 Pro 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q1 Pro 0.6 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q1 Pro 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q2 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q2 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q2 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q2C 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_Q_Series",
+   "name": "PolyLite ABS @Qidi Q2C 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_3_Series",
+   "name": "PolyLite ABS @X3 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_3_Series",
+   "name": "PolyLite ABS @X3 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_3_Series",
+   "name": "PolyLite ABS @X3 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Max 4 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Max 4 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Max 4 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 4 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 4 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_4_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 4 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 5 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 5 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Plus 5 0.8 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Smart 5 0.2 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Smart 5 0.4 nozzle"
+  },
+  {
+   "bundle": "QIDIStudio_X_5_Series",
+   "name": "PolyLite ABS @Qidi X-Smart 5 0.8 nozzle"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    245,
+    265
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 70,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 6,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.04,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 104.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polylite-abs",
+    "title": "Polymaker, PolyLite ABS",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

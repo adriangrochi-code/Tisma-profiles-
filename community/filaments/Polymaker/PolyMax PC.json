@@ -1,0 +1,62 @@
+{
+ "vendor": "Polymaker",
+ "name": "PolyMax PC",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polymax-pc",
+    "title": "Polymaker, PolyMax PC",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    105
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polymax-pc",
+    "title": "Polymaker, PolyMax PC",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.19,
+   "unit": "g/cm³",
+   "kind": "official",
+   "conditions": "ISO 1183",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polymax-pc",
+    "title": "Polymaker, PolyMax PC",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 116.9,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "ISO 306",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://us.polymaker.com/products/polymax-pc",
+    "title": "Polymaker, PolyMax PC",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

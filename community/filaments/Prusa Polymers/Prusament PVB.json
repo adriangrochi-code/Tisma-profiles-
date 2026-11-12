@@ -1,10 +1,132 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PVB",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PVB"
- },
+ "pack_filament": [
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S HF0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S HF0.5"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S HF0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @MK4S HF0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PVB @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @0.8 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @MMU 0.25"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PVB @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament PVB"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PVB @DQ2"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

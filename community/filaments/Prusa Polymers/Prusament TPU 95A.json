@@ -1,6 +1,56 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament TPU 95A",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament TPU 95A @XL 0.8"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

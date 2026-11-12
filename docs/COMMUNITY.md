@@ -62,7 +62,11 @@ community/resins/<Fabricante>/<Nombre>.json
 - **`pack_model`:** opcional. Une el archivo al modelo del paquete (`id` es el del índice).
 - **`pack_filament`:** opcional, en un filamento. Lo une al filamento del paquete: `{"bundle": …, "name": …}`, el
   paquete (la carpeta de `vendors/`) y el nombre del perfil, o una lista de esos cuando el mismo producto está en
-  varios paquetes o perfiles (solo los que tienen el mismo nombre sin la marca, sin espacios ni guiones). `tools/check_pack.py` revisa que exista y anota como
+  varios paquetes o perfiles. Lo arma `tools/community_links.py <paquete> community`: los filamentos de la misma marca
+  con el mismo nombre (antes de « @», sin mayúsculas, espacios, signos ni la palabra de la marca), o con un nombre de
+  `community/filament_aliases.json`. Esa tabla se escribe a mano, un alias por vez y con su motivo (`reason`: las
+  mismas palabras en otro orden, el nombre en la página del fabricante…), nunca por parecido automático;
+  `tools/check_community.py` revisa que cada alias tenga su archivo. `tools/check_pack.py` revisa que exista y anota como
   nota (no como falla) cuando las temperaturas del perfil quedan fuera del rango del fabricante.
 
 **Tipos de dato (`kind`):**

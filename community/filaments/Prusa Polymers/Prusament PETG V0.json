@@ -1,10 +1,96 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PETG V0",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PETG V0"
- },
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG V0 @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament PETG V0"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

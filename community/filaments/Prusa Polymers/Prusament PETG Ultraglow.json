@@ -1,10 +1,48 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PETG Ultraglow",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PETG Ultraglow"
- },
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @0.6 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PETG Ultraglow @XL 0.6"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

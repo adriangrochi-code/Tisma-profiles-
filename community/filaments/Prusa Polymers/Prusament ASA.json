@@ -1,10 +1,240 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament ASA",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament ASA"
- },
+ "pack_filament": [
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One HF 0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One HF 0.5"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One HF 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @CORE One HF 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S HF0.4 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S HF0.5 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S HF0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @MK4S HF0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament ASA @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @0.8 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @0.8 nozzle MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MINIIS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @MMU 0.25"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament ASA @XL HF0.8"
+  },
+  {
+   "bundle": "Sovol",
+   "name": "Prusament ASA @SOVOL"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament ASA"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament ASA @AQD"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament ASA @AQI"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament ASA @AQI 0.6 nozzle"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament ASA @AQI 0.8 nozzle"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

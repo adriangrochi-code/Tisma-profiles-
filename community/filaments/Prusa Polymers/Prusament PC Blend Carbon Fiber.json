@@ -1,10 +1,144 @@
 {
  "vendor": "Prusa Polymers",
  "name": "Prusament PC Blend Carbon Fiber",
- "pack_filament": {
-  "bundle": "PrusaResearch",
-  "name": "Prusament PC Blend Carbon Fiber"
- },
+ "pack_filament": [
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @CORE One"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @CORE One 0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @CORE One 0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK3S"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S 0.6 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S 0.8 @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S @Orca Prusa"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S HF0.4"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S HF0.6"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S HF0.8"
+  },
+  {
+   "bundle": "Orca_Prusa",
+   "name": "Prusament PC Blend Carbon Fiber @XL @Orca Prusa"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @0.8 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @0.8 nozzle MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK2"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Prusament PC Blend Carbon Fiber @XL 0.8"
+  },
+  {
+   "bundle": "Sovol",
+   "name": "Prusament PC Blend Carbon Fiber @SOVOL"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Prusament PC Blend Carbon Fiber"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PC Blend Carbon Fiber @DQ2"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Prusament PC Blend Carbon Fiber @DQ2 0.6 nozzle"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

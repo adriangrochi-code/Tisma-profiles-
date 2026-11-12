@@ -1,6 +1,64 @@
 {
  "vendor": "Fiberlogy",
  "name": "Fiberlogy PLA FiberWood",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy FiberWood @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy FiberWood"
+  }
+ ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",
