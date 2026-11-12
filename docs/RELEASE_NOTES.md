@@ -14,8 +14,8 @@ VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, Anyc
   tiene el paquete propio de QIDI siguen de ahí, y X-CF Pro, X-Max y X-Plus, que QIDI Studio no tiene, de OrcaSlicer.
 - **Anycubic desde Anycubic Slicer Next** donde OrcaSlicer las traía: 14 modelos (Kobra, Kobra 2, Kobra 3, Kobra S1,
   Vyper, Chiron, 4Max Pro…). Las Kobra 3 Max, 3 V2, Neo, S1 Max y X, que ese programa no tiene, siguen de OrcaSlicer.
-- **Flashforge desde Orca-Flashforge** donde OrcaSlicer las traía: AD5X, Adventurer 3, 5M, 5M Pro y A5, Guider 2
-  y Guider 3 Ultra. La Adventurer 3 ya imprime con su propio G-code y la torre de purga. Guider 2s, Guider4 y Guider4
+- **Flashforge desde Orca-Flashforge** donde OrcaSlicer las traía: AD5X, Adventurer 3, 5M, 5M Pro y A5, y Guider 3
+  Ultra. La Adventurer 3 ya imprime con su propio G-code y la torre de purga. Guider 2s, Guider4 y Guider4
   Pro siguen de OrcaSlicer: en el programa de Flashforge les falta el perfil de impresión o el diámetro de la boquilla.
 - **Como en el programa de origen, también donde el paquete de Tisma Slicer difiere:** 160 valores de filamentos de la
   familia OrcaSlicer (por ejemplo el ABS de Anycubic para la Kobra S1 Max 0.8: 220 °C, no 250) y los anchos de línea
