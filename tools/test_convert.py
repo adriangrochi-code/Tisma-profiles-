@@ -215,7 +215,32 @@ class OfficialBundles(unittest.TestCase):
                          [('extruder_clearance_radius', None, '57'),
                           ('printer_notes', 'PRINTER_VENDOR_ORCA_BBL', 'PRINTER_VENDOR_BAMBUSTUDIO_BBL')])
         self.assertEqual(stats['official presets not in the replaced bundle (printer)'], 1)
-        self.assertEqual(stats['replaced presets not in the official bundle'], 1)
+        self.assertEqual(stats['replaced presets not in the official bundles'], 1)
+
+
+class ReplaceModels(unittest.TestCase):
+    def test_only_the_models_the_official_bundle_has(self):
+        # QIDI Studio 21d4745 has the Q1 Pro but not the X-CF Pro of OrcaSlicer's Qidi bundle: the X-CF Pro, its
+        # printer and its print stay; the Q1 Pro's printer, its own print and a filament QIDI Studio has go.
+        with tempfile.TemporaryDirectory() as d:
+            old, new = os.path.join(d, 'Orca_Qidi.ini'), os.path.join(d, 'QIDIStudio_Q_Series.ini')
+            with open(old, 'w') as f:
+                f.write('[vendor]\nname = Qidi\n\n[printer_model:Qidi Q1 Pro]\nname = Qidi Q1 Pro\n\n'
+                        '[printer_model:Qidi X-CF Pro]\nname = Qidi X-CF Pro\n\n'
+                        '[printer:Qidi Q1 Pro 0.4 nozzle]\nprinter_model = Qidi Q1 Pro\n\n'
+                        '[printer:Qidi X-CF Pro 0.4 nozzle]\nprinter_model = Qidi X-CF Pro\n\n'
+                        '[print:0.2mm @Qidi Q1 Pro]\ncompatible_printers = "Qidi Q1 Pro 0.4 nozzle"\n\n'
+                        '[print:0.2mm @Qidi X-CF Pro]\ncompatible_printers = "Qidi X-CF Pro 0.4 nozzle"\n\n'
+                        '[filament:QIDI PLA Rapido]\ncompatible_printers = "Qidi X-CF Pro 0.4 nozzle"\n')
+            with open(new, 'w') as f:
+                f.write('[vendor]\nname = Qidi\n\n[printer_model:Q1 Pro]\nname = Q1 Pro\n\n'
+                        '[printer:Qidi Q1 Pro 0.4 nozzle]\nprinter_model = Q1 Pro\n\n'
+                        '[filament:QIDI PLA Rapido]\ncompatible_printers = "Qidi Q1 Pro 0.4 nozzle"\n')
+            o = convert.Bundle(old)
+            gone = convert.replace_models(o, convert.Bundle(new))
+        self.assertEqual(gone, {'Qidi Q1 Pro 0.4 nozzle'})
+        self.assertEqual(list(o.models), ['Qidi X-CF Pro'])
+        self.assertEqual(sorted(o.sections), [('print', '0.2mm @Qidi X-CF Pro'), ('printer', 'Qidi X-CF Pro 0.4 nozzle')])
 
 
 class CuraFlavor(unittest.TestCase):

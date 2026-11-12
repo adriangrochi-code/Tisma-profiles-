@@ -11,6 +11,7 @@ own slicer over OrcaSlicer).
 Usage: fetch_sources.py <sources.json> <dir> [<convert_orca_profiles.py>]
 """
 
+import glob
 import json
 import os
 import subprocess
@@ -26,14 +27,17 @@ def git(*args, cwd=None):
 
 
 def fetch(s, root, cone=True):
-    """A checkout of s["repository"] at s["commit"] with only s["directory"] (its paths, space-separated: folders, or
-    with cone False also files)."""
+    """A checkout of s["repository"] at s["commit"] with only s["directory"] (its paths: space-separated, or a list;
+    folders, or with cone False also files)."""
     folder = os.path.join(root, s['repository'].rstrip('/').split('/')[-1])
     if not os.path.isdir(os.path.join(folder, '.git')):
         os.makedirs(folder, exist_ok=True)
         git('init', '-q', cwd=folder)
         git('remote', 'add', 'origin', s['repository'] + '.git', cwd=folder)
-    git('sparse-checkout', 'set', *([] if cone else ['--no-cone']), *s['directory'].split(), cwd=folder)
+    paths = s['directory'].split() if isinstance(s['directory'], str) else s['directory']
+    if not cone:
+        paths = ['/' + p.strip('/') + ('/' if not p.endswith('.json') else '') for p in paths]  # anchored patterns
+    git('sparse-checkout', 'set', *([] if cone else ['--no-cone']), *paths, cwd=folder)
     git('fetch', '-q', '--depth', '1', '--filter=blob:none', 'origin', s['commit'], cwd=folder)
     git('checkout', '-q', 'FETCH_HEAD', cwd=folder)
     return folder
@@ -59,12 +63,13 @@ def main():
         os.makedirs(bundles, exist_ok=True)
         tisma_root = os.path.join(os.path.dirname(os.path.abspath(converter)), '..', '..')
         subprocess.run([sys.executable, converter, os.path.join(folder, 'resources', 'profiles'), bundles,
-                        '--tisma-root', tisma_root, '--orca-commit', s['commit'], '--vendors', s['vendor'],
-                        '--prefix', s['prefix'], '--source', s['program'], '--url', s['repository']],
+                        '--tisma-root', tisma_root, '--orca-commit', s['commit'], '--vendors', ','.join(s['vendors']),
+                        '--prefix', s['prefix'], '--source', s['program'], '--url', s['repository']] +
+                       (['--maker', s['maker']] if s.get('maker') else []),
                        check=True, stdout=subprocess.DEVNULL)
         out.append('--upstream=%s=%s' % (s['repository'], os.path.abspath(folder)))
-        out.append('--official-bundle=%s=%s' % (os.path.join(bundles, s['prefix'] + s['vendor'] + '.ini'),
-                                                 s['replaces']))
+        for ini in sorted(glob.glob(os.path.join(bundles, s['prefix'] + '*.ini'))):
+            out.append('--official-bundle=%s=%s' % (ini, s['replaces']))
         print('%s at %s (official, in place of %s)' % (s['program'], s['commit'], s['replaces']), file=sys.stderr)
     print(' '.join(out))
 

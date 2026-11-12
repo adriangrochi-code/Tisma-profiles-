@@ -2,13 +2,16 @@
 
 Convertido desde Tisma Slicer a6b4f62 y UVtools de8580d. El G-code, las listas de impresoras y los valores por defecto
 de los programas salen de OrcaSlicer 1d577ea, Creality Print 59ae8cb, Elegoo Slicer 2d507e3, Cura 5bea2f8 y
-VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93. AGPL-3.0-or-later.
+VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, de QIDI Studio 21d4745.
+AGPL-3.0-or-later.
 
 ## Qué cambia desde pack-2026.11.10-dcb4250
 
 - **Bambu Lab desde su propio laminador, Bambu Studio**, en lugar de OrcaSlicer: 60 variantes (con la nueva H3C),
   16 perfiles de impresión y 77 filamentos más. Cada valor que cambia frente a OrcaSlicer está en `stats.json`
   (`official_over_replaced`). La H3C usa por ahora el G-code simple: el suyo tiene variables propias de Bambu Studio.
+- **QIDI desde QIDI Studio** donde OrcaSlicer las traía: Q2, Q2C, X-Max 4, X-Plus 5 y la nueva X-Smart 5. Las que
+  tiene el paquete propio de QIDI siguen de ahí, y X-CF Pro, X-Max y X-Plus, que QIDI Studio no tiene, de OrcaSlicer.
 - **Como en el programa de origen, también donde el paquete de Tisma Slicer difiere:** 160 valores de filamentos de la
   familia OrcaSlicer (por ejemplo el ABS de Anycubic para la Kobra S1 Max 0.8: 220 °C, no 250) y los anchos de línea
   que OrcaSlicer da en % de la boquilla: 113 perfiles de impresión para varias boquillas van ahora uno por boquilla,

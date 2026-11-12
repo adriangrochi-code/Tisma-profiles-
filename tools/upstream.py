@@ -23,7 +23,9 @@ DIALECTS = {'https://github.com/SoftFever/OrcaSlicer': 'orcaslicer',
             # A fork of OrcaSlicer for belt printers, with OrcaSlicer's option names (its IdeaFormer IR3 V2 preset).
             'https://github.com/kdho77/VertexSlice': 'orcaslicer',
             # Bambu Lab's own slicer, the one OrcaSlicer was forked from: OrcaSlicer's option names in its profiles.
-            'https://github.com/bambulab/BambuStudio': 'orcaslicer'}
+            'https://github.com/bambulab/BambuStudio': 'orcaslicer',
+            # QIDI's own slicer, from Bambu Studio and OrcaSlicer.
+            'https://github.com/QIDITech/QIDIStudio': 'orcaslicer'}
 
 # The custom G-code keys of each dialect and the pack's name for each (docs/FORMAT.md). Keys of a dialect that end in
 # "_gcode" and are not here are kept with their own name.

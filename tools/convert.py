@@ -834,31 +834,59 @@ def same_value(a, b):
         return False
 
 
+def replace_models(old, new, stats=None):
+    """Takes out of the bundle old the printer models that the bundle new has (the same model by name, without the
+    vendor's words), their printers, and the print and filament presets that new has by name or that are only for
+    those printers. The names of the printers taken out."""
+    words = vendor_words(old.vendor.get('name', ''), old.id) | vendor_words(new.vendor.get('name', ''), new.id) | \
+        vendor_words(new.vendor.get('name', ''), old.id)
+    theirs = {canonical_model(m.get('name', mid) or mid, words) for mid, m in new.models.items()}
+    gone_models = {mid for mid, m in old.models.items() if canonical_model(m.get('name', mid) or mid, words) in theirs}
+    gone = set()
+    for (kind, name), values in list(old.sections.items()):
+        if kind == 'printer' and not name.startswith('*') and values.get('printer_model') in gone_models:
+            gone.add(name)
+            del old.sections[(kind, name)]
+    for mid in gone_models:
+        del old.models[mid]
+    for (kind, name), values in list(old.sections.items()):
+        if kind not in ('print', 'filament') or name.startswith('*'):
+            continue
+        cps = [x.strip().strip('"') for x in values.get('compatible_printers', '').split(';') if x.strip()]
+        if (kind, name) in new.sections or (cps and all(c in gone for c in cps)):
+            del old.sections[(kind, name)]
+    return gone
+
+
 def official_differences(official, profiles, stats):
-    """What the bundles made from the manufacturers' own slicers change against the bundles they replace: for every
+    """What the bundles made from the manufacturers' own slicers change against the bundle they replace: for every
     preset in both (the same name, as Tisma Slicer's converter writes them), the keys with another value.
-    [{official, replaced, kind, name, key, replaced_value, official_value}], and the presets only in one."""
+    [{official, replaced, kind, name, key, replaced_value, official_value}]; counts give the presets only in one."""
     out = []
+    groups = collections.defaultdict(list)
     for path, gone in sorted(official.items()):
-        new, old = Bundle(path), Bundle(os.path.join(profiles, gone + '.ini'))
-        for kind, name in new.sections:
-            if name.startswith('*'):
-                continue
-            if (kind, name) not in old.sections:
-                stats['official presets not in the replaced bundle (%s)' % kind] += 1
-                continue
-            try:
-                a, b = old.flat(kind, name, old.sections), new.flat(kind, name, new.sections)
-            except KeyError:  # a parent in another bundle (the filament library)
-                stats['official presets not compared (a parent in another bundle)'] += 1
-                continue
-            for k in sorted(set(a) | set(b)):
-                if k in ('inherits', 'compatible_printers_condition') or same_value(a.get(k, ''), b.get(k, '')):
+        groups[gone].append(Bundle(path))
+    for gone, news in sorted(groups.items()):
+        old = Bundle(os.path.join(profiles, gone + '.ini'))
+        for new in news:
+            for kind, name in new.sections:
+                if name.startswith('*'):
                     continue
-                out.append({'official': new.id, 'replaced': gone, 'kind': kind, 'name': name, 'key': k,
-                            'replaced_value': a.get(k), 'official_value': b.get(k)})
-        stats['replaced presets not in the official bundle'] += sum(
-            1 for key in old.sections if not key[1].startswith('*') and key not in new.sections)
+                if (kind, name) not in old.sections:
+                    stats['official presets not in the replaced bundle (%s)' % kind] += 1
+                    continue
+                try:
+                    a, b = old.flat(kind, name, old.sections), new.flat(kind, name, new.sections)
+                except KeyError:  # a parent in another bundle (the filament library)
+                    stats['official presets not compared (a parent in another bundle)'] += 1
+                    continue
+                for k in sorted(set(a) | set(b)):
+                    if k in ('inherits', 'compatible_printers_condition') or same_value(a.get(k, ''), b.get(k, '')):
+                        continue
+                    out.append({'official': new.id, 'replaced': gone, 'kind': kind, 'name': name, 'key': k,
+                                'replaced_value': a.get(k), 'official_value': b.get(k)})
+        stats['replaced presets not in the official bundles'] += sum(
+            1 for key in old.sections if not key[1].startswith('*') and not any(key in n.sections for n in news))
     stats['official values over the replaced bundle\'s'] = len(out)
     return out
 
@@ -1026,7 +1054,12 @@ def license_of(bundle_id):
     return 'AGPL-3.0-or-later', 'PrusaSlicer / Tisma Slicer vendor profiles'
 
 
+OFFICIAL_VENDORS = {}  # bundle made from a manufacturer's own slicer -> the canonical name of its vendor
+
+
 def canonical_vendor(bundle_id):
+    if bundle_id in OFFICIAL_VENDORS:  # QIDIStudio_Q_Series: Qidi
+        return OFFICIAL_VENDORS[bundle_id]
     s = re.sub(r'^(orca|crealityprint|elegooslicer|cura|belt|uvtools)_', '', bundle_id.lower())
     s = re.sub(r'sla$', '', s)
     s = re.sub(r'research|technologies|technology|3d$', '', s)
@@ -1152,9 +1185,11 @@ def build_models(w, index, printer_entries):
                 groups.setdefault((e['technology'], v['id'], rel), []).append((v, m))
 
     def preference(item):
+        # The manufacturer's own bundle first, then a bundle from its own slicer (OFFICIAL_VENDORS), then the ones
+        # Tisma Slicer converted from other programs; among them, the one with more printers.
         v, m = item
         derived = bool(re.match(r'^(Orca|CrealityPrint|ElegooSlicer|Cura|Belt|UVtools)_', v['id']))
-        return (derived, -len(m['printers']))
+        return (2 if derived else 1 if v['id'] in OFFICIAL_VENDORS else 0, -len(m['printers']))
 
     for key, items in groups.items():
         items.sort(key=preference)
@@ -1294,9 +1329,16 @@ def main():
     renames = translation.Renames()  # the other dialects' names, from the same presets
 
     official = dict(x.rsplit('=', 1) for x in args.official_bundle)
-    paths = [os.path.join(args.profiles, f) for f in os.listdir(args.profiles)
-             if f.endswith('.ini') and f[:-len('.ini')] not in official.values()] + list(official)
+    paths = [os.path.join(args.profiles, f) for f in os.listdir(args.profiles) if f.endswith('.ini')] + list(official)
     bundles = [Bundle(p) for p in sorted(paths, key=os.path.basename)]
+    by_id = {b.id: b for b in bundles}
+    for path, gone in sorted(official.items()):
+        # The manufacturer's models replace the same models of the replaced bundle; its other models stay.
+        replace_models(by_id[gone], Bundle(path), stats=None)
+    bundles = [b for b in bundles if b.models or b.id not in official.values()]
+    for b in bundles:
+        if b.path in official:
+            OFFICIAL_VENDORS[b.id] = canonical_vendor(b.vendor.get('name', b.id))
     replaced_repo = {}  # official bundle -> repository of the bundle it replaces
     for path, gone in official.items():
         src = upstream.bundle_source(os.path.join(args.profiles, gone + '.ini'))
