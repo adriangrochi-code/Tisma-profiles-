@@ -302,7 +302,10 @@ agrega las boquillas que le faltan. Hoy: Bambu Lab desde Bambu Studio (`BambuStu
 QIDI desde QIDI Studio (sus cuatro series, en lugar de los modelos de `Orca_Qidi` que tiene; la X-CF Pro, la X-Max y la
 X-Plus siguen de OrcaSlicer, y las Q1 Pro, X-Max 3, X-Plus 3, X-Plus 4 y X-Smart 3 de `QIDITechnology`) y Anycubic
 desde Anycubic Slicer Next (14 modelos; Kobra 3 Max, Kobra 3 V2, Kobra Neo, Kobra S1 Max y Kobra X, que no tiene,
-siguen de OrcaSlicer) y Flashforge desde Orca-Flashforge. Un perfil del paquete reemplazado del que hereda otro que
+siguen de OrcaSlicer), Flashforge desde Orca-Flashforge, y Creality y Elegoo desde Creality Print y Elegoo Slicer (los
+mismos commits que `converted_from`): Creality Print reemplaza a la vez los modelos de `Orca_Creality` y los de
+`CrealityPrint_Creality` (el paquete de Tisma Slicer con los modelos que OrcaSlicer no tenía; `replaces` es una lista,
+y `--official-bundle` toma varios nombres separados por comas). Un perfil del paquete reemplazado del que hereda otro que
 queda, queda también. Un modelo del laminador del fabricante que no se puede usar (una impresora sin boquilla en mm o
 sin un perfil de impresión propio) queda del paquete reemplazado: en Orca-Flashforge c45cc82 la Guider 2s solo tiene
 plantillas de impresión y las boquillas HF de las Guider4 y Guider4 Pro dicen «0.6HF»; las tres siguen de OrcaSlicer
@@ -482,8 +485,8 @@ Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabr
 - **PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0;
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
 - **VertexSlice** (la IdeaFormer IR3 V2), **Bambu Studio** (las Bambu Lab), **QIDI Studio** (las QIDI), **Anycubic
-  Slicer Next** (las Anycubic) y **Orca-Flashforge** (las Flashforge; `sources.json`, `official`): AGPL-3.0, según el
-  `LICENSE` de cada repositorio en su commit;
+  Slicer Next** (las Anycubic) y **Orca-Flashforge** (las Flashforge; `sources.json`, `official`, con Creality Print y
+  Elegoo Slicer): AGPL-3.0, según el `LICENSE` de cada repositorio en su commit;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
 - **mallas de las camas de UltiMaker Cura** (`resources/meshes`, en el commit de `sources.json`): LGPL-3.0, la licencia

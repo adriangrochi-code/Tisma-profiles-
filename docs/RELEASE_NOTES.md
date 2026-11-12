@@ -17,6 +17,9 @@ VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, Anyc
 - **Flashforge desde Orca-Flashforge** donde OrcaSlicer las traía: AD5X, Adventurer 3, 5M, 5M Pro y A5, y Guider 3
   Ultra. La Adventurer 3 ya imprime con su propio G-code y la torre de purga. Guider 2s, Guider4 y Guider4
   Pro siguen de OrcaSlicer: en el programa de Flashforge les falta el perfil de impresión o el diámetro de la boquilla.
+- **Creality y Elegoo desde Creality Print y Elegoo Slicer** donde OrcaSlicer las traía: 37 modelos de Creality (K1,
+  K1C, K2, Ender-3 V3, Hi, Sermoon…) y 10 de Elegoo (Centauri, Neptune 4…). Las que tienen el paquete propio de
+  Creality o de Elegoo siguen de ahí. 39 impresoras más y 33 perfiles de impresión que antes quedaban afuera.
 - **Como en el programa de origen, también donde el paquete de Tisma Slicer difiere:** 160 valores de filamentos de la
   familia OrcaSlicer (por ejemplo el ABS de Anycubic para la Kobra S1 Max 0.8: 220 °C, no 250) y los anchos de línea
   que OrcaSlicer da en % de la boquilla: 113 perfiles de impresión para varias boquillas van ahora uno por boquilla,

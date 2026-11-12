@@ -1369,9 +1369,10 @@ def main():
                                               "commit, with its src/libslic3r): which presets it merged into one")
     ap.add_argument('--prusa-config', help="PrusaSlicer's PrintConfig.cpp (Tisma Slicer's, at the bundles' commit), "
                                            "for the types of the values in the G-code blocks")
-    ap.add_argument('--official-bundle', action='append', default=[], metavar='BUNDLE.ini=REPLACED',
+    ap.add_argument('--official-bundle', action='append', default=[], metavar='BUNDLE.ini=REPLACED[,REPLACED]',
                     help="a bundle that Tisma Slicer's converter made from the manufacturer's own slicer, in place of "
-                         "the bundle REPLACED (e.g. BambuStudio_BBL.ini=Orca_BBL): sources.json, \"official\"")
+                         "the models it has of the bundles REPLACED (e.g. BambuStudio_BBL.ini=Orca_BBL): sources.json, "
+                         "\"official\"")
     args = ap.parse_args()
     if args.prusa_config:
         OPTION_TYPES.update(translation.option_types(args.prusa_config))
@@ -1385,16 +1386,24 @@ def main():
     keys_seen = collections.defaultdict(set)  # kind -> source keys of the bundles (PrusaSlicer names)
     renames = translation.Renames()  # the other dialects' names, from the same presets
 
-    official = dict(x.rsplit('=', 1) for x in args.official_bundle)
+    # bundle path -> the bundle it replaces (the first) ; more replaced bundles: replaced_also
+    official, replaced_also = {}, collections.defaultdict(list)
+    for x in args.official_bundle:
+        path, _, gone = x.rpartition('=')
+        names = gone.split(',')
+        official[path] = names[0]
+        replaced_also[path] = names[1:]
     paths = [os.path.join(args.profiles, f) for f in os.listdir(args.profiles) if f.endswith('.ini')] + list(official)
     bundles = [Bundle(p) for p in sorted(paths, key=os.path.basename)]
     by_id = {b.id: b for b in bundles}
     by_path = {b.path: b for b in bundles}
     early_stats = collections.Counter()
     for path, gone in sorted(official.items()):
-        # The manufacturer's models replace the same models of the replaced bundle; its other models stay.
-        replace_models(by_id[gone], by_path[path], early_stats)
-    bundles = [b for b in bundles if b.models or b.id not in official.values()]
+        # The manufacturer's models replace the same models of the replaced bundles; their other models stay.
+        for name in [gone] + replaced_also[path]:
+            replace_models(by_id[name], by_path[path], early_stats)
+    replaced_ids = set(official.values()) | {n for names in replaced_also.values() for n in names}
+    bundles = [b for b in bundles if b.models or b.id not in replaced_ids]
     for b in bundles:
         if b.path in official:
             OFFICIAL_VENDORS[b.id] = canonical_vendor(b.vendor.get('name', b.id))

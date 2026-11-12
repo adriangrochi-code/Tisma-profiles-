@@ -36,7 +36,7 @@ def fetch(s, root, cone=True):
         git('remote', 'add', 'origin', s['repository'] + '.git', cwd=folder)
     paths = s['directory'].split() if isinstance(s['directory'], str) else s['directory']
     if not cone:
-        paths = ['/' + p.strip('/') + ('/' if not p.endswith('.json') else '') for p in paths]  # anchored patterns
+        paths = ['/' + p.strip('/') + ('' if os.path.splitext(p)[1] else '/') for p in paths]  # anchored: file, dir
     git('sparse-checkout', 'set', *([] if cone else ['--no-cone']), *paths, cwd=folder)
     git('fetch', '-q', '--depth', '1', '--filter=blob:none', 'origin', s['commit'], cwd=folder)
     git('checkout', '-q', 'FETCH_HEAD', cwd=folder)
@@ -58,19 +58,22 @@ def main():
             out.append('--source-config=%s=%s' % (dialect, os.path.abspath(config)))
         print('%s at %s' % (s['program'], s['commit']), file=sys.stderr)
     for s in data.get('official', []) if converter else []:
-        folder = fetch(s, root, cone=False)
+        folder = fetch(s, os.path.join(root, 'official_sources'), cone=False)  # apart from converted_from's
         bundles = os.path.join(os.path.abspath(root), 'official')
         os.makedirs(bundles, exist_ok=True)
         tisma_root = os.path.join(os.path.dirname(os.path.abspath(converter)), '..', '..')
         subprocess.run([sys.executable, converter, os.path.join(folder, 'resources', 'profiles'), bundles,
-                        '--tisma-root', tisma_root, '--orca-commit', s['commit'], '--vendors', ','.join(s['vendors']),
-                        '--prefix', s['prefix'], '--source', s['program'], '--url', s['repository']] +
-                       (['--maker', s['maker']] if s.get('maker') else []),
+                        '--tisma-root', tisma_root, '--orca-commit', s['commit'],
+                        '--vendors', ','.join(s['vendors']), '--prefix', s['prefix'], '--source', s['program'],
+                        '--url', s['repository']] + (['--maker', s['maker']] if s.get('maker') else []),
                        check=True, stdout=subprocess.DEVNULL)
-        out.append('--upstream=%s=%s' % (s['repository'], os.path.abspath(folder)))
+        if not any(c['repository'] == s['repository'] for c in data['converted_from']):  # else read from there
+            out.append('--upstream=%s=%s' % (s['repository'], os.path.abspath(folder)))
+        replaces = s['replaces'] if isinstance(s['replaces'], list) else [s['replaces']]
         for ini in sorted(glob.glob(os.path.join(bundles, s['prefix'] + '*.ini'))):
-            out.append('--official-bundle=%s=%s' % (ini, s['replaces']))
-        print('%s at %s (official, in place of %s)' % (s['program'], s['commit'], s['replaces']), file=sys.stderr)
+            out.append('--official-bundle=%s=%s' % (ini, ','.join(replaces)))
+        print('%s at %s (official, in place of %s)' % (s['program'], s['commit'], ', '.join(replaces)),
+              file=sys.stderr)
     print(' '.join(out))
 
 
