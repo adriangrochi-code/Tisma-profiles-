@@ -1,0 +1,211 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PCTG",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PCTG @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy PCTG"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.23,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 64.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctg-pctg-en/",
+    "title": "PCTG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

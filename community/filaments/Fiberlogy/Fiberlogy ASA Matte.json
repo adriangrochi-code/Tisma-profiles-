@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy ASA Matte",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    255,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 80,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.07,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 87.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "@ 1.8 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/asa-matte-en/",
+    "title": "ASA Matte, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

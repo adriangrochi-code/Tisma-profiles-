@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PLA FiberSatin",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    200,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    60,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 40,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.2,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 55.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 0.45 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-fibersatin-en/",
+    "title": "PLA FiberSatin, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

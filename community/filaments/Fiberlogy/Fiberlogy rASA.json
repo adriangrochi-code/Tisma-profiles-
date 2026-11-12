@@ -1,0 +1,72 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy rASA",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/rasa-en/",
+    "title": "rASA, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/rasa-en/",
+    "title": "rASA, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/rasa-en/",
+    "title": "rASA, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/rasa-en/",
+    "title": "rASA, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/asa-en/rasa-en/",
+    "title": "rASA, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

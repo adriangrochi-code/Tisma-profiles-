@@ -1,0 +1,61 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy FiberFlex+CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    205
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/fiberflexcf-en/",
+    "title": "FiberFlex+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    80,
+    80
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/fiberflexcf-en/",
+    "title": "FiberFlex+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.23,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/fiberflexcf-en/",
+    "title": "FiberFlex+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 70.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "@ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/fiberflexcf-en/",
+    "title": "FiberFlex+CF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,119 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PP",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PP @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy PP"
+  },
+  {
+   "bundle": "TriLAB",
+   "name": "Fiberlogy PP @DQ2FP2"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/pp-pp-en/",
+    "title": "PP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/pp-pp-en/",
+    "title": "PP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/pp-pp-en/",
+    "title": "PP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/pp-pp-en/",
+    "title": "PP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PC/ABS",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    260,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/pc-abs-en/",
+    "title": "PC/ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/pc-abs-en/",
+    "title": "PC/ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 70,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/pc-abs-en/",
+    "title": "PC/ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/pc-abs-en/",
+    "title": "PC/ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.07,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/pc-abs-en/",
+    "title": "PC/ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

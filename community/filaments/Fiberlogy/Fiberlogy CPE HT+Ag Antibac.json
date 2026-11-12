@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy CPE HT+Ag Antibac",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    260,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    120,
+    120
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 80,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.18,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 85.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-htag-antibac-en/",
+    "title": "CPE HT+Ag Antibac, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

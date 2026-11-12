@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy rNylon",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    255,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    110,
+    110
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 70,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.01,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 55.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/nylon-en/rnylon-en/",
+    "title": "rNylon, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

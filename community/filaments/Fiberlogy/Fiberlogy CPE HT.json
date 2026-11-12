@@ -1,0 +1,207 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy CPE HT",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy CPE HT @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy CPE HT"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    260,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    120,
+    120
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 80,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.18,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 85.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/cpe-en/cpe-ht-en/",
+    "title": "CPE HT, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy rPP",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/rpp-en/",
+    "title": "rPP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/rpp-en/",
+    "title": "rPP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/rpp-en/",
+    "title": "rPP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pp-en/rpp-en/",
+    "title": "rPP, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

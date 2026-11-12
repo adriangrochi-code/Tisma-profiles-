@@ -1,0 +1,143 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy MattFlex 40D",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy MattFlex 40D @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy MattFlex 40D"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    210,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    70,
+    70
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.16,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 70.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 0.45 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/flex-en/mattflex-40d-en/",
+    "title": "MattFlex 40D, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

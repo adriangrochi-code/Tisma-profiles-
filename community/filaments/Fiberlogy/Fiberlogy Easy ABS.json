@@ -1,0 +1,211 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy Easy ABS",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy ABS @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy Easy ABS"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    235,
+    255
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.09,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 70.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/easy-abs-en/",
+    "title": "Easy ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

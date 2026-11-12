@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PCTG+GF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.31,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 64.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "under load @ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pctg-en/pctggf-en/",
+    "title": "PCTG+GF, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

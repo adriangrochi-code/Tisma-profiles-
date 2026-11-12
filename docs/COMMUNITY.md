@@ -100,7 +100,7 @@ community/resins/<Fabricante>/<Nombre>.json
 | `filament.shrinkage_xy`, `filament.shrinkage_z` | % | Contracción |
 | `filament.drying_temperature`, `filament.drying_hours` | °C, h | Secado |
 | `filament.nozzle_temperature_range` | °C | Temperatura de boquilla que da el fabricante, `[mínima, máxima]` («210 ± 10» es `[200, 220]`; el texto de la hoja en `conditions`) |
-| `filament.bed_temperature_range` | °C | Temperatura de cama que da el fabricante, `[mínima, máxima]` |
+| `filament.bed_temperature_range` | °C | Temperatura de cama que da el fabricante, `[mínima, máxima]` (un solo valor recomendado es `[v, v]`; `check_pack` no lo compara con el perfil) |
 | `filament.vicat_softening` | °C | Temperatura de ablandamiento Vicat (método, por ejemplo ISO 306, en `conditions`) |
 | `filament.temperature_resistance` | °C | Resistencia a la temperatura que declara el fabricante, cuando no dice el método (si dice HDT, va en `filament.hdt`) |
 | `filament.price_per_kg` | moneda/kg | Precio, con la moneda y la fecha en `conditions` |

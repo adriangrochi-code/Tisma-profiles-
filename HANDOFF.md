@@ -97,8 +97,10 @@ values, check_pack notes where a profile is outside the maker's range.
 | Prusa Polymers (Prusament) | 2026-11-12: 22 materials from prusament.com/materials (nozzle and bed ranges, temperature resistance); 14 linked to the pack's filament. Note: Prusament PA11 Carbon Fiber first layer bed 90 °C, the sheet 100-120 |
 | Polymaker | 2026-11-12: 78 products from us.polymaker.com/products/<handle> (nozzle and bed ranges, drying, density ISO 1183, Vicat ISO 306); 27 linked to 142 pack filaments (same name without the brand, only Polymaker filaments). 60 notes of profiles outside the maker's ranges (check_pack --report, notes): Fiberon on the Snapmaker U1 (nozzle below the sheet), Fiberon PETG-ESD (bed 60, the sheet 70-80), PolyLite ABS, PLA and CosPLA on Bambu Lab, QIDI X-Max 4 and Snapmaker U1 profiles, HT-PLA(-GF), Polymaker PETG on Sovol SV08 MAX, PolyLite PLA-CF on HSP1 |
 | Bambu Lab | pendiente: the store pages (us.store.bambulab.com/products/…) carry no figures in their HTML and no products.json; wiki.bambulab.com/en/general/filament-guide-material-table gives bed ranges by material family and plate only, not per product; the per-product sheets are PDFs still to be found |
-| eSun | pendiente: esun3d.com answers 403 from here |
-| Sunlu, Elegoo | pendiente: the product pages to read are still to be found |
+| Fiberlogy | 2026-11-12: 46 products from fiberlogy.com/en/filaments/<family>/<product>/ (printing and bed temperature, drying, density, HDT with its load and standard); 12 linked to 284 pack filaments (exact names only: "FiberSatin"/"PLA FiberSatin", "Impact PLA"/"PLA Impact" and the like are left unlinked). A single bed value is [v, v] and not compared. Notes: FiberFlex 40D printed at 230-240 °C, the sheet lower |
+| eSun, Hatchbox | not done: esun3d.com, esun3dstore.com and hatchbox3d.com answer 403 from here |
+| Sunlu, Overture | not done: their store descriptions are marketing text (speed-dependent temperatures, bundles of several materials), not data sheets; only 12 products would give one clear labelled range, and some of those are doubtful |
+| Elegoo (filaments) | not done: none of its 11 filament products gives a temperature in the store description |
 
 ## Coverage (owner's request of 2026-11-10 21:00)
 

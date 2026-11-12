@@ -1,0 +1,72 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy ABS Plus",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-plus-en/",
+    "title": "ABS Plus, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-plus-en/",
+    "title": "ABS Plus, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-plus-en/",
+    "title": "ABS Plus, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-plus-en/",
+    "title": "ABS Plus, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-plus-en/",
+    "title": "ABS Plus, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

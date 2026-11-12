@@ -1,0 +1,48 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy ABS",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    265
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-abs-en/",
+    "title": "ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    100,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-abs-en/",
+    "title": "ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.05,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/abs-en/abs-abs-en/",
+    "title": "ABS, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

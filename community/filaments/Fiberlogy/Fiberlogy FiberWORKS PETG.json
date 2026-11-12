@@ -1,0 +1,85 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy FiberWORKS PETG",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    240,
+    260
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    70,
+    70
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.29,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 70.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "@ 1.8 MPa (ASTM D648)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/fiberworks/fiberworks-petg/",
+    "title": "FiberWORKS PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy PLA Mineral",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy PLA Mineral @XL 0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy PLA Mineral"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    210
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-mineral-en/",
+    "title": "PLA Mineral, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    60,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-mineral-en/",
+    "title": "PLA Mineral, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-mineral-en/",
+    "title": "PLA Mineral, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 6,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-mineral-en/",
+    "title": "PLA Mineral, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.38,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/pla-en/pla-mineral-en/",
+    "title": "PLA Mineral, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -1,0 +1,223 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy Easy PETG",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @0.6 nozzle"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @0.6 nozzle MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @MMU1"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy Easy PET-G @XL HF0.8"
+  },
+  {
+   "bundle": "Templates",
+   "name": "Fiberlogy Easy PET-G"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    220,
+    250
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    90
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 60,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.29,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 62.0,
+   "unit": "°C",
+   "kind": "official",
+   "conditions": "@ 1.8 MPa (ISO 75)",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/petg-en/easy-petg-en/",
+    "title": "Easy PETG, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}

@@ -83,6 +83,8 @@ def check_ranges(d, pf, e, notes):
             if item['key'] != key:
                 continue
             low, high = item['value']
+            if low == high:  # one recommended value, not a range: no note
+                continue
             for name in names:
                 try:
                     v = float(str(variables.get(name, '')).split(',')[0])

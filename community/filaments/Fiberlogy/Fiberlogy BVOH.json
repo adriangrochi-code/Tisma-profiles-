@@ -1,0 +1,154 @@
+{
+ "vendor": "Fiberlogy",
+ "name": "Fiberlogy BVOH",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @MMU"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Fiberlogy BVOH @XL 0.8"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    220
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/support-en/bvoh-en/",
+    "title": "BVOH, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    60,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/support-en/bvoh-en/",
+    "title": "BVOH, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_temperature",
+   "value": 50,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/support-en/bvoh-en/",
+    "title": "BVOH, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "filament.drying_hours",
+   "value": 4,
+   "unit": "h",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/support-en/bvoh-en/",
+    "title": "BVOH, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.14,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "manufacturer",
+    "url": "https://fiberlogy.com/en/filaments/support-en/bvoh-en/",
+    "title": "BVOH, Fiberlogy",
+    "accessed": "2026-11-12"
+   }
+  }
+ ]
+}
