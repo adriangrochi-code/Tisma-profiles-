@@ -1,0 +1,34 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PA6 CS20 FR V0",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    265,
+    290
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2021/12/en_tds_spectrum_pa6_cs20_frv0.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 CS20 FR V0",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.49,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2021/12/en_tds_spectrum_pa6_cs20_frv0.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 CS20 FR V0",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 1183-3"
+  }
+ ]
+}

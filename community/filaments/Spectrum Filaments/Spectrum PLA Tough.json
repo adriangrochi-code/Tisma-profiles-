@@ -1,0 +1,179 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PLA Tough",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum Tough PLA @XL HF0.8"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_tough.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Tough",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    0,
+    45
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_tough.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Tough",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.2,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_tough.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Tough",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 55.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_tough.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Tough",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "E 2092"
+  }
+ ]
+}

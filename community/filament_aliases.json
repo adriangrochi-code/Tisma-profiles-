@@ -120,6 +120,11 @@
    "file": "Extrudr/Extrudr GreenTEC Pro CF.json",
    "pack_name": "Extrudr GreenTEC Pro Carbon",
    "reason": "the data sheet of GreenTEC Pro CF names the product GreenTEC Pro Carbon in its description"
+  },
+  {
+   "file": "Spectrum Filaments/Spectrum PLA Tough.json",
+   "pack_name": "Spectrum Tough PLA",
+   "reason": "the same words in another order (PLA Tough on the data sheet)"
   }
  ]
 }

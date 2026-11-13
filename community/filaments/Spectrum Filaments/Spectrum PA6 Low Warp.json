@@ -1,0 +1,49 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PA6 Low Warp",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2021/09/en_tds_spectrum_pa6_low_warp.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 Low Warp",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    85,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2021/09/en_tds_spectrum_pa6_low_warp.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 Low Warp",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.15,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2021/09/en_tds_spectrum_pa6_low_warp.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 Low Warp",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 1183"
+  }
+ ]
+}

@@ -1,0 +1,34 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PA6 CF15",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    260,
+    290
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pa6_cf15.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 CF15",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.25,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pa6_cf15.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 CF15",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 1183-3"
+  }
+ ]
+}

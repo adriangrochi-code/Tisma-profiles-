@@ -1,0 +1,46 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PCTG CF10",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_pctg_cf10.pdf",
+    "title": "Spectrum Filaments, technical data sheet PCTG CF10",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.28,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_pctg_cf10.pdf",
+    "title": "Spectrum Filaments, technical data sheet PCTG CF10",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ASTM D792"
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 77.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_pctg_cf10.pdf",
+    "title": "Spectrum Filaments, technical data sheet PCTG CF10",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

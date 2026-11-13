@@ -1,0 +1,36 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum AquaPrint",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    215
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/02/en_tds_spectrum_aquaprint.pdf",
+    "title": "Spectrum Filaments, technical data sheet AquaPrint",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    25,
+    70
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/02/en_tds_spectrum_aquaprint.pdf",
+    "title": "Spectrum Filaments, technical data sheet AquaPrint",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

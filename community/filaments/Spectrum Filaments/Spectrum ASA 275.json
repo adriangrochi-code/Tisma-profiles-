@@ -1,0 +1,170 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum ASA 275",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @COREONE HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @MK4S HF0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @PG"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @PG 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @PG 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL HF0.4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL HF0.5"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL HF0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA 275 @XL HF0.8"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    200,
+    240
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_asa_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA 275",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    40,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_asa_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA 275",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 50.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_asa_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA 275",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

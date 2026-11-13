@@ -1,0 +1,60 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PLA Carbon",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    220
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_carbon.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Carbon",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    0,
+    45
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_carbon.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Carbon",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.3,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_carbon.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Carbon",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 60.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/05/en_tds_spectrum_pla_carbon.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA Carbon",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

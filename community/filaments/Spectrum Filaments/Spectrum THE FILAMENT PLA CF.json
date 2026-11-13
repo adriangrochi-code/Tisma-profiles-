@@ -1,0 +1,61 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum THE FILAMENT PLA CF",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    200,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/11/eng_tds_the_filament_pla_cf.pdf",
+    "title": "Spectrum Filaments, technical data sheet THE FILAMENT PLA CF",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    35,
+    45
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/11/eng_tds_the_filament_pla_cf.pdf",
+    "title": "Spectrum Filaments, technical data sheet THE FILAMENT PLA CF",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.25,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/11/eng_tds_the_filament_pla_cf.pdf",
+    "title": "Spectrum Filaments, technical data sheet THE FILAMENT PLA CF",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 55.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/11/eng_tds_the_filament_pla_cf.pdf",
+    "title": "Spectrum Filaments, technical data sheet THE FILAMENT PLA CF",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "E 2092"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PA6 Low Warp CF15S",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    280
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_pa6_low_warp_cf15s.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 Low Warp CF15S",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.18,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_pa6_low_warp_cf15s.pdf",
+    "title": "Spectrum Filaments, technical data sheet PA6 Low Warp CF15S",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

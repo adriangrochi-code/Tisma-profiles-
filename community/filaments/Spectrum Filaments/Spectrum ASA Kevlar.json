@@ -1,0 +1,120 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum ASA Kevlar",
+ "pack_filament": [
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @COREONE"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @COREONE 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @COREONE 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MINI"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4S"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4S 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @MK4S 0.8"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @XL"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @XL 0.6"
+  },
+  {
+   "bundle": "PrusaResearch",
+   "name": "Spectrum ASA Kevlar @XL 0.8"
+  }
+ ],
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    240,
+    270
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_asa_kevlar.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA Kevlar",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    80,
+    100
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_asa_kevlar.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA Kevlar",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.07,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_asa_kevlar.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA Kevlar",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 1183"
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 94.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_asa_kevlar.pdf",
+    "title": "Spectrum Filaments, technical data sheet ASA Kevlar",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 306"
+  }
+ ]
+}

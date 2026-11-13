@@ -1,0 +1,61 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum Huracan PLA",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    190,
+    230
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/11/en_tds_spectrum_pla_huracan.pdf",
+    "title": "Spectrum Filaments, technical data sheet Huracan PLA",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    0,
+    45
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/11/en_tds_spectrum_pla_huracan.pdf",
+    "title": "Spectrum Filaments, technical data sheet Huracan PLA",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.22,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/11/en_tds_spectrum_pla_huracan.pdf",
+    "title": "Spectrum Filaments, technical data sheet Huracan PLA",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 80.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/11/en_tds_spectrum_pla_huracan.pdf",
+    "title": "Spectrum Filaments, technical data sheet Huracan PLA",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "E 2092"
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PC 275",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    250,
+    290
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/10/en_tds_spectrum_pc_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet PC 275",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    90,
+    130
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/10/en_tds_spectrum_pc_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet PC 275",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.2,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/10/en_tds_spectrum_pc_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet PC 275",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 150.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2023/10/en_tds_spectrum_pc_275.pdf",
+    "title": "Spectrum Filaments, technical data sheet PC 275",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "D 1525"
+  }
+ ]
+}

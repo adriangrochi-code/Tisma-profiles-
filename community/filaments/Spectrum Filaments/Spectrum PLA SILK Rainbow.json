@@ -1,0 +1,60 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PLA SILK Rainbow",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    210,
+    240
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/05/en_tds_spectrum_pla_silk_rainbow.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA SILK Rainbow",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    40,
+    60
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/05/en_tds_spectrum_pla_silk_rainbow.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA SILK Rainbow",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.22,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/05/en_tds_spectrum_pla_silk_rainbow.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA SILK Rainbow",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.hdt",
+   "value": 50.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2024/05/en_tds_spectrum_pla_silk_rainbow.pdf",
+    "title": "Spectrum Filaments, technical data sheet PLA SILK Rainbow",
+    "accessed": "2026-11-13"
+   }
+  }
+ ]
+}

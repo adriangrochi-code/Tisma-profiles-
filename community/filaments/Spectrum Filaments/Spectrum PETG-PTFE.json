@@ -1,0 +1,62 @@
+{
+ "vendor": "Spectrum Filaments",
+ "name": "Spectrum PETG-PTFE",
+ "data": [
+  {
+   "key": "filament.nozzle_temperature_range",
+   "value": [
+    230,
+    255
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_petg_ptfe.pdf",
+    "title": "Spectrum Filaments, technical data sheet PETG/PTFE",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "filament.bed_temperature_range",
+   "value": [
+    60,
+    80
+   ],
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_petg_ptfe.pdf",
+    "title": "Spectrum Filaments, technical data sheet PETG/PTFE",
+    "accessed": "2026-11-13"
+   }
+  },
+  {
+   "key": "extrusion.density",
+   "value": 1.32,
+   "unit": "g/cm³",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_petg_ptfe.pdf",
+    "title": "Spectrum Filaments, technical data sheet PETG/PTFE",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 1183"
+  },
+  {
+   "key": "filament.vicat_softening",
+   "value": 70.0,
+   "unit": "°C",
+   "kind": "official",
+   "source": {
+    "type": "datasheet",
+    "url": "https://spectrumfilaments.com/wp-content/uploads/2022/10/en_tds_spectrum_petg_ptfe.pdf",
+    "title": "Spectrum Filaments, technical data sheet PETG/PTFE",
+    "accessed": "2026-11-13"
+   },
+   "conditions": "ISO 306"
+  }
+ ]
+}
