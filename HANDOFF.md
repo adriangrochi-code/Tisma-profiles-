@@ -47,11 +47,9 @@ changes.
 
 ## Open
 
-- `retraction.only_crossing_walls` (spec toolpath_time.md rule 5; QA 2026-11-13): PrusaSlicer's
-  only_retract_when_crossing_perimeters as translated, OrcaSlicer's reduce_infill_retraction (from the source preset by
-  name, as the scarf seam) as similar with the difference in the note. Ready (4176 prints, patch
-  only-crossing-walls.patch in the session scratchpad; redo it from this note if gone), not pushed until the engine's
-  pack reader reads it.
+- `retraction.only_crossing_walls` (spec toolpath_time.md rule 5; QA 2026-11-13): in the pack since the engine
+  read it (dev 50e7aaa): PrusaSlicer's only_retract_when_crossing_perimeters translated, OrcaSlicer's
+  reduce_infill_retraction similar (from the source preset by name).
 - PF15 (`machine.flavor_choices`, owner's decision of 2026-11-11): in the pack (278 Cura variants, 2eb8fec). With
   engine dev fed27b1 the pack reader keeps it: `validate.py --reader` 19205 runs, 0 settings left out, 35 refusals
   (pairs the source excludes).

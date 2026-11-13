@@ -429,6 +429,11 @@ paquete, da exactamente su `profile.settings`.
   `"nozzle"`: en OrcaSlicer un `"N%"` es de la boquilla, y se pasa a mm con la del proyecto antes de la traducción de
   PrusaSlicer, donde un `"N%"` es de la altura de capa (spec PF12). `seam_slope_type` es `scarf_seam_placement`, con
   `prusaslicer_values` (`external`: `contours`, `all`: `everywhere`).
+- **Con su propio nombre** (familia OrcaSlicer): `reduce_infill_retraction`, que el conversor de Tisma Slicer no pasa
+  al paquete, se lee del perfil del programa de origen con ese nombre y va a `retraction.only_crossing_walls` como
+  `similar`: OrcaSlicer no retrae solo si el viaje queda dentro de una zona de relleno, y además ahí no hace Z-hop; el
+  motor (regla 5 de toolpath_time.md) no retrae si el viaje queda entero dentro de la pieza, sin cruzar la pared
+  externa ni el aire. La de PrusaSlicer, `only_retract_when_crossing_perimeters`, es `translated`.
 - **Nombres del conversor de Tisma Slicer:** una clave de la familia OrcaSlicer que la comparación no nombra y que el
   conversor de Tisma Slicer renombra toma ese nombre (con sus valores renombrados: los patrones de relleno y la
   costura), con **`renamed_by`** `"converter"`; por ejemplo `outer_wall_speed` de Creality Print. Las aceleraciones,

@@ -465,6 +465,16 @@ class PrintOptions(unittest.TestCase):
                                          'support_material_interface_extruder': '5'}, 0.4)
         self.assertEqual(settings['extruders'], {'support': 0, 'support_interface': 5})
 
+    def test_retract_only_crossing_walls(self):
+        # Voron bundle prints: only_retract_when_crossing_perimeters = 1. OrcaSlicer's reduce_infill_retraction (read
+        # from the source preset by name, Tisma Slicer's converter drops it) goes to the same setting.
+        settings, _ = convert.map_print({'layer_height': '0.2', 'only_retract_when_crossing_perimeters': '1'}, 0.4)
+        self.assertIs(settings['retraction']['only_crossing_walls'], True)
+        settings, _ = convert.map_print({'layer_height': '0.2', 'reduce_infill_retraction': '0'}, 0.4)
+        self.assertIs(settings['retraction']['only_crossing_walls'], False)
+        lost = convert.lost_values('print', {}, {'reduce_infill_retraction': '1'}, 'orcaslicer')
+        self.assertEqual(lost, {'reduce_infill_retraction': '1'})
+
     def test_tisma_options(self):
         # Geeetech "M1 speed" prints: gap_fill_enabled = 0 with a gap fill speed of 100 (no gap fill in the source).
         settings, _ = convert.map_print({'layer_height': '0.2', 'gap_fill_enabled': '0', 'gap_fill_speed': '100',

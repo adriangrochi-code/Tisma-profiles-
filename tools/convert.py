@@ -561,7 +561,7 @@ MACHINE_RENAMES = {'machine_max_feedrate_' + a: 'machine_max_speed_' + a for a i
 # Options Tisma Slicer's converter knows but does not fill from an OrcaSlicer preset (it keeps only the scarf seam's
 # start height): from the source by name, as the ones it does not know.
 NOT_CONVERTED = {'scarf_seam_placement', 'scarf_seam_entire_loop', 'scarf_seam_length',
-                 'scarf_seam_on_inner_perimeters'}
+                 'scarf_seam_on_inner_perimeters', 'reduce_infill_retraction'}
 
 
 _TISMA = {}

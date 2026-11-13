@@ -294,6 +294,11 @@ TABLE = {
         E('avoid_crossing_perimeters', 'travel.avoid_crossing_walls', 'flag'),
         E('avoid_crossing_perimeters_max_detour', 'travel.max_detour', 'number_or_percent',
           note='"N%" of the straight travel'),
+        E('only_retract_when_crossing_perimeters', 'retraction.only_crossing_walls', 'flag'),
+        # OrcaSlicer's option (Tisma Slicer's converter does not convert it): from the source preset by its name.
+        E('reduce_infill_retraction', 'retraction.only_crossing_walls', 'flag', 'similar',
+          note='OrcaSlicer skips the retraction only when the travel stays inside an infill area, and also skips the '
+               'Z-hop there, which the engine does not'),
         E('raft_layers', 'adhesion.raft_layers'),
         E('brim_separation', 'adhesion.brim_gap'),
         E('spiral_vase', 'vase.enabled', 'flag'),
@@ -830,6 +835,8 @@ def table_json(dialect, keys_seen, renames=None, source=None, fallback=None, pla
             elif renames is not None and not p and fallback and key in fallback and (kind, fallback[key][0]) in by_key:
                 p, extra = fallback[key]
                 extra = dict(extra, renamed_by='converter')
+            elif renames is not None and not p and (kind, key) in by_key:
+                p = key  # an option of the source program the table reads by its own name (reduce_infill_retraction)
             row = {}
             if p in (None,) or (kind, p) not in by_key:
                 row = {'engine': None, 'group': 'none'}
