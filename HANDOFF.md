@@ -45,6 +45,14 @@ changes.
   they need a new PR, only when the owner asks.
 - Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
 
+## Paused (owner, 2026-11-13 09:20 UTC: «Pausa el trabajo hoy»)
+
+State at the pause: profiles/next 021153f, CI green, working tree clean, nothing pending local. Checked with engine
+dev 50e7aaa: check_pack 0 problems; validate --reader 19951 runs, 0 left out; --all 19263/19276; --macros 2288/2288;
+GM13 0. Waiting on the owner: the new prerelease (two Marlin, the manufacturers' own slicers, the H3C's own G-code,
+filament data sheets, only_crossing_walls). Next when the work goes on: Formfutura and Bambu Lab sheets (see the
+table), FLSun through a PrusaSlicer-format path, the H3C variables the engine still fills with 0.
+
 ## Open
 
 - `retraction.only_crossing_walls` (spec toolpath_time.md rule 5; QA 2026-11-13): in the pack since the engine
