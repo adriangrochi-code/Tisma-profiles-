@@ -432,6 +432,10 @@ paquete, da exactamente su `profile.settings`.
   `crosshatch` de OrcaSlicer es `grid`), también en una clave que conserva su nombre (la costura `back` de OrcaSlicer
   es `rear`; ahí, un valor que no aparece se escribe igual en PrusaSlicer). Una clave sin `prusaslicer` no tiene un
   nombre que los perfiles muestren.
+- **El G-code, revisado contra su fuente:** `tools/check_gcode_sources.py` (en la CI, después de `check_pack`) compara
+  el G-code de cada variante de impresora con el texto de su fuente tal como lo lee el programa (el perfil de la
+  familia OrcaSlicer con sus padres, la definición de Cura o la sección del paquete de Tisma Slicer) y falla si alguno
+  difiere.
 - **Texto como lo lee el programa** (familia OrcaSlicer): el programa lee cada opción de texto de sus JSON con
   `unescape_string_cstyle` (`\n` es un salto de línea, `\r` un retorno, `\` antes de otro carácter se quita); el G-code
   del bloque se lee igual. Snapmaker Orca escribe todo su G-code así, y OrcaSlicer el `file_start_gcode` de las Ender-3

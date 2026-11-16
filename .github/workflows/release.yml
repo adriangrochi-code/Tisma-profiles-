@@ -72,6 +72,9 @@ jobs:
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json --community community
 
+      - name: Every printer's G-code as its source has it
+        run: python3 tools/check_gcode_sources.py pack upstream.args "source/${{ steps.src.outputs.dir }}"
+
       - name: Package
         id: pkg
         run: |

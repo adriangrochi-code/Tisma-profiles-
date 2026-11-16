@@ -74,6 +74,9 @@ jobs:
       - name: Check the pack
         run: python3 tools/check_pack.py pack --report pack/check.json --community community
 
+      - name: Every printer's G-code as its source has it
+        run: python3 tools/check_gcode_sources.py pack upstream.args "source/${{ steps.src.outputs.dir }}"
+
       - name: docs/GCODE_VARIABLES.md in step with the pack
         run: |
           python3 tools/gcode_variables.py pack gcode_variables.md --defs prusaslicer=source/src/libslic3r/PrintConfig.cpp --defs orcaslicer=upstream/OrcaSlicer/src/libslic3r/PrintConfig.cpp --defs crealityprint=upstream/CrealityPrint/src/libslic3r/PrintConfig.cpp --defs elegooslicer=upstream/ElegooSlicer/src/libslic3r/PrintConfig.cpp --cura upstream/Cura --sources-json sources.json
