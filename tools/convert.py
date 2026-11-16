@@ -451,9 +451,46 @@ CURA_MARLIN = 'RepRap (Marlin/Sprinter)'
 SOURCE_PRESET_NAMES = {('Belt_Creality', 'Creality CR-30 PrintMill 0.4 nozzle'): 'Creality CR-30 0.4 nozzle'}
 
 
+# Printers whose source preset has a G-code that is not the machine's, given the G-code of a sibling preset in the
+# manufacturer's own slicer instead (owner's decision, recorded in the block's source.decision).
+# (bundle, section) -> (repository, vendor folder, preset, decision)
+GCODE_FROM_SIBLING = {
+    ('Orca_Snapmaker', 'Snapmaker U1 (0.4+0.6 nozzle)'): (
+        'https://github.com/Snapmaker/OrcaSlicer', 'Snapmaker', 'Snapmaker U1 (0.4 nozzle)',
+        "owner, 2026-11-16: OrcaSlicer's 0.4+0.6 preset defines no G-code of its own and gets a generic toolchanger "
+        "one (PRINT_START with temperatures, PRINT_END), without the U1's checks, nozzle cleaning and bed mesh; "
+        "Snapmaker Orca has no 0.4+0.6 preset; the G-code of its U1 0.4 nozzle preset is used"),
+}
+
+
+def sibling_gcode(b, name, sources, stats):
+    """The G-code block of a printer given its sibling's (GCODE_FROM_SIBLING), or None."""
+    rule = GCODE_FROM_SIBLING.get((b.id, name))
+    if not rule:
+        return None
+    repo, vendor, preset, decision = rule
+    have = sources.repos.get(repo)
+    if not have:
+        return None
+    block = upstream.orca_machine_gcode(upstream.OrcaVendor(os.path.join(have[0], 'resources', 'profiles', vendor)),
+                                        preset)
+    if not block or not block['templates']:
+        return None
+    stats['printer G-code from a sibling preset (owner\'s decision)'] += 1
+    return {'dialect': upstream.DIALECTS[repo], 'origin': 'source_program',
+            'source': {'repository': repo, 'commit': have[1], 'preset': block['preset'], 'decision': decision},
+            'templates': {k: v for k, v in block['templates'].items() if v},
+            'keys': {k: v for k, v in block['keys'].items() if block['templates'].get(k)},
+            'from': {k: v for k, v in block['from'].items() if block['templates'].get(k)},
+            'relative_extrusion': block['relative_extrusion']}
+
+
 def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozenset()):
     """The printer's G-code block: from the source program when the bundle was converted from another one and its
     checkout is given, else from the bundle."""
+    sibling = sibling_gcode(b, name, sources, stats)
+    if sibling is not None:
+        return sibling
     src = sources.of(b, stats)
     rel = flag(c['use_relative_e_distances']) if 'use_relative_e_distances' in c else None
     if src and src[3] is not None:
@@ -885,13 +922,42 @@ def replace_models(old, new, stats=None):
         drop_models(new, unusable)
     theirs = {canonical_model(m.get('name', mid) or mid, words) for mid, m in new.models.items()}
     gone_models = {mid for mid, m in old.models.items() if canonical_model(m.get('name', mid) or mid, words) in theirs}
-    gone = set()
+
+    def variants(b, models):  # {canonical model: {printer variant}}
+        out = collections.defaultdict(set)
+        for (kind, name), values in b.sections.items():
+            if kind == 'printer' and not name.startswith('*') and values.get('printer_model') in models:
+                try:
+                    v = b.flat(kind, name, b.sections).get('printer_variant', '')
+                except KeyError:
+                    v = values.get('printer_variant', '')
+                mid = values['printer_model']
+                out[canonical_model(b.models.get(mid, {}).get('name', mid) or mid, words)].add(v.strip())
+        return out
+    official_variants = variants(new, set(new.models))
+    gone, kept = set(), collections.defaultdict(list)
     for (kind, name), values in list(old.sections.items()):
         if kind == 'printer' and not name.startswith('*') and values.get('printer_model') in gone_models:
+            mid = values['printer_model']
+            model = canonical_model(old.models[mid].get('name', mid) or mid, words)
+            try:
+                variant = old.flat(kind, name, old.sections).get('printer_variant', '').strip()
+            except KeyError:
+                variant = values.get('printer_variant', '').strip()
+            if variant and variant not in official_variants.get(model, ()):
+                # A variant the manufacturer's model lacks stays from old: the pack adds it to that model (a second
+                # source's nozzle, build_models).
+                kept[mid].append(variant)
+                if stats is not None:
+                    stats['replaced variants the official model lacks, kept'] += 1
+                continue
             gone.add(name)
             del old.sections[(kind, name)]
     for mid in gone_models:
-        del old.models[mid]
+        if kept.get(mid):
+            old.models[mid] = dict(old.models[mid], variants='; '.join(kept[mid]))
+        else:
+            del old.models[mid]
     drop = set()
     for (kind, name), values in old.sections.items():
         if kind not in ('print', 'filament') or name.startswith('*'):
@@ -1274,6 +1340,8 @@ def build_models(w, index, printer_entries):
                 if n is None or any(n2 == n and bool(re.match(r'(?i)hf', vid)) == hf for vid, n2, _, _ in variants):
                     continue
                 vid = str(n) if not hf else 'HF' + str(n)
+                if isinstance(n, list):  # several nozzles (Snapmaker U1 "0.4+0.6"): the source's variant name
+                    vid = (e.get('variant') or '').strip() or vid
                 if vid in seen:
                     vid = e['profile']['name']
                 seen.add(vid)

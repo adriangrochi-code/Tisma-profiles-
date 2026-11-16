@@ -9,10 +9,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "PolyLite CosPLA @BBL P1P"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "PolyLite CosPLA @Snapmaker U1"
   }
  ],
  "data": [

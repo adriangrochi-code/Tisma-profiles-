@@ -3,10 +3,6 @@
  "name": "Polymaker PETG",
  "pack_filament": [
   {
-   "bundle": "Orca_Snapmaker",
-   "name": "Polymaker PETG @Snapmaker U1"
-  },
-  {
    "bundle": "Orca_Sovol",
    "name": "Polymaker PETG @Sovol SV08 MAX"
   }

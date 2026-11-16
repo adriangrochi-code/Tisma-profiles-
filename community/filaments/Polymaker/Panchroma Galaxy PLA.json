@@ -33,10 +33,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Panchroma PLA Galaxy @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Panchroma PLA Galaxy @Snapmaker U1"
   }
  ],
  "data": [

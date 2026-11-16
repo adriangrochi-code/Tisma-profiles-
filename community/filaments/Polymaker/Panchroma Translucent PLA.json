@@ -33,10 +33,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Panchroma PLA Translucent @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Panchroma PLA Translucent @Snapmaker U1"
   }
  ],
  "data": [

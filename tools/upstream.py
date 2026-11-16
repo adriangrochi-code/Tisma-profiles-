@@ -29,7 +29,9 @@ DIALECTS = {'https://github.com/SoftFever/OrcaSlicer': 'orcaslicer',
             # Flashforge's own OrcaSlicer.
             'https://github.com/FlashForge/Orca-Flashforge': 'orcaslicer',
             # Anycubic's own OrcaSlicer.
-            'https://github.com/ANYCUBIC-3D/AnycubicSlicerNext': 'orcaslicer'}
+            'https://github.com/ANYCUBIC-3D/AnycubicSlicerNext': 'orcaslicer',
+            # Snapmaker's own OrcaSlicer (Snapmaker Orca).
+            'https://github.com/Snapmaker/OrcaSlicer': 'orcaslicer'}
 
 # The custom G-code keys of each dialect and the pack's name for each (docs/FORMAT.md). Keys of a dialect that end in
 # "_gcode" and are not here are kept with their own name.
@@ -229,6 +231,25 @@ def _gcode_keys(values, table):
     return out
 
 
+def unescape_cstyle(text):
+    """The text as the OrcaSlicer family reads a single-text option from its JSON presets (ConfigBase::load_from_json
+    -> set_deserialize -> unescape_string_cstyle, OrcaSlicer and Snapmaker Orca Config.cpp): "\\r" and "\\n" become
+    the characters, a backslash before any other character is dropped, a lone backslash at the end ends the text
+    there (the program refuses it: its value is not set; here the text up to it). Lists (the filament G-code) go
+    through the same path escaped first, so they are read as they are."""
+    out, i = [], 0
+    while i < len(text):
+        c = text[i]
+        if c == '\\':
+            i += 1
+            if i == len(text):
+                break
+            c = {'r': '\r', 'n': '\n'}.get(text[i], text[i])
+        out.append(c)
+        i += 1
+    return ''.join(out)
+
+
 def orca_machine_gcode(vendor, name):
     """The G-code block (docs/FORMAT.md) of an OrcaSlicer-style printer preset, or None if the preset is unknown."""
     key = vendor.find(name)
@@ -237,7 +258,7 @@ def orca_machine_gcode(vendor, name):
     values, where = vendor.resolve(key)
     templates, keys, origin = {}, {}, {}
     for neutral, (k, v) in sorted(_gcode_keys(values, ORCA_KEYS).items()):
-        templates[neutral] = v
+        templates[neutral] = unescape_cstyle(v) if isinstance(v, str) else v
         keys[neutral] = k
         origin[neutral] = where[k]
     rel = values.get('use_relative_e_distances')

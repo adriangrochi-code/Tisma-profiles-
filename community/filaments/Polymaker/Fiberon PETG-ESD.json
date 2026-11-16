@@ -17,10 +17,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Fiberon PETG-ESD @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Fiberon PETG-ESD @Snapmaker U1"
   }
  ],
  "data": [

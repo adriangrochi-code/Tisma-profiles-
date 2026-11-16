@@ -1,12 +1,6 @@
 {
  "vendor": "Polymaker",
  "name": "PolyLite Metallic PLA Pro",
- "pack_filament": [
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "PolyLite PLA Pro Metallic @Snapmaker U1"
-  }
- ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

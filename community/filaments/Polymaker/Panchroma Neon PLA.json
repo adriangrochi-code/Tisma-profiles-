@@ -33,10 +33,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Panchroma PLA Neon @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Panchroma PLA Neon @Snapmaker U1"
   }
  ],
  "data": [

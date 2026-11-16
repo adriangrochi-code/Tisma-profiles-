@@ -45,6 +45,20 @@ changes.
   they need a new PR, only when the owner asks.
 - Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
 
+## G-code audit (owner, 2026-11-16: «los G-codes iniciales y finales son muy importantes para cada máquina»)
+
+The pause was lifted by the owner the same day. Every printer variant's G-code templates in the pack against its source
+text (the session scratchpad's audit_gcode.py): 10,890 templates (5093 OrcaSlicer family, official slicers included;
+5205 PrusaSlicer bundles; 592 Cura), 0 differences; the 156 without G-code are resin printers.
+- Fixed: the OrcaSlicer family reads every single-text option of its JSON with unescape_string_cstyle; the pack read
+  the raw text, so a literal backslash-n stayed as text (Ender-3 V3 SE file_start_gcode; all of Snapmaker Orca).
+- Snapmaker U1: Snapmaker Orca v2.3.3 (the version snapmaker.com offers; owner's choice over OrcaSlicer's newer one and
+  the unpublished 2.4.1 branch). OrcaSlicer's "0.4+0.6" preset has no G-code of its own (a generic toolchanger one):
+  it keeps the U1 0.4 nozzle G-code of Snapmaker Orca (owner's decision, source.decision in the block).
+- Variants a maker's slicer lacks stay from OrcaSlicer: CR-10 SE, Ender-3 V3 KE, Ender-3 V3 SE 0.2/0.6/0.8 are back.
+  Creality Print's "0.24mm Draft" prints for the 0.2 nozzle now fit them and fail as the source would (3 more of the
+  source-data failures of --all, 16).
+
 ## Paused (owner, 2026-11-13 09:20 UTC: «Pausa el trabajo hoy»)
 
 State at the pause: profiles/next 021153f, CI green, working tree clean, nothing pending local. Checked with engine

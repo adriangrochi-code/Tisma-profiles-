@@ -21,10 +21,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Polymaker HT-PLA-GF @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Polymaker HT-PLA-GF @Snapmaker U1"
   }
  ],
  "data": [

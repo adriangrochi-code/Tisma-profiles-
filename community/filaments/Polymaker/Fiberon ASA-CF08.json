@@ -1,12 +1,6 @@
 {
  "vendor": "Polymaker",
  "name": "Fiberon ASA-CF08",
- "pack_filament": [
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Fiberon ASA-CF08 @Snapmaker U1"
-  }
- ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

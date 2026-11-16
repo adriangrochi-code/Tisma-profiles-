@@ -5,10 +5,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Polymaker PLA Pro @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Polymaker PLA Pro @Snapmaker U1"
   }
  ],
  "data": [

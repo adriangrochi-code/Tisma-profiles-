@@ -21,10 +21,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "PolyLite PLA Pro @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "PolyLite PLA Pro @Snapmaker U1"
   }
  ],
  "data": [

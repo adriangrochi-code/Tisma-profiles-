@@ -9,10 +9,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Fiberon PA6-CF20 @BBL X1"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Fiberon PA6-CF20 @Snapmaker U1"
   }
  ],
  "data": [

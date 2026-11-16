@@ -158,6 +158,26 @@
     "Orca_Elegoo"
    ],
    "license": "AGPL-3.0 (LICENSE at the commit: GNU Affero General Public License, version 3)"
+  },
+  {
+   "program": "Snapmaker Orca",
+   "repository": "https://github.com/Snapmaker/OrcaSlicer",
+   "commit": "9921461fc99745ac22ef331c7720383aabc04987",
+   "directory": [
+    "resources/profiles/Snapmaker.json",
+    "resources/profiles/Snapmaker",
+    "resources/profiles/OrcaFilamentLibrary.json",
+    "resources/profiles/OrcaFilamentLibrary",
+    "src/libslic3r"
+   ],
+   "vendors": [
+    "Snapmaker"
+   ],
+   "prefix": "SnapmakerOrca_",
+   "replaces": [
+    "Orca_Snapmaker"
+   ],
+   "license": "AGPL-3.0 (LICENSE.txt at the commit: GNU Affero General Public License, version 3); tag v2.3.3, the version snapmaker.com/snapmaker-orca offers (2026-11-16)"
   }
  ]
 }

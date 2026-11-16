@@ -265,6 +265,27 @@ class ReplaceModels(unittest.TestCase):
         self.assertEqual(list(n.models), [])
         self.assertEqual(sum(stats.values()), 1)
 
+    def test_a_variant_the_official_model_lacks_stays(self):
+        # Snapmaker Orca v2.3.3 has the U1 with 0.2/0.4/0.6/0.8 nozzles; OrcaSlicer 1d577ea also has "0.4+0.6": it
+        # stays from OrcaSlicer, the 0.4 goes.
+        with tempfile.TemporaryDirectory() as d:
+            old, new = os.path.join(d, 'Orca_Snapmaker.ini'), os.path.join(d, 'SnapmakerOrca_Snapmaker.ini')
+            with open(old, 'w') as f:
+                f.write('[vendor]\nname = Snapmaker\n\n[printer_model:Snapmaker U1]\nname = Snapmaker U1\n'
+                        'variants = 0.4; 0.4+0.6\n\n'
+                        '[printer:Snapmaker U1 (0.4 nozzle)]\nprinter_model = Snapmaker U1\nprinter_variant = 0.4\n\n'
+                        '[printer:Snapmaker U1 (0.4+0.6 nozzle)]\nprinter_model = Snapmaker U1\n'
+                        'printer_variant = 0.4+0.6\n')
+            with open(new, 'w') as f:
+                f.write('[vendor]\nname = Snapmaker\n\n[printer_model:Snapmaker U1]\nname = Snapmaker U1\n\n'
+                        '[printer:Snapmaker U1 (0.4 nozzle)]\nprinter_model = Snapmaker U1\nprinter_variant = 0.4\n'
+                        'nozzle_diameter = 0.4\n\n[print:0.20mm @U1]\ncompatible_printers = "Snapmaker U1 (0.4 nozzle)"\n')
+            o = convert.Bundle(old)
+            gone = convert.replace_models(o, convert.Bundle(new))
+        self.assertEqual(gone, {'Snapmaker U1 (0.4 nozzle)'})
+        self.assertEqual([k[1] for k in o.sections], ['Snapmaker U1 (0.4+0.6 nozzle)'])
+        self.assertEqual(o.models['Snapmaker U1']['variants'], '0.4+0.6')
+
     def test_a_parent_of_a_remaining_preset_stays(self):
         # OrcaSlicer 1d577ea "Anycubic PLA-CF @Anycubic Kobra S1 Max 0.4 nozzle" (a model Anycubic Slicer Next 6103ed8
         # lacks) inherits "Generic PLA-CF @Anycubic", whose printers are all models Anycubic Slicer Next has.
@@ -283,6 +304,16 @@ class ReplaceModels(unittest.TestCase):
             o = convert.Bundle(old)
             convert.replace_models(o, convert.Bundle(new))
         self.assertIn(('filament', 'Generic PLA-CF @Anycubic'), o.sections)
+
+
+class OrcaTextOptions(unittest.TestCase):
+    def test_unescaped_as_the_program_reads_them(self):
+        # OrcaSlicer 1d577ea "Creality Ender-3 V3 SE 0.4 nozzle": file_start_gcode with a literal backslash-n, which
+        # the program turns into a line break (unescape_string_cstyle); Snapmaker Orca v2.3.3 writes all its G-code so.
+        self.assertEqual(convert.upstream.unescape_cstyle(';FLAVOR:Marlin\\n;TIME:{print_time}'),
+                         ';FLAVOR:Marlin\n;TIME:{print_time}')
+        self.assertEqual(convert.upstream.unescape_cstyle('a\nb'), 'a\nb')
+        self.assertEqual(convert.upstream.unescape_cstyle('{if a == \\"b\\"}\\\\'), '{if a == "b"}\\')
 
 
 class CuraFlavor(unittest.TestCase):

@@ -1,12 +1,6 @@
 {
  "vendor": "Polymaker",
  "name": "PolyLite Translucent PETG",
- "pack_filament": [
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "PolyLite PETG Translucent @Snapmaker U1"
-  }
- ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

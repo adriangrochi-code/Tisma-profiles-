@@ -1,12 +1,6 @@
 {
  "vendor": "Polymaker",
  "name": "Fiberon PPS-GF20",
- "pack_filament": [
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Fiberon PPS-GF20 @Snapmaker U1"
-  }
- ],
  "data": [
   {
    "key": "filament.nozzle_temperature_range",

@@ -25,10 +25,6 @@
   {
    "bundle": "Orca_OrcaFilamentLibrary",
    "name": "Panchroma CoPE @Orca"
-  },
-  {
-   "bundle": "Orca_Snapmaker",
-   "name": "Panchroma CoPE @Snapmaker U1"
   }
  ],
  "data": [

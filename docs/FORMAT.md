@@ -289,6 +289,13 @@ plantillas aparte), así que todas las Bambu Lab quedaban con el G-code genéric
 otro modelo de la misma base. Por eso el convertidor lee esos programas en el commit que dice cada paquete
 (`sources.json`, `converted_from`). Los paquetes que ya eran de PrusaSlicer entran tal cual.
 
+**G-code de una variante hermana** (`source.decision` en el bloque): cuando el perfil de origen de una impresora no
+tiene un G-code propio de la máquina, por decisión del dueño se usa el de una variante hermana del laminador del
+fabricante, y `source` nombra ese perfil y la decisión. Hoy solo la Snapmaker U1 «0.4+0.6»: en OrcaSlicer no define
+G-code y hereda uno genérico de cambiador de herramientas (`PRINT_START` con temperaturas, `PRINT_END`), sin los
+controles, la limpieza de boquilla ni la malla de cama del U1; lleva el de «Snapmaker U1 (0.4 nozzle)» de Snapmaker
+Orca (decisión del 16-11-2026).
+
 **Laminador del fabricante (`sources.json`, `official`):** cuando el fabricante tiene su propio laminador de la
 familia OrcaSlicer, sus perfiles reemplazan a los de OrcaSlicer (regla del dueño; la página o la hoja técnica del
 fabricante solo sirven para cotejar). `tools/fetch_sources.py` baja ese programa en su commit, lo convierte con el
@@ -309,7 +316,10 @@ y `--official-bundle` toma varios nombres separados por comas). Un perfil del pa
 queda, queda también. Un modelo del laminador del fabricante que no se puede usar (una impresora sin boquilla en mm o
 sin un perfil de impresión propio) queda del paquete reemplazado: en Orca-Flashforge c45cc82 la Guider 2s solo tiene
 plantillas de impresión y las boquillas HF de las Guider4 y Guider4 Pro dicen «0.6HF»; las tres siguen de OrcaSlicer
-(`counts`, «official models left as the replaced bundle has them»). `stats.json`
+(`counts`, «official models left as the replaced bundle has them»). Una variante que el modelo del fabricante no
+tiene queda del paquete reemplazado y se suma a ese modelo (`counts`, «replaced variants the official model lacks,
+kept»): las boquillas 0,2/0,6/0,8 de CR-10 SE, Ender-3 V3 KE y Ender-3 V3 SE, y la Snapmaker U1 «0.4+0.6».
+Snapmaker desde Snapmaker Orca v2.3.3, la versión que ofrece snapmaker.com/snapmaker-orca. `stats.json`
 (`official_over_replaced`) anota cada diferencia con el paquete reemplazado, preset por preset
 (`{official, replaced, kind, name, key, replaced_value, official_value}`), y `counts` los presets que solo están en
 uno de los dos. Los filamentos de la biblioteca de OrcaSlicer que nombran una impresora reemplazada siguen siendo
@@ -422,6 +432,10 @@ paquete, da exactamente su `profile.settings`.
   `crosshatch` de OrcaSlicer es `grid`), también en una clave que conserva su nombre (la costura `back` de OrcaSlicer
   es `rear`; ahí, un valor que no aparece se escribe igual en PrusaSlicer). Una clave sin `prusaslicer` no tiene un
   nombre que los perfiles muestren.
+- **Texto como lo lee el programa** (familia OrcaSlicer): el programa lee cada opción de texto de sus JSON con
+  `unescape_string_cstyle` (`\n` es un salto de línea, `\r` un retorno, `\` antes de otro carácter se quita); el G-code
+  del bloque se lee igual. Snapmaker Orca escribe todo su G-code así, y OrcaSlicer el `file_start_gcode` de las Ender-3
+  V3 SE. Las listas (el G-code de los filamentos) quedan como están, como en el programa.
 - **Nombres que los valores no muestran** (familia OrcaSlicer): el conversor de Tisma Slicer cambia el valor, así que
   la comparación no los encuentra; van escritos en la tabla. Los anchos de línea (`line_width`,
   `outer_wall_line_width`, `inner_wall_line_width`, `initial_layer_line_width`, `sparse_infill_line_width`,
@@ -490,8 +504,8 @@ Los perfiles vienen de programas con licencias libres, y cada perfil y cada fabr
 - **PrusaSlicer, OrcaSlicer, Creality Print y Elegoo Slicer**, a través de Tisma Slicer: AGPL-3.0;
 - **UVtools** (impresoras de resina y perfiles universales de impresión de resina): AGPL-3.0;
 - **VertexSlice** (la IdeaFormer IR3 V2), **Bambu Studio** (las Bambu Lab), **QIDI Studio** (las QIDI), **Anycubic
-  Slicer Next** (las Anycubic) y **Orca-Flashforge** (las Flashforge; `sources.json`, `official`, con Creality Print y
-  Elegoo Slicer): AGPL-3.0, según el `LICENSE` de cada repositorio en su commit;
+  Slicer Next** (las Anycubic), **Orca-Flashforge** (las Flashforge) y **Snapmaker Orca** (las Snapmaker;
+  `sources.json`, `official`, con Creality Print y Elegoo Slicer): AGPL-3.0, según el `LICENSE` de cada repositorio en su commit;
 - **definiciones de UltiMaker Cura y BlackBelt Cura:** LGPL-3.0 (`licenses/Cura-LGPL-3.0.txt`), compatible con la
   AGPL-3.0.
 - **mallas de las camas de UltiMaker Cura** (`resources/meshes`, en el commit de `sources.json`): LGPL-3.0, la licencia
