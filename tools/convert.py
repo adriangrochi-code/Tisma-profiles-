@@ -426,8 +426,14 @@ class Sources:
         return out
 
 
+# The printer G-code defaults of Tisma Slicer (PrusaSlicer's PrintConfig.cpp, --prusa-config): what the program uses
+# when no section of a printer's inheritance sets the key (gCreate gMax 1.5XT Plus: no start or end G-code).
+PRUSA_GCODE_DEFAULTS = {}
+
+
 def bundle_gcode(b, kind, name, c, everything, keys):
-    """The G-code block of a section, from the bundle itself (its keys as the bundle writes them)."""
+    """The G-code block of a section, from the bundle itself (its keys as the bundle writes them). A printer key that no
+    section sets takes the program's default (PRUSA_GCODE_DEFAULTS), with "PrintConfig.cpp" as its origin."""
     templates, source_keys, origin = {}, {}, {}
     for k, neutral in keys.items():
         text = gcode_text(c.get(k))
@@ -435,6 +441,10 @@ def bundle_gcode(b, kind, name, c, everything, keys):
             templates[neutral] = text
             source_keys[neutral] = k
             origin[neutral] = b.defined_in(kind, name, k, everything)
+        elif kind == 'printer' and k not in c and PRUSA_GCODE_DEFAULTS.get(k):
+            templates[neutral] = gcode_text(PRUSA_GCODE_DEFAULTS[k])
+            source_keys[neutral] = k
+            origin[neutral] = 'PrintConfig.cpp'
     return templates, source_keys, origin
 
 
@@ -509,7 +519,7 @@ def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozens
                    'relative_extrusion': rel if block['relative_extrusion'] is None else block['relative_extrusion']}
             out['keys'] = {k: v for k, v in out['keys'].items() if k in out['templates']}
             out['from'] = {k: v for k, v in out['from'].items() if k in out['templates']}
-            for k in ('expressions', 'values', 'flavor'):
+            for k in ('expressions', 'evaluated', 'values', 'flavor'):
                 if block.get(k):
                     out[k] = block[k]  # flavor: only read by the caller, not written
             return out
@@ -1444,6 +1454,8 @@ def main():
     args = ap.parse_args()
     if args.prusa_config:
         OPTION_TYPES.update(translation.option_types(args.prusa_config))
+        defaults = upstream.program_defaults(args.prusa_config)
+        PRUSA_GCODE_DEFAULTS.update({k: defaults[k] for k in PRINTER_KEYS if defaults.get(k)})
     program_defaults = {}
     for spec in args.source_config or []:
         dialect, _, path = spec.partition('=')

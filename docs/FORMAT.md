@@ -259,11 +259,12 @@ siendo la versión con variables simples (abajo).
 | `source` | `repository`, `commit` y `preset` (el perfil o la definición de origen), o `bundle` y `section`; en `converted_bundle`, también `program`, `repository` y `commit` del programa del que salió |
 | `templates` | El G-code, por nombre (tabla de abajo). Texto; en `cura`, `extruder_start` y `extruder_end` son una lista, uno por extrusor (`null` si no tiene) |
 | `keys` | El nombre de origen de cada uno |
-| `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer) |
+| `from` | El archivo o la sección de origen que lo define (después de la herencia y de los `include` de OrcaSlicer). En `bundle` y `converted_bundle`, `PrintConfig.cpp` si ninguna sección de la herencia de la impresora define esa clave: el texto es el valor por defecto de Tisma Slicer (su `PrintConfig.cpp`, el de los paquetes), que es lo que usa el programa al laminar (por ejemplo, el inicio y el fin de la gCreate gMax 1.5XT Plus, o `color_change` `M600`) |
 | `relative_extrusion` | Si el programa de origen extruye en relativo con este G-code (`null` si no lo dice). En `cura` es casi siempre `false`: su G-code de inicio pone `M82`. Al usar `templates`, el motor extruye como dice este campo |
 | `values` | Los valores de la máquina para las variables de sus macros. En `source_program` de la familia OrcaSlicer, todos los de la máquina en el programa de origen, con sus nombres (listas como listas). En `bundle` y `converted_bundle`, los de la sección del paquete que usan su G-code y el G-code de los filamentos, con el tipo que les da PrusaSlicer (su `PrintConfig.cpp`, el de Tisma Slicer en el commit de los paquetes): sí/no, números, textos y listas; como texto si el tipo no se conoce |
 | `program_defaults` | Solo en `source_program` de la familia OrcaSlicer: las claves de `values` que el perfil no dice y que salen del valor por defecto del programa (su `PrintConfig.cpp`, en el commit de origen), como hace el programa al laminar; solo opciones de la máquina que usa el G-code de la máquina o de los filamentos (por ejemplo `support_air_filtration`) |
-| `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto. No está en `templates` |
+| `expressions` | Solo en `cura`: el G-code que Cura calcula con una expresión (`value`) en vez de un texto y que el conversor no evalúa. No está en `templates` |
+| `evaluated` | Solo en `cura`: las expresiones que el conversor sí evalúa, con su texto de origen; su resultado está en `templates`. Solo las que usan texto, `+`, `a if condición else b` y `==`/`!=` con valores fijos de la propia definición (por ejemplo `machine_heated_bed` en el fin de Fused Form, FabX Pro y Ultimaker Original) |
 
 **Nombres de `templates`** (otras claves de G-code del origen quedan con su nombre):
 
@@ -439,7 +440,13 @@ paquete, da exactamente su `profile.settings`.
 - **Texto como lo lee el programa** (familia OrcaSlicer): el programa lee cada opción de texto de sus JSON con
   `unescape_string_cstyle` (`\n` es un salto de línea, `\r` un retorno, `\` antes de otro carácter se quita); el G-code
   del bloque se lee igual. Snapmaker Orca escribe todo su G-code así, y OrcaSlicer el `file_start_gcode` de las Ender-3
-  V3 SE. Las listas (el G-code de los filamentos) quedan como están, como en el programa.
+  V3 SE. Las listas (el G-code de los filamentos) quedan como están, como en el programa. Una opción de un solo texto
+  escrita como lista JSON (`machine_start_gcode` de las Prusa CORE One y MK4S HF, SeeMeCNC, TwoTrees SK1 y BLOCKS
+  RF50 en OrcaSlicer) se lee como el programa: los elementos unidos con una coma. Las opciones sí/no que terminan en
+  `_gcode` (`emit_machine_limits_to_gcode`) no son G-code y no van en `templates`.
+- **Toda impresora FFF tiene G-code de inicio y de fin** (`check_pack`: «fff variants with a start G-code»). Si su
+  fuente no los define, se usa lo que usa el programa: el valor por defecto de Tisma Slicer para un paquete (`from`:
+  `PrintConfig.cpp`) o la expresión de Cura evaluada (`evaluated`).
 - **Nombres que los valores no muestran** (familia OrcaSlicer): el conversor de Tisma Slicer cambia el valor, así que
   la comparación no los encuentra; van escritos en la tabla. Los anchos de línea (`line_width`,
   `outer_wall_line_width`, `inner_wall_line_width`, `initial_layer_line_width`, `sparse_infill_line_width`,

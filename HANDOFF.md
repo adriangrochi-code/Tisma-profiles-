@@ -58,6 +58,14 @@ text (the session scratchpad's audit_gcode.py): 10,890 templates (5093 OrcaSlice
 - Variants a maker's slicer lacks stay from OrcaSlicer: CR-10 SE, Ender-3 V3 KE, Ender-3 V3 SE 0.2/0.6/0.8 are back.
   Creality Print's "0.24mm Draft" prints for the 0.2 nozzle now fit them and fail as the source would (3 more of the
   source-data failures of --all, 16).
+- QA 2026-11-17: 53 FFF variants without a start G-code and 65 without an end one (pack-2026.11.10-2378e66). Fixed:
+  OrcaSlicer presets that write a single-text G-code as a JSON list are read as the program does (joined with a comma:
+  Prusa CORE One / CORE One HF / CORE One L HF / MK4S HF, SeeMeCNC, TwoTrees SK1, BLOCKS RF50); a bundle printer
+  whose inheritance sets no start/end G-code takes Tisma Slicer's default (gCreate gMax 1.5XT Plus, gMax 2 Pro end;
+  `from` "PrintConfig.cpp"; also M600/M601 for color change and pause where the bundle sets none, as the program
+  does); Cura end G-code written as a plain text expression is evaluated (Fused Form, FabX Pro, Ultimaker Original).
+  The yes/no emit_machine_limits_to_gcode no longer slips into the templates. check_pack now fails on an FFF variant
+  without start or end G-code: 2297/2297 have both. check_gcode_sources: 11,864 templates, 0 differences.
 
 ## Paused (owner, 2026-11-13 09:20 UTC: «Pausa el trabajo hoy»)
 

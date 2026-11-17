@@ -7,6 +7,13 @@ VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, Anyc
 
 ## Qué cambia desde pack-2026.11.10-dcb4250
 
+- **Toda impresora FDM tiene G-code de inicio y de fin, igual al de su origen.** 53 variantes no tenían inicio y 65 no
+  tenían fin: las Prusa CORE One, CORE One HF, CORE One L HF y MK4S HF, las SeeMeCNC, la TwoTrees SK1 y la BLOCKS RF50
+  de OrcaSlicer (su G-code escrito como lista), las gCreate gMax 1.5XT Plus y gMax 2 Pro (su paquete no lo define y
+  vale el del programa) y las Fused Form, FabX Pro y Ultimaker Original de Cura (el fin calculado con una expresión).
+  El G-code de la familia OrcaSlicer se lee como lo lee el programa (`\n` escrito como texto es un salto de línea: la
+  Ender-3 V3 SE y todo Snapmaker Orca). La Snapmaker U1 sale de Snapmaker Orca v2.3.3. Cada plantilla de G-code del
+  paquete (11 864) se compara en la CI con el texto de su fuente: 0 diferencias.
 - **Bambu Lab desde su propio laminador, Bambu Studio**, en lugar de OrcaSlicer: 60 variantes (con la nueva H3C),
   16 perfiles de impresión y 77 filamentos más. Cada valor que cambia frente a OrcaSlicer está en `stats.json`
   (`official_over_replaced`). La H3C imprime con su propio G-code desde el motor dev 237dac0.

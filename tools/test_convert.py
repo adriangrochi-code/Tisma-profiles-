@@ -315,6 +315,46 @@ class OrcaTextOptions(unittest.TestCase):
         self.assertEqual(convert.upstream.unescape_cstyle('a\nb'), 'a\nb')
         self.assertEqual(convert.upstream.unescape_cstyle('{if a == \\"b\\"}\\\\'), '{if a == "b"}\\')
 
+    def test_text_written_as_a_list(self):
+        # OrcaSlicer 1d577ea "Prusa CORE One 0.4 nozzle" writes machine_start_gcode as a JSON list; the program joins
+        # the elements with a comma (parse_str_arr, single_sep ','). emit_machine_limits_to_gcode is yes/no.
+        keys = convert.upstream._gcode_keys({'machine_start_gcode': ['M17', 'G28\\nM83'],
+                                             'emit_machine_limits_to_gcode': ['1']}, convert.upstream.ORCA_KEYS)
+        self.assertEqual(keys, {'start': ('machine_start_gcode', 'M17,G28\\nM83')})
+
+
+class ProgramDefaultGcode(unittest.TestCase):
+    def test_unset_printer_gcode_takes_the_program_default(self):
+        # PrusaSlicer.ini of gCreate: "gMax 1.5XT Plus" inherits only *common*, which sets no start_gcode/end_gcode;
+        # Tisma Slicer then uses its PrintConfig.cpp default.
+        saved = dict(convert.PRUSA_GCODE_DEFAULTS)
+        convert.PRUSA_GCODE_DEFAULTS.update({'start_gcode': 'G28 ; home all axes\\nG1 Z5 F5000 ; lift nozzle\\n'})
+        try:
+            class B:
+                def defined_in(self, *a):
+                    return 'gCreate.ini'
+            t, k, o = convert.bundle_gcode(B(), 'printer', 'p', {'end_gcode': 'M84'}, {},
+                                           {'start_gcode': 'start', 'end_gcode': 'end'})
+        finally:
+            convert.PRUSA_GCODE_DEFAULTS.clear()
+            convert.PRUSA_GCODE_DEFAULTS.update(saved)
+        self.assertEqual(t, {'start': 'G28 ; home all axes\nG1 Z5 F5000 ; lift nozzle\n', 'end': 'M84'})
+        self.assertEqual(o, {'start': 'PrintConfig.cpp', 'end': 'gCreate.ini'})
+
+
+class CuraExpressions(unittest.TestCase):
+    def test_text_expression_with_a_setting(self):
+        # Cura 5bea2f8 fusedform_base.def.json machine_end_gcode, with machine_heated_bed true in the definition.
+        ex = "'M104 S0' + ('\\nM140 S0' if machine_heated_bed else '') + '\\nM84'"
+        self.assertEqual(convert.upstream.cura_text_expression(ex, {'machine_heated_bed': (True, None)}),
+                         'M104 S0\nM140 S0\nM84')
+        self.assertEqual(convert.upstream.cura_text_expression(ex, {'machine_heated_bed': (False, None)}),
+                         'M104 S0\nM84')
+        # A setting that is itself an expression, or anything but text and conditions, is left out.
+        self.assertIsNone(convert.upstream.cura_text_expression(ex, {'machine_heated_bed': (None, 'x > 1')}))
+        self.assertIsNone(convert.upstream.cura_text_expression("'G28 ' + str(machine_width)",
+                                                                {'machine_width': (200, None)}))
+
 
 class CuraFlavor(unittest.TestCase):
     def test_marlin_without_a_version(self):

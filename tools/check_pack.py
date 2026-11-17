@@ -423,9 +423,15 @@ def main():
                                                                                 for x in t))):
                         problems['G-code template that is not text'].append('%s: %s' % (where, k))
                 start = (g.get('templates') or {}).get('start')
-                if start:
+                if start and start.strip():
                     counts['fff variants with a start G-code'] += 1
                     by_text[start].append((doc['model']['name'], where, g))
+                else:
+                    # Without it the printer neither homes nor heats nor purges (QA, 2026-11-17).
+                    problems['FFF printer without a start G-code'].append(where)
+                end = (g.get('templates') or {}).get('end')
+                if not (end and end.strip()):
+                    problems['FFF printer without an end G-code'].append(where)
     for text, users in by_text.items():
         models = sorted({u[0] for u in users})
         if len(models) < 2:

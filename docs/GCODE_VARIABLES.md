@@ -126,27 +126,28 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 
 | Variable | Tipo | Dónde | Qué es | En PrusaSlicer |
 |---|---|---|---|---|
-| `layer_z` | número | `before_layer_change`, `layer_change`, `toolchange`, `timelapse`, `end`, `toolchange_gcode` (650) | Height of the current layer above the print bed, measured to the top of the layer | `layer_z` |
-| `nozzle_temperature_initial_layer` | lista de enteros | `start`, `toolchange_gcode`, `before_layer_change`, `end`, `toolchange` (482) | First layer nozzle temperature | `first_layer_temperature` |
+| `layer_z` | número | `before_layer_change`, `layer_change`, `toolchange`, `timelapse`, `end`, `toolchange_gcode` (668) | Height of the current layer above the print bed, measured to the top of the layer | `layer_z` |
+| `nozzle_temperature_initial_layer` | lista de enteros | `start`, `toolchange_gcode`, `before_layer_change`, `end`, `toolchange` (483) | First layer nozzle temperature | `first_layer_temperature` |
 | `bed_temperature_initial_layer_single` | entero | `start`, `before_layer_change` (413) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
-| `first_layer_temperature` | lista de enteros | `start`, `toolchange` (251) | set by the program while slicing (GCode.cpp) | `first_layer_temperature` |
-| `first_layer_print_min` | lista de números | `start` (242) | Bottom-left corner of the first layer bounding box | `first_layer_print_min` |
+| `first_layer_temperature` | lista de enteros | `start`, `toolchange` (270) | set by the program while slicing (GCode.cpp) | `first_layer_temperature` |
+| `first_layer_print_min` | lista de números | `start` (260) | Bottom-left corner of the first layer bounding box | `first_layer_print_min` |
 | `layer_num` | entero | `layer_change`, `before_layer_change`, `toolchange`, `wrapping_detection_gcode`, `timelapse`, `toolchange_gcode` (238) | Index of the current layer | `layer_num` |
-| `max_layer_z` | número | `end`, `toolchange`, `timelapse` (199) | Maximal layer Z | `max_layer_z` |
-| `first_layer_bed_temperature` | lista de enteros | `start` (184) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
-| `first_layer_print_max` | lista de números | `start` (172) | Top-right corner of the first layer bounding box | `first_layer_print_max` |
+| `first_layer_bed_temperature` | lista de enteros | `start` (231) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
+| `max_layer_z` | número | `end`, `toolchange`, `timelapse` (217) | Maximal layer Z | `max_layer_z` |
+| `first_layer_print_max` | lista de números | `start` (190) | Top-right corner of the first layer bounding box | `first_layer_print_max` |
 | `total_layer_count` | entero | `start`, `layer_change` (169) | Total layer count | `total_layer_count` |
+| `initial_tool` | entero | `start`, `toolchange` (162) | Zero-based index of the first extruder used in the print | `initial_tool` |
+| `chamber_temperature` | lista de enteros | `start`, `end` (141) | Chamber temperature | `chamber_temperature` |
 | `next_extruder` | entero | `toolchange`, `toolchange_gcode`, `filament_swap_gcode` (137) | set by the program while slicing (GCode.cpp) | `next_extruder` |
-| `chamber_temperature` | lista de enteros | `start`, `end` (127) | Chamber temperature | `chamber_temperature` |
-| `initial_tool` | entero | `start`, `toolchange` (116) | Zero-based index of the first extruder used in the print | `initial_tool` |
+| `print_bed_max` | lista de números | `start`, `toolchange`, `end` (114) | Top-right corner of print bed bounding box | `print_bed_max` |
 | `nozzle_temperature` | lista de enteros | `start`, `toolchange`, `before_layer_change`, `end`, `toolchange_gcode` (107) | Nozzle temperature after the first layer | `temperature` |
-| `print_bed_max` | lista de números | `start`, `toolchange`, `end` (96) | Top-right corner of print bed bounding box | `print_bed_max` |
-| `bed_temperature_initial_layer` | lista de enteros | `start` (92) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
-| `filament_type` | lista de textos | `start`, `toolchange`, `layer_change`, `before_layer_change` (88) | Filament material type | `filament_type` |
+| `filament_type` | lista de textos | `start`, `toolchange`, `layer_change`, `before_layer_change` (106) | Filament material type | `filament_type` |
+| `max_print_height` | entero | `end`, `toolchange`, `layer_change` (102) | set by the program while slicing (GCode.cpp) | `max_print_height` |
+| `bed_temperature_initial_layer` | lista de enteros | `start` (93) | set by the program while slicing (GCode.cpp) | `first_layer_bed_temperature` |
 | `curr_bed_type` | opción | `start`, `custom` (87) | Plate types supported by the printer | `curr_bed_type` |
 | `initial_layer_print_height` | número | `toolchange`, `start`, `before_layer_change`, `toolchange_gcode` (85) | First layer height | `first_layer_height` |
-| `max_print_height` | entero | `end`, `toolchange`, `layer_change` (84) | set by the program while slicing (GCode.cpp) | `max_print_height` |
 | `new_filament_temp` | entero | `toolchange` (82) | set by the program while slicing (GCode.cpp) |  |
+| `z_offset` | número | `end`, `start` (81) | Z offset | `z_offset` |
 | `initial_no_support_extruder` | entero | `start` (78) | set by the program while slicing (Print.cpp) | `initial_extruder` |
 | `first_layer_print_size` | lista de números | `start` (72) | Size of the first layer bounding box | `first_layer_print_size` |
 | `old_filament_temp` | entero | `toolchange` (70) | set by the program while slicing (GCode.cpp) |  |
@@ -154,22 +155,23 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `x_after_toolchange` | número | `toolchange` (64) | set by the program while slicing (GCode.cpp) |  |
 | `y_after_toolchange` | número | `toolchange` (64) | set by the program while slicing (GCode.cpp) |  |
 | `z_after_toolchange` | número | `toolchange` (64) | set by the program while slicing (GCode.cpp) |  |
-| `z_offset` | número | `end`, `start` (63) | Z offset | `z_offset` |
 | `initial_layer_acceleration` | lista de números | `toolchange` (62) | This is the printing acceleration for the first layer |  |
 | `flush_temperatures` | lista de enteros | `toolchange`, `start` (60) | set by the program while slicing (GCode.cpp) |  |
 | `flush_volumetric_speeds` | lista de números | `toolchange`, `start`, `end` (60) | set by the program while slicing (GCode.cpp) |  |
 | `previous_extruder` | entero | `toolchange` (60) | set by the program while slicing (GCode.cpp) | `previous_extruder` |
 | `toolchange_count` | entero | `toolchange` (58) | set by the program while slicing (GCode.cpp) |  |
+| `initial_extruder` | entero | `start`, `toolchange` (57) | Zero-based index of the first extruder used in the print | `initial_extruder` |
 | `retraction_distances_when_cut` | lista de números | `toolchange`, `start` (56) | Retraction distance when cut |  |
 | `bed_temperature` | lista de enteros | `start`, `end`, `before_layer_change`, `toolchange` (55) | set by the program while slicing (GCode.cpp) | `bed_temperature` |
 | `filament_max_volumetric_speed` | lista de números | `start`, `toolchange` (54) | Max volumetric speed | `filament_max_volumetric_speed` |
+| `spiral_mode` | sí/no | `timelapse`, `wrapping_detection_gcode`, `layer_change`, `end` (53) | Spiral vase | `spiral_vase` |
 | `new_filament_e_feedrate` | entero | `toolchange` (52) | set by the program while slicing (GCode.cpp) |  |
+| `nozzle_diameter` | lista de números | `start`, `toolchange` (52) | The diameter of nozzle | `nozzle_diameter` |
 | `old_filament_e_feedrate` | entero | `toolchange` (52) | set by the program while slicing (GCode.cpp) |  |
 | `printable_height` | número | `end` (52) | This is the maximum printable height which is limited by the height of the build area | `max_print_height` |
 | `flush_length` | número | `toolchange` (51) | set by the program while slicing (GCode.cpp) |  |
 | `default_acceleration` | lista de números | `toolchange`, `start` (50) | This is the default acceleration for both normal printing and travel after the first layer | `default_acceleration` |
 | `outer_wall_volumetric_speed` | número | `start`, `toolchange` (49) | set by the program while slicing (GCode.cpp) |  |
-| `spiral_mode` | sí/no | `timelapse`, `wrapping_detection_gcode`, `layer_change`, `end` (49) | Spiral vase | `spiral_vase` |
 | `flush_length_1` |  | `toolchange` (48) |  |  |
 | `flush_length_2` |  | `toolchange` (48) |  |  |
 | `flush_length_3` |  | `toolchange` (48) |  |  |
@@ -181,7 +183,6 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `travel_point_2_y` | número | `toolchange` (48) | set by the program while slicing (GCode.cpp) |  |
 | `travel_point_3_x` | número | `toolchange` (48) | set by the program while slicing (GCode.cpp) |  |
 | `travel_point_3_y` | número | `toolchange` (48) | set by the program while slicing (GCode.cpp) |  |
-| `initial_extruder` | entero | `start`, `toolchange` (47) | Zero-based index of the first extruder used in the print | `initial_extruder` |
 | `long_retractions_when_cut` | lista de sí/no | `toolchange` (44) | Long retraction when cut (beta) |  |
 | `temperature` | lista de enteros | `start`, `toolchange` (43) | set by the program while slicing (GCode.cpp) | `temperature` |
 | `current_extruder` | entero | `toolchange`, `end`, `toolchange_gcode`, `start` (41) | Zero-based index of currently used extruder | `current_extruder` |
@@ -190,7 +191,6 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `retraction_distance_when_cut` | número | `toolchange`, `end` (36) | set by the program while slicing (GCode.cpp) |  |
 | `travel_speed` | lista de números | `start`, `end`, `toolchange` (36) | This is the speed at which traveling is done | `travel_speed` |
 | `retraction_length` | lista de números | `start`, `layer_change`, `toolchange`, `end` (35) | Retraction Length | `retract_length` |
-| `nozzle_diameter` | lista de números | `start`, `toolchange` (34) | The diameter of nozzle | `nozzle_diameter` |
 | `filament_map` | lista de enteros | `toolchange`, `start` (32) | Filament map to extruder |  |
 | `overall_chamber_temperature` | entero | `start`, `layer_change`, `toolchange` (32) | set by the program while slicing (GCode.cpp) |  |
 | `current_filament_id` | entero | `toolchange`, `layer_change`, `end` (28) | set by the program while slicing (GCode.cpp) |  |
@@ -203,6 +203,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `next_nozzle_id` | entero | `toolchange` (28) | set by the program while slicing (GCode.cpp) |  |
 | `nozzle_diameter_at_nozzle_id` | lista de números | `start`, `toolchange`, `layer_change` (28) | set by the program while slicing (GCode.cpp) |  |
 | `is_extruder_used` | lista de sí/no | `start`, `layer_change`, `end` (26) | Is extruder used? | `is_extruder_used` |
+| `filament_notes` | lista de textos | `start` (25) | You can put your notes regarding the filament here | `filament_notes` |
 | `print_bed_min` | lista de números | `start` (25) | Bottom-left corner of print bed bounding box | `print_bed_min` |
 | `standby_temperature_delta` | entero | `start` (25) | Temperature variation | `standby_temperature_delta` |
 | `filament_tower_interface_print_temp` | lista de enteros | `toolchange` (24) | Interface layer print temperature |  |
@@ -222,6 +223,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `machine_max_acceleration_retracting` | lista de números | `start` (19) | Maximum acceleration for retracting | `machine_max_acceleration_retracting` |
 | `adaptive_bed_mesh_max` | lista de números | `start` (18) | set by the program while slicing (GCode.cpp) | `first_layer_print_max` |
 | `adaptive_bed_mesh_min` | lista de números | `start` (18) | set by the program while slicing (GCode.cpp) | `first_layer_print_min` |
+| `printer_notes` | texto | `start` (18) | You can put your notes regarding the printer here | `printer_notes` |
 | `layer_height` | número | `before_layer_change`, `start`, `file_start_gcode`, `toolchange_gcode` (17) | This is the height for each layer | `layer_height` |
 | `z_hop` | lista de números | `toolchange` (17) | Z-hop height | `retract_lift` |
 | `additional_cooling_fan_speed` | lista de enteros | `layer_change`, `toolchange`, `start` (16) | Fan speed |  |
@@ -233,6 +235,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `farthest_point_timelapse_enabled` | sí/no | `timelapse` (16) | set by the program while slicing (GCode.cpp) |  |
 | `first_non_support_filaments` | lista de enteros | `start` (16) | set by the program while slicing (GCode.cpp) |  |
 | `has_timelapse_safe_pos` | sí/no | `timelapse` (16) | set by the program while slicing (GCode.cpp) |  |
+| `idle_temperature` | lista de enteros | `start` (16) | Idle temperature | `idle_temperature` |
 | `initial_no_support_hotend` |  | `start` (16) |  |  |
 | `most_used_physical_extruder_id` | entero | `timelapse` (16) | set by the program while slicing (GCode.cpp) |  |
 | `next_hotend` | entero | `toolchange` (16) | set by the program while slicing (GCode.cpp) |  |
@@ -241,6 +244,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `travel_acceleration` | lista de números | `toolchange` (16) | Acceleration of travel moves | `travel_acceleration` |
 | `wipe_avoid_perimeter` | sí/no | `toolchange` (16) | set by the program while slicing (GCode.cpp) |  |
 | `wipe_avoid_pos_x` | número | `toolchange` (16) | set by the program while slicing (GCode.cpp) |  |
+| `extruded_weight_total` | número | `before_layer_change`, `layer_change` (13) | Total weight of the print | `extruded_weight_total` |
 | `current_hotend` | entero | `toolchange`, `end` (12) | set by the program while slicing (GCode.cpp) |  |
 | `first_filaments` | lista de enteros | `start` (12) | set by the program while slicing (GCode.cpp) |  |
 | `first_layer_center_no_wipe_tower` | lista de números | `timelapse`, `end` (12) | set by the program while slicing (GCode.cpp) |  |
@@ -260,7 +264,6 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `z_hop_types` | lista de opciones | `toolchange` (12) | Type of Z-hop |  |
 | `machine_max_acceleration_travel` | lista de números | `start` (11) | Maximum acceleration for travel | `machine_max_acceleration_travel` |
 | `notes` | texto | `start` (10) | Configuration notes | `notes` |
-| `extruded_weight_total` | número | `before_layer_change`, `layer_change` (9) | Total weight of the print | `extruded_weight_total` |
 | `additional_fan_full_speed_layer` | lista de enteros | `layer_change`, `toolchange` (8) | Full fan speed at layer |  |
 | `close_additional_fan_first_x_layers` | lista de enteros | `layer_change`, `toolchange` (8) | For the first |  |
 | `filament_ids` | lista de textos | `start`, `toolchange` (8) |  |  |
@@ -268,12 +271,10 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `in_head_wrap_detect_zone` |  | `timelapse` (8) |  |  |
 | `max_additional_fan` |  | `layer_change`, `toolchange` (8) |  |  |
 | `filament_diameter` | lista de números | `start`, `toolchange` (7) | Diameter | `filament_diameter` |
-| `filament_notes` | lista de textos | `start` (7) | You can put your notes regarding the filament here | `filament_notes` |
 | `filament_settings_id` | lista de textos | `start`, `layer_change` (7) |  | `filament_settings_id` |
 | `nozzle_temperature_initial_layer_0` |  | `start` (7) |  | `first_layer_temperature` |
 | `nozzle_temperature_initial_layer_1` |  | `start` (7) |  |  |
 | `enable_prime_tower` | sí/no | `toolchange`, `start` (6) | Enable |  |
-| `idle_temperature` | lista de enteros | `start` (6) | Idle temperature | `idle_temperature` |
 | `then` |  | `toolchange` (6) |  |  |
 | `extra_loading_move` | número | `start` (5) | Extra loading distance | `extra_loading_move` |
 | `extrude_length_` | propia de la macro | `toolchange` (5) |  |  |
@@ -297,7 +298,6 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `initial_layer_travel_acceleration` | lista de números o porcentajes | `toolchange` (4) | First layer travel |  |
 | `initial_no_support_nozzle_id` |  | `start` (4) |  |  |
 | `print_settings_id` | texto | `end` (4) |  | `print_settings_id` |
-| `printer_notes` | texto | `start` (4) | You can put your notes regarding the printer here | `printer_notes` |
 | `temperature_vitrification` | lista de enteros | `start`, `toolchange` (4) | Softening temperature |  |
 | `time_flush_` | propia de la macro | `toolchange` (4) |  |  |
 | `wipe_tower_center_pos_valid` | sí/no | `start`, `toolchange` (4) | set by the program while slicing (GCode.cpp) |  |

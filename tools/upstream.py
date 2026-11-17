@@ -8,6 +8,7 @@ follow "include" (the per-model G-code templates of the Bambu Lab printers), so 
 source itself, with the source's own variable names (its "dialect"; docs/FORMAT.md, "G-code de la máquina").
 """
 
+import ast
 import glob
 import json
 import os
@@ -48,6 +49,8 @@ ORCA_KEYS = {'machine_start_gcode': 'start', 'machine_end_gcode': 'end', 'before
 CURA_KEYS = {'machine_start_gcode': 'start', 'machine_end_gcode': 'end'}
 CURA_EXTRUDER_KEYS = {'machine_extruder_start_code': 'extruder_start', 'machine_extruder_end_code': 'extruder_end'}
 NON_GCODE = {'machine_start_gcode', 'machine_end_gcode'}  # Cura keys that are G-code without the suffix rule
+# Options of the OrcaSlicer family whose name ends in "_gcode" but are yes/no, not G-code (PrintConfig.cpp: coBool).
+NOT_TEXT = {'emit_machine_limits_to_gcode', 'export_gcode'}
 
 
 def bundle_source(path):
@@ -222,6 +225,13 @@ def merged_compatible(vendor, converted=None):
 def _gcode_keys(values, table):
     out = {}
     for k, v in values.items():
+        if k in NOT_TEXT:
+            continue
+        if isinstance(v, list) and v and all(isinstance(x, str) for x in v):
+            # A single-text option written as a JSON list (OrcaSlicer's Prusa CORE One, SeeMeCNC, TwoTrees SK1, BLOCKS
+            # RF50): the program joins the elements with a comma before reading the text (ConfigBase::load_from_json,
+            # parse_str_arr with single_sep ',' for a coString).
+            v = ','.join(v)
         if not isinstance(v, str):
             continue
         if k in table:
@@ -268,18 +278,62 @@ def orca_machine_gcode(vendor, name):
                        and k not in ('name', 'type', 'instantiation', 'from', 'setting_id')}}
 
 
+def cura_text_expression(ex, values):
+    """The text a Cura value expression gives, or None. Only text, "+", "a if test else b" and "==" / "!=" are read,
+    with names that the definition sets to a fixed value (default_value, not an expression of their own); Cura
+    evaluates these with the machine's settings (fusedform_base: "'M104 S0' + ('\\nM140 S0' if machine_heated_bed
+    else '') + ..."). Anything else is left out."""
+    try:
+        tree = ast.parse(ex, mode='eval')
+    except (SyntaxError, ValueError):
+        return None
+
+    def ev(n):
+        if isinstance(n, ast.Constant) and isinstance(n.value, (str, bool, int, float)):
+            return n.value
+        if isinstance(n, ast.Name):
+            dv, nex = values.get(n.id, (None, None))
+            if nex is not None or dv is None:
+                raise ValueError(n.id)
+            return dv
+        if isinstance(n, ast.BinOp) and isinstance(n.op, ast.Add):
+            a, b = ev(n.left), ev(n.right)
+            if not (isinstance(a, str) and isinstance(b, str)):
+                raise ValueError('+')
+            return a + b
+        if isinstance(n, ast.IfExp):
+            return ev(n.body) if ev(n.test) else ev(n.orelse)
+        if isinstance(n, ast.Compare) and len(n.ops) == 1 and isinstance(n.ops[0], (ast.Eq, ast.NotEq)):
+            same = ev(n.left) == ev(n.comparators[0])
+            return same if isinstance(n.ops[0], ast.Eq) else not same
+        raise ValueError(type(n).__name__)
+
+    try:
+        out = ev(tree.body)
+    except ValueError:
+        return None
+    return out if isinstance(out, str) else None
+
+
 def cura_machine_gcode(cura, def_id):
     """The G-code block of a Cura machine definition and its extruders, or None if the definition is unknown.
-    Templates that Cura computes with a value expression are left out (listed in "expressions")."""
+    A template that Cura computes with a value expression is evaluated when it only uses text and fixed values of the
+    definition (cura_text_expression; listed in "evaluated"); otherwise it is left out (listed in "expressions")."""
     if def_id not in cura.defs:
         return None
     values, where, meta = cura.resolve(def_id)
-    templates, keys, origin, expressions = {}, {}, {}, {}
+    templates, keys, origin, expressions, evaluated = {}, {}, {}, {}, {}
     for k, neutral in CURA_KEYS.items():
         if k not in values:
             continue
         dv, ex = values[k]
-        if ex is not None:
+        text = cura_text_expression(ex, values) if ex is not None else None
+        if text is not None:
+            templates[neutral] = text
+            keys[neutral] = k
+            origin[neutral] = where[k]
+            evaluated[neutral] = ex
+        elif ex is not None:
             expressions[neutral] = ex
         elif isinstance(dv, str):
             templates[neutral] = dv
@@ -308,6 +362,8 @@ def cura_machine_gcode(cura, def_id):
            'relative_extrusion': bool(rel), 'flavor': values.get('machine_gcode_flavor', (None, None))[0]}
     if expressions:
         out['expressions'] = expressions
+    if evaluated:
+        out['evaluated'] = evaluated
     return out
 
 

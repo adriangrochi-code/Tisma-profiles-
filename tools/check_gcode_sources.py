@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Every printer variant's G-code templates in a converted pack against the text of its source, as the source program
 reads it: the OrcaSlicer-family preset (resolved with its parents; upstream.orca_machine_gcode), UltiMaker Cura's
-definition, or the Tisma Slicer bundle section. Exits with 1 and lists the variants that differ.
+definition, or the Tisma Slicer bundle section (or, for a printer key no section of its inheritance sets, the
+program's default in PrintConfig.cpp). Exits with 1 and lists the variants that differ.
 
-Usage: check_gcode_sources.py <pack> <upstream.args> <Tisma Slicer resources/profiles>
+Usage: check_gcode_sources.py <pack> <upstream.args> <Tisma Slicer resources/profiles> [<Tisma Slicer PrintConfig.cpp>]
 (upstream.args: the arguments tools/fetch_sources.py prints.)
 """
 
@@ -28,6 +29,7 @@ def merged(d, v):
 
 def main():
     pack, args_file, profiles = sys.argv[1], sys.argv[2], sys.argv[3]
+    defaults = upstream.program_defaults(sys.argv[4]) if len(sys.argv) > 4 else {}
     words = open(args_file).read().split()
     ups = {}
     official = []
@@ -76,7 +78,14 @@ def main():
                         for k2, val in bundle(os.path.basename(ini)[:-4]).sections.items():
                             everything.setdefault(k2, val)
                 c = bundle(src['bundle']).flat('printer', src['section'], everything)
-                want = {k: convert.gcode_text(c.get(g['keys'].get(k, ''))) for k in t}
+                want = {}
+                for k in t:
+                    key = g['keys'].get(k, '')
+                    if g['from'].get(k) == 'PrintConfig.cpp':
+                        # The program's default: only when no section sets the key.
+                        want[k] = convert.gcode_text(defaults.get(key)) if key not in c else None
+                    else:
+                        want[k] = convert.gcode_text(c.get(key))
             for k, text in t.items():
                 counts['checked (%s)' % (g.get('dialect') if g.get('origin') == 'source_program' else 'bundle')] += 1
                 if want.get(k) != text:
