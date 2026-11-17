@@ -359,6 +359,27 @@ class OwnerDecisions(unittest.TestCase):
         self.assertEqual(list(b.models), ['Vertex K8400'])
         self.assertEqual([n for k, n in b.sections if k == 'printer'], ['Vertex K8400 0.35 nozzle'])
 
+    def test_bed_from_the_manufacturers_slicer(self):
+        # Creality.ini of Tisma Slicer a6b4f62: the CR-20 sets no bed_shape; Creality Print 59ae8cb "Creality CR-20
+        # Pro 0.4 nozzle" has printable_area 0x0,220x0,220x220,0x220.
+        repo = 'https://github.com/CrealityOfficial/CrealityPrint'
+        with tempfile.TemporaryDirectory() as d:
+            m = os.path.join(d, 'resources', 'profiles', 'Creality', 'machine')
+            os.makedirs(m)
+            json.dump({'name': 'Creality CR-20 Pro 0.4 nozzle', 'type': 'machine',
+                       'printable_area': ['0x0', '220x0', '220x220', '0x220']},
+                      open(os.path.join(m, 'Creality CR-20 Pro 0.4 nozzle.json'), 'w'))
+
+            class Sources:
+                repos = {repo: (d, 'abc')}
+
+            class B:
+                id = 'Creality'
+            text, record = convert.bed_from_source(B(), {'printer_model': 'CR20'}, Sources())
+            self.assertIsNone(convert.bed_from_source(B(), {'printer_model': 'CR20', 'bed_shape': '0x0'}, Sources()))
+        self.assertEqual(text, '0x0,220x0,220x220,0x220')
+        self.assertEqual(record['commit'], 'abc')
+
     def test_cura_text_read_as_its_expression(self):
         # Cura 5bea2f8 z-bolt_classic.def.json: the end G-code expression stored as default_value (real line breaks).
         with tempfile.TemporaryDirectory() as d:

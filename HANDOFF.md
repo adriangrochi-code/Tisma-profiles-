@@ -71,6 +71,10 @@ text (the session scratchpad's audit_gcode.py): 10,890 templates (5093 OrcaSlice
   c270b94 (upstream.CURA_TEXT_AS_EXPRESSION, source.decision). Vertex Nano K8600 (Velleman; start and end on one
   commented line since 2019, no correct version): left out (convert.LEFT_OUT_PRINTERS) until a correct source exists.
   check_pack fails on either pattern; a scan of every template finds no other case.
+- QA 2026-11-17: Creality CR-20 and CR-20 Pro without a bed (no section of the PrusaSlicer bundle sets bed_shape;
+  their G-code uses print_bed_max). Owner's decision the same day: the bed of Creality Print's CR-20 Pro preset,
+  220 x 220 as OrcaSlicer and Cura (convert.BED_FROM_SOURCE; source_decisions in the variant). Every FFF variant now
+  has a bed.
 
 ## Paused (owner, 2026-11-13 09:20 UTC: «Pausa el trabajo hoy»)
 

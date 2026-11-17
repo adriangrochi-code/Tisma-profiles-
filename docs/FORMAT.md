@@ -191,6 +191,11 @@ comparten:
   porcentaje de la boquilla de cada una (OrcaSlicer: `line_width = 105%`) se escribe una vez por boquilla, con el mismo
   nombre, `nozzle` y sus impresoras de esa boquilla, y los anchos en mm que da el origen para ella; la ruta lleva la
   boquilla (`…_0.4mm.json`). El perfil por defecto de cada impresora es el de su boquilla.
+- **`source_decisions`** (en una variante de impresora): los valores que no salen del paquete ni de su programa de
+  origen sino de otro laminador, por decisión del dueño; por clave del perfil, `repository`, `commit`, `preset`, la
+  clave y el valor de origen (`key`, `value`) y la decisión. Hoy solo la cama (`machine.bed`) de las Creality CR-20 y
+  CR-20 Pro: el paquete de PrusaSlicer no la define (el programa usaría 200 × 200) y sale de Creality Print, 220 × 220
+  como en OrcaSlicer y Cura (decisión del 17-11-2026). La clave también está en `from_source_program`.
 - **`from_source_program`** (en un filamento o en una variante de impresora): las claves del perfil (`grupo.clave`)
   que no salen de la traducción del paquete de Tisma Slicer porque el paquete las perdió: las temperaturas de la
   boquilla de 3 filamentos de la UltiMaker 2 extended+ y la boquilla de 3 de sus variantes, la altura de 9

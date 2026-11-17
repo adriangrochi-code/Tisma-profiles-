@@ -424,6 +424,9 @@ def main():
                     if not (isinstance(t, str) or (isinstance(t, list) and all(x is None or isinstance(x, str)
                                                                                 for x in t))):
                         problems['G-code template that is not text'].append('%s: %s' % (where, k))
+                if not merged_block(doc['common']['settings'], var['settings']).get('machine', {}).get('bed'):
+                    # The G-code's print_bed_max / bed variables need it (CR-20, QA 2026-11-17).
+                    problems['FFF printer without a bed'].append(where)
                 for k in ('start', 'end'):
                     t = ((g.get('templates') or {}).get(k) or '').strip()
                     if CURA_EXPRESSION_TEXT.match(t):

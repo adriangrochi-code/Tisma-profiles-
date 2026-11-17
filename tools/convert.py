@@ -494,6 +494,40 @@ def leave_out_printers(b, stats):
             del b.models[mid]
 
 
+# Printers whose bundle defines no bed (bed_shape) in any section of their inheritance, so Tisma Slicer would use its
+# 200 x 200 default: the bed of the manufacturer's slicer instead (owner's decision, recorded in the printer entry's
+# source_decisions). (bundle, printer_model) -> (repository, vendor folder, preset, decision)
+BED_FROM_SOURCE = {
+    ('Creality', 'CR20'): (
+        'https://github.com/CrealityOfficial/CrealityPrint', 'Creality', 'Creality CR-20 Pro 0.4 nozzle',
+        "owner, 2026-11-17: the PrusaSlicer bundle sets no bed_shape for the CR-20; Creality Print has the CR-20 "
+        "only as the CR-20 Pro, the same 220 x 220 bed as OrcaSlicer and Cura (creality_cr20.def.json)"),
+    ('Creality', 'CR20PRO'): (
+        'https://github.com/CrealityOfficial/CrealityPrint', 'Creality', 'Creality CR-20 Pro 0.4 nozzle',
+        "owner, 2026-11-17: the PrusaSlicer bundle sets no bed_shape for the CR-20 Pro; the bed of Creality Print's "
+        "preset, the same as OrcaSlicer and Cura"),
+}
+
+
+def bed_from_source(b, c, sources):
+    """(bed_shape text, record) for a BED_FROM_SOURCE printer without a bed, or None."""
+    rule = BED_FROM_SOURCE.get((b.id, c.get('printer_model')))
+    if not rule or c.get('bed_shape'):
+        return None
+    repo, vendor, preset, decision = rule
+    have = sources.repos.get(repo)
+    if not have:
+        return None
+    reader = upstream.OrcaVendor(os.path.join(have[0], 'resources', 'profiles', vendor), kind='machine')
+    key = reader.find(preset)
+    area = reader.resolve(key)[0].get('printable_area') if key else None
+    if not area:
+        return None
+    text = ','.join(area) if isinstance(area, list) else area
+    return text, {'repository': repo, 'commit': have[1], 'preset': preset, 'key': 'printable_area',
+                  'value': text, 'decision': decision}
+
+
 def sibling_gcode(b, name, sources, stats):
     """The G-code block of a printer given its sibling's (GCODE_FROM_SIBLING), or None."""
     rule = GCODE_FROM_SIBLING.get((b.id, name))
@@ -1407,7 +1441,7 @@ def build_models(w, index, printer_entries):
                 own = diff_block(common_gcode, e['gcode'])
                 if own:
                     var['gcode'] = own
-            for k in ('not_converted', 'from_source_program'):
+            for k in ('not_converted', 'from_source_program', 'source_decisions'):
                 if k in e:
                     var[k] = e[k]
             if rel in extra:
@@ -1601,6 +1635,14 @@ def main():
                 put(settings, 'machine', 'max_height', height)
                 filled.append('machine.max_height')
                 w.stats['printer height from the source program'] += 1
+            decided = {}
+            bed = None if sla else bed_from_source(b, c, sources)
+            if bed:
+                full, _ = map_printer(dict(c, bed_shape=bed[0]), engine_texts(block, c))
+                put(settings, 'machine', 'bed', full['machine']['bed'])
+                filled.append('machine.bed')
+                decided['machine.bed'] = bed[1]
+                w.stats["printer bed from the manufacturer's slicer (owner's decision)"] += 1
             source_flavor = block.pop('flavor', None) if block else None
             if not sla and source_flavor == CURA_MARLIN and \
                     settings.get('machine', {}).get('flavor') in ('marlin', 'marlin_legacy'):
@@ -1648,6 +1690,8 @@ def main():
                      'license': lic, 'origin': origin, 'original': c}
             if filled:
                 entry['from_source_program'] = filled
+            if decided:
+                entry['source_decisions'] = decided
             if block:
                 entry['gcode'] = block
             if notes:

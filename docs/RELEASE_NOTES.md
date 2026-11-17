@@ -13,6 +13,7 @@ VertexSlice 1d6ad28; las Bambu Lab, de Bambu Studio 930fe93, y varias QIDI, Anyc
   vale el del programa) y las Fused Form, FabX Pro y Ultimaker Original de Cura (el fin calculado con una expresión).
   La Z-Bolt Classic de Cura ya apaga los calentadores al terminar (en Cura su fin es una expresión que se envía como
   texto); la Vertex Nano K8600 sale del paquete porque en Cura su G-code está comentado entero y no hay fuente correcta.
+  Las Creality CR-20 y CR-20 Pro tienen cama (220 × 220, de Creality Print): su perfil de PrusaSlicer no la define.
   El G-code de la familia OrcaSlicer se lee como lo lee el programa (`\n` escrito como texto es un salto de línea: la
   Ender-3 V3 SE y todo Snapmaker Orca). La Snapmaker U1 sale de Snapmaker Orca v2.3.3. Cada plantilla de G-code del
   paquete (11 864) se compara en la CI con el texto de su fuente: 0 diferencias.
