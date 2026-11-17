@@ -315,6 +315,16 @@ def cura_text_expression(ex, values):
     return out if isinstance(out, str) else None
 
 
+# Cura G-code written as a value expression but stored as default_value, which Cura sends as literal text (the
+# printer gets lines that start with a quote and the heaters stay on). Read as the expression it was, with its line
+# breaks back as "\\n" (owner's decision; the block's "decision"). (definition file, key) -> decision.
+CURA_TEXT_AS_EXPRESSION = {
+    ('definitions/z-bolt_classic.def.json', 'machine_end_gcode'): (
+        "owner, 2026-11-17: Cura 22f7d30 moved this expression from value to default_value, so Cura sends it as "
+        "text; evaluated as the value it was when the printer was added (c270b94)"),
+}
+
+
 def cura_machine_gcode(cura, def_id):
     """The G-code block of a Cura machine definition and its extruders, or None if the definition is unknown.
     A template that Cura computes with a value expression is evaluated when it only uses text and fixed values of the
@@ -322,11 +332,15 @@ def cura_machine_gcode(cura, def_id):
     if def_id not in cura.defs:
         return None
     values, where, meta = cura.resolve(def_id)
-    templates, keys, origin, expressions, evaluated = {}, {}, {}, {}, {}
+    templates, keys, origin, expressions, evaluated, decisions = {}, {}, {}, {}, {}, {}
     for k, neutral in CURA_KEYS.items():
         if k not in values:
             continue
         dv, ex = values[k]
+        decision = CURA_TEXT_AS_EXPRESSION.get((where[k], k)) if ex is None and isinstance(dv, str) else None
+        if decision:
+            ex = dv.replace('\n', '\\n')
+            decisions[neutral] = decision
         text = cura_text_expression(ex, values) if ex is not None else None
         if text is not None:
             templates[neutral] = text
@@ -364,6 +378,8 @@ def cura_machine_gcode(cura, def_id):
         out['expressions'] = expressions
     if evaluated:
         out['evaluated'] = evaluated
+    if decisions:
+        out['decision'] = decisions
     return out
 
 

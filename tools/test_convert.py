@@ -4,6 +4,7 @@
 Usage: python3 -m unittest discover -s tools -p 'test_*.py'
 """
 
+import collections
 import os
 import json
 import sys
@@ -340,6 +341,34 @@ class ProgramDefaultGcode(unittest.TestCase):
             convert.PRUSA_GCODE_DEFAULTS.update(saved)
         self.assertEqual(t, {'start': 'G28 ; home all axes\nG1 Z5 F5000 ; lift nozzle\n', 'end': 'M84'})
         self.assertEqual(o, {'start': 'PrintConfig.cpp', 'end': 'gCreate.ini'})
+
+
+class OwnerDecisions(unittest.TestCase):
+    def test_left_out_printer_takes_its_model(self):
+        # Cura_Velleman.ini of Tisma Slicer a6b4f62: Vertex K8600, its G-code on one commented line in Cura.
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'Cura_Velleman.ini')
+            with open(path, 'w') as f:
+                f.write('[vendor]\nname = Velleman\n\n[printer_model:Vertex K8400]\nname = Vertex K8400\n\n'
+                        '[printer_model:Vertex K8600]\nname = Vertex K8600\n\n'
+                        '[printer:Vertex K8400 0.35 nozzle]\nprinter_model = Vertex K8400\n\n'
+                        '[printer:Vertex K8600 0.35 nozzle]\nprinter_model = Vertex K8600\n')
+            b = convert.Bundle(path)
+        stats = collections.Counter()
+        convert.leave_out_printers(b, stats)
+        self.assertEqual(list(b.models), ['Vertex K8400'])
+        self.assertEqual([n for k, n in b.sections if k == 'printer'], ['Vertex K8400 0.35 nozzle'])
+
+    def test_cura_text_read_as_its_expression(self):
+        # Cura 5bea2f8 z-bolt_classic.def.json: the end G-code expression stored as default_value (real line breaks).
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, 'definitions'))
+            json.dump({'overrides': {'machine_heated_bed': {'default_value': True}, 'machine_end_gcode': {
+                'default_value': "'M104 S0' + ('\nM140 S0' if machine_heated_bed else '') + '\nM84'"}}},
+                open(os.path.join(d, 'definitions', 'z-bolt_classic.def.json'), 'w'))
+            block = convert.upstream.cura_machine_gcode(convert.upstream.CuraDefinitions(d), 'z-bolt_classic')
+        self.assertEqual(block['templates']['end'], 'M104 S0\nM140 S0\nM84')
+        self.assertIn('end', block['decision'])
 
 
 class CuraExpressions(unittest.TestCase):

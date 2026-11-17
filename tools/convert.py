@@ -473,6 +473,27 @@ GCODE_FROM_SIBLING = {
 }
 
 
+# Printers left out of the pack (owner's decision): their source G-code cannot run and no source gives a correct one.
+# (bundle, section) -> decision. A model left without printers goes too.
+LEFT_OUT_PRINTERS = {
+    ('Cura_Velleman', 'Vertex K8600 0.35 nozzle'): (
+        "owner, 2026-11-17: Cura's vertex_nano_k8600.def.json writes its start and end G-code on one line after ';' "
+        "since it was added (949d62f, 2019), so nothing of it runs; no version has the line breaks"),
+}
+
+
+def leave_out_printers(b, stats):
+    """Takes the LEFT_OUT_PRINTERS of a bundle out of it, with the models they leave without printers."""
+    gone = [n for (bid, n) in LEFT_OUT_PRINTERS if bid == b.id and ('printer', n) in b.sections]
+    for name in gone:
+        del b.sections[('printer', name)]
+        stats["printer left out (owner's decision)"] += 1
+    if gone:
+        used = {v.get('printer_model') for (kind, n), v in b.sections.items() if kind == 'printer'}
+        for mid in [m for m in b.models if m not in used]:
+            del b.models[mid]
+
+
 def sibling_gcode(b, name, sources, stats):
     """The G-code block of a printer given its sibling's (GCODE_FROM_SIBLING), or None."""
     rule = GCODE_FROM_SIBLING.get((b.id, name))
@@ -522,6 +543,8 @@ def printer_gcode(b, name, c, everything, sources, stats, filament_names=frozens
             for k in ('expressions', 'evaluated', 'values', 'flavor'):
                 if block.get(k):
                     out[k] = block[k]  # flavor: only read by the caller, not written
+            if block.get('decision'):
+                out['source']['decision'] = '; '.join('%s: %s' % kv for kv in sorted(block['decision'].items()))
             return out
         stats['printer G-code from the bundle: not in the source program (%s)' % dialect] += 1
     templates, keys, origin = bundle_gcode(b, 'printer', name, c, everything, PRINTER_KEYS)
@@ -1478,6 +1501,8 @@ def main():
     by_id = {b.id: b for b in bundles}
     by_path = {b.path: b for b in bundles}
     early_stats = collections.Counter()
+    for b in bundles:
+        leave_out_printers(b, early_stats)
     for path, gone in sorted(official.items()):
         # The manufacturer's models replace the same models of the replaced bundles; their other models stay.
         for name in [gone] + replaced_also[path]:

@@ -297,6 +297,18 @@ G-code y hereda uno genérico de cambiador de herramientas (`PRINT_START` con te
 controles, la limpieza de boquilla ni la malla de cama del U1; lleva el de «Snapmaker U1 (0.4 nozzle)» de Snapmaker
 Orca (decisión del 16-11-2026).
 
+**G-code de Cura corregido por decisión del dueño** (`source.decision` en el bloque, decisión del 17-11-2026): la
+Z-Bolt Classic tiene en Cura su G-code de fin como una expresión guardada como texto fijo (`default_value`, desde el
+commit 22f7d30 de Cura), así que Cura la envía tal cual y la impresora recibe líneas que empiezan con comilla. Se lee
+como la expresión que era cuando se añadió la impresora (c270b94) y se evalúa con su cama caliente; también está en
+`evaluated`.
+
+**Impresoras que no van en el paquete** (decisión del dueño, `stats.json`: «printer left out (owner's decision)»): la
+Vertex Nano K8600 de Velleman (Cura) tiene el G-code de inicio y de fin en una sola línea que empieza con `;` desde que
+se añadió a Cura (2019), así que no se ejecuta nada, y ninguna versión lo tiene bien. Sale del paquete hasta que haya
+una fuente correcta. `check_pack` falla si un G-code de inicio o de fin es una expresión de Cura o es una sola línea
+comentada con órdenes dentro.
+
 **Laminador del fabricante (`sources.json`, `official`):** cuando el fabricante tiene su propio laminador de la
 familia OrcaSlicer, sus perfiles reemplazan a los de OrcaSlicer (regla del dueño; la página o la hoja técnica del
 fabricante solo sirven para cotejar). `tools/fetch_sources.py` baja ese programa en su commit, lo convierte con el

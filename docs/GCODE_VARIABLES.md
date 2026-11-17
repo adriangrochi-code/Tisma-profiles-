@@ -474,7 +474,7 @@ Definiciones: Tisma Slicer a6b4f62 (PrusaSlicer), OrcaSlicer 1d577ea, Creality P
 | `material_print_temperature_layer_0` | número | `start` (65) | Printing Temperature Initial Layer | `first_layer_temperature` |
 | `material_bed_temperature_layer_0` | número | `start` (51) | Build Plate Temperature Initial Layer | `first_layer_bed_temperature` |
 | `machine_depth` | número | `end` (31) | Machine Depth |  |
-| `material_print_temperature` | número | `start` (27) | Printing Temperature | `temperature` |
+| `material_print_temperature` | número | `start` (26) | Printing Temperature | `temperature` |
 | `material_bed_temperature` | número | `start` (19) | Build Plate Temperature | `bed_temperature` |
 | `speed_travel` | número | `start`, `end` (19) | Travel Speed | `travel_speed` |
 | `material_type` | texto | `start` (14) | Material Type | `filament_type` |

@@ -35,6 +35,8 @@ import cura_platform
 import translation
 import upstream
 
+CURA_EXPRESSION_TEXT = re.compile(r"^'[^']*'\s*\+")
+COMMAND = re.compile(r'(?:^|\s)[GMT]\d+\b')  # a G-code command word
 NOZZLE_CONDITION = re.compile(r'(?:^|\band\b|&&|\()\s*nozzle_diameter\[0\]\s*==\s*"?(\d+(?:\.\d+)?)"?\s*'
                               r'(?=\)|\band\b|&&|$)')
 NOZZLE_NAME = re.compile(r'(?i)(?<![\d.])(\d+(?:\.\d+)?)\s*(?:mm)?\s*nozzle\b|\bnozzle\s*(\d+(?:\.\d+)?)(?![\d.])')
@@ -422,6 +424,14 @@ def main():
                     if not (isinstance(t, str) or (isinstance(t, list) and all(x is None or isinstance(x, str)
                                                                                 for x in t))):
                         problems['G-code template that is not text'].append('%s: %s' % (where, k))
+                for k in ('start', 'end'):
+                    t = ((g.get('templates') or {}).get(k) or '').strip()
+                    if CURA_EXPRESSION_TEXT.match(t):
+                        # Z-Bolt Classic in Cura 5bea2f8: the printer would get lines starting with a quote.
+                        problems['%s G-code that is a Cura expression, not G-code' % k].append(where)
+                    elif '\n' not in t and len(COMMAND.findall(t.partition(';')[2])) >= 3:
+                        # Vertex Nano K8600 in Cura: every command after the ';' of a single line, so none runs.
+                        problems['%s G-code on one commented line' % k].append(where)
                 start = (g.get('templates') or {}).get('start')
                 if start and start.strip():
                     counts['fff variants with a start G-code'] += 1
