@@ -66,6 +66,12 @@ text (the session scratchpad's audit_gcode.py): 10,890 templates (5093 OrcaSlice
   does); Cura end G-code written as a plain text expression is evaluated (Fused Form, FabX Pro, Ultimaker Original).
   The yes/no emit_machine_limits_to_gcode no longer slips into the templates. check_pack now fails on an FFF variant
   without start or end G-code: 2297/2297 have both. check_gcode_sources: 11,864 templates, 0 differences.
+- QA 2026-11-17, waiting on the owner: two Cura definitions whose G-code is broken in Cura itself (the pack copies it
+  as it is). Z-Bolt Classic end G-code: a value expression stored as default_value (Cura 22f7d30 "replace value with
+  default_value"; c270b94 had it as a value), so it goes out as literal text and the heaters stay on. Vertex Nano K8600
+  (Velleman) start and end: everything on one line after ";" since it was added (949d62f, 2019), so nothing runs.
+  Tisma Slicer's Cura_Velleman.ini and Cura_Z_Bolt.ini carry the same text. A scan of every template in the pack
+  finds no other case.
 
 ## Paused (owner, 2026-11-13 09:20 UTC: «Pausa el trabajo hoy»)
 
