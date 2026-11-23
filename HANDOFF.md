@@ -45,6 +45,12 @@ changes.
   they need a new PR, only when the owner asks.
 - Commit 0892fa7 carries the spec session's id in its Claude-Session line by mistake (history not rewritten).
 
+## Prerelease pack-2026.11.23-9735510
+
+Published 2026-11-23 15:21 UTC (release.yml run 45203705029, prerelease from profiles/next 9735510) on the owner's yes
+in this session. It carries the start/end G-code fixes, the CR-20 and CR-20 Pro bed, the Z-Bolt Classic end G-code and
+the Vertex K8600 left out; the latest release stays as it was. QA has the tag for its sweep of the 2296 FFF variants.
+
 ## G-code audit (owner, 2026-11-16: «los G-codes iniciales y finales son muy importantes para cada máquina»)
 
 The pause was lifted by the owner the same day. Every printer variant's G-code templates in the pack against its source
