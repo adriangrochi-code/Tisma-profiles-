@@ -49,7 +49,8 @@ changes.
 
 Published 2026-11-23 15:21 UTC (release.yml run 45203705029, prerelease from profiles/next 9735510) on the owner's yes
 in this session. It carries the start/end G-code fixes, the CR-20 and CR-20 Pro bed, the Z-Bolt Classic end G-code and
-the Vertex K8600 left out; the latest release stays as it was. QA has the tag for its sweep of the 2296 FFF variants.
+the Vertex K8600 left out; the latest release stays as it was. QA's sweep the same day: 2296/2296 FFF variants slice,
+all with start, end and bed. The 159 Prusa variants keep gcode.binary on, as their source does (the engine writes .bgcode).
 
 ## G-code audit (owner, 2026-11-16: «los G-codes iniciales y finales son muy importantes para cada máquina»)
 
